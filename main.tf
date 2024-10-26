@@ -44,8 +44,13 @@ resource "docker_container" "lb" {
 
 # `as215011.net` upstream services
 ## `as215011.net` 
-resource "docker_image" "website_nxthdr" {
+data "docker_registry_image" "website_nxthdr" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
+}
+
+resource "docker_image" "website_nxthdr" {
+  name          = data.docker_registry_image.website_nxthdr.name
+  pull_triggers = [data.docker_registry_image.website_nxthdr.sha256_digest]
 }
 
 resource "docker_container" "website_as215011" {
