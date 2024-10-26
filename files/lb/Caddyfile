@@ -1,0 +1,11 @@
+as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:10::10]:80
+}
+
+geofeed.as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:10::11]:80
+}
+
+nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::12]:80
+}
