@@ -1,0 +1,16 @@
+server:
+  http:
+    listen_addr: ":9090"
+    allowed_networks: ["2a06:de00:50:cafe:10::/80"]
+
+users:
+  - name: "read"
+    to_cluster: "chproxy"
+    to_user: "chproxy"
+    password: "read"
+
+clusters:
+  - name: "chproxy"
+    nodes: ["[2a06:de00:50:cafe:10::101]:8123"]
+    users:
+      - name: "chproxy"

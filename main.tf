@@ -58,6 +58,10 @@ resource "docker_container" "caddy" {
     container_path = "/data"
     host_path = "/home/matthieugouel/nxthdr/caddy/data"
   }
+  volumes {
+    container_path = "/certs"
+    host_path = "/home/matthieugouel/nxthdr/caddy/certs"
+  }
 }
 
 # `as215011.net` backend services
@@ -96,11 +100,11 @@ resource "docker_container" "geofeed" {
   }
   volumes {
     container_path = "/etc/nginx/conf.d/default.conf"
-    host_path = "/home/matthieugouel/nxthdr/geofeed/default.conf"
+    host_path = "/home/matthieugouel/nxthdr/geofeed/config/default.conf"
   }
   volumes {
     container_path = "/usr/share/nginx/html"
-    host_path = "/home/matthieugouel/nxthdr/geofeed/html"
+    host_path = "/home/matthieugouel/nxthdr/geofeed/data/html"
   }
 }
 
@@ -130,13 +134,43 @@ resource "docker_container" "clickhouse" {
     ipv6_address = "2a06:de00:50:cafe:10::101"
   }
   volumes {
+    container_path = "/etc/clickhouse-server/users.d"
+    host_path = "/home/matthieugouel/nxthdr/clickhouse/config/users.d"
+  }
+  volumes {
     container_path = "/var/lib/clickhouse"
-    host_path = "/home/matthieugouel/nxthdr/clickhouse"
+    host_path = "/home/matthieugouel/nxthdr/clickhouse/data"
+  }
+  capabilities {
+    add = [ "SYS_NICE", "NET_ADMIN", "IPC_LOCK" ]
   }
   ulimit {
     name = "nofile"
     soft = 262144
     hard = 262144
+  }
+}
+
+## Chproxy
+resource "docker_image" "chproxy" {
+  name = "contentsquareplatform/chproxy:v1.26.5"
+}
+
+resource "docker_container" "chproxy" {
+  image = docker_image.chproxy.image_id
+  name  = "chproxy"
+  network_mode = "bridge"
+  command = [
+    "-config", "/config/config.yml",
+    "-enableTCP6"
+  ]
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::102"
+  }
+  volumes {
+    container_path = "/config"
+    host_path = "/home/matthieugouel/nxthdr/chproxy/config"
   }
 }
 
@@ -164,7 +198,7 @@ resource "docker_container" "redpanda" {
   }
   networks_advanced {
     name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::102"
+    ipv6_address = "2a06:de00:50:cafe:10::103"
   }
   volumes {
     container_path = "/etc/redpanda"

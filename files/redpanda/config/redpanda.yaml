@@ -10,7 +10,7 @@ redpanda:
           name: dmz
           port: 9092
           authentication_method: sasl
-        - address: 2a06:de00:50:cafe:10::102
+        - address: 2a06:de00:50:cafe:10::103
           name: backend
           port: 9092
           authentication_method: none
@@ -24,7 +24,7 @@ redpanda:
         - address: 2a06:de00:50:cafe:100::b
           name: dmz
           port: 9092
-        - address: 2a06:de00:50:cafe:10::102
+        - address: 2a06:de00:50:cafe:10::103
           name: backend
           port: 9092
     developer_mode: true
@@ -39,8 +39,5 @@ redpanda:
 rpk:
     overprovisioned: true
     coredump_dir: /var/lib/redpanda/coredump
-pandaproxy:
-  pandaproxy_api:
-    - address: 2a06:de00:50:cafe:10::102
-      port: 8082
+pandaproxy: {}
 schema_registry: {}
