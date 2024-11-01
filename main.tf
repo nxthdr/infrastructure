@@ -1,6 +1,7 @@
 locals {
   network_dmz_ipv4_prefix = "172.18.0.0/16"
   network_dmz_ipv6_prefix = "2a06:de00:50:cafe:100::/80"
+  
   network_backend_ipv4_prefix = "172.19.0.0/16"
   network_backend_ipv6_prefix = "2a06:de00:50:cafe:10::/80"
 }
@@ -37,9 +38,9 @@ resource "docker_image" "caddy" {
   name = "caddy:latest"
 }
 
-resource "docker_container" "lb" {
+resource "docker_container" "caddy" {
   image = docker_image.caddy.image_id
-  name  = "lb"
+  name  = "caddy"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
@@ -51,7 +52,11 @@ resource "docker_container" "lb" {
   }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
-    host_path = "/home/matthieugouel/nxthdr/lb/Caddyfile"
+    host_path = "/home/matthieugouel/nxthdr/caddy/config/Caddyfile"
+  }
+  volumes {
+    container_path = "/data"
+    host_path = "/home/matthieugouel/nxthdr/caddy/data"
   }
 }
 
@@ -108,5 +113,65 @@ resource "docker_container" "website_nxthdr" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::100"
+  }
+}
+
+## ClickHouse
+resource "docker_image" "clickhouse" {
+  name = "docker.io/clickhouse/clickhouse-server:latest"
+}
+
+resource "docker_container" "clickhouse" {
+  image = docker_image.clickhouse.image_id
+  name  = "clickhouse"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::101"
+  }
+  volumes {
+    container_path = "/var/lib/clickhouse"
+    host_path = "/home/matthieugouel/nxthdr/clickhouse"
+  }
+  ulimit {
+    name = "nofile"
+    soft = 262144
+    hard = 262144
+  }
+}
+
+## Redpanda
+resource "docker_image" "redpanda" {
+  name = "docker.vectorized.io/vectorized/redpanda:latest"
+}
+
+resource "docker_container" "redpanda" {
+  image = docker_image.redpanda.image_id
+  name  = "redpanda"
+  command = [
+    "redpanda", "start",
+    "--overprovisioned",
+    "--smp", "1",
+    "--memory", "2G",
+    "--reserve-memory", "200M",
+    "--node-id", "0",
+    "--check=false"
+  ]
+  network_mode = "bridge"
+    networks_advanced {
+    name = docker_network.dmz.name
+    ipv6_address = "2a06:de00:50:cafe:100::b"
+  }
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::102"
+  }
+  volumes {
+    container_path = "/etc/redpanda"
+    host_path = "/home/matthieugouel/nxthdr/redpanda/config"
+  }
+  volumes {
+    container_path = "/var/lib/redpanda/data"
+    host_path = "/home/matthieugouel/nxthdr/redpanda/data"
   }
 }
