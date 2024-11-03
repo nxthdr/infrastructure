@@ -41,6 +41,7 @@ resource "docker_image" "caddy" {
 resource "docker_container" "caddy" {
   image = docker_image.caddy.image_id
   name  = "caddy"
+  dns = [ "1.1.1.1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
@@ -223,7 +224,7 @@ resource "docker_image" "risotto" {
 resource "docker_container" "risotto" {
   image = docker_image.risotto.image_id
   name  = "risotto"
-  command = ["--config", "/config/risotto"]
+  command = [ "--config", "/config/risotto" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
