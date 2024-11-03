@@ -192,10 +192,10 @@ resource "docker_container" "redpanda" {
     "--check=false"
   ]
   network_mode = "bridge"
-    networks_advanced {
-    name = docker_network.dmz.name
-    ipv6_address = "2a06:de00:50:cafe:100::b"
-  }
+  # networks_advanced {
+  #   name = docker_network.dmz.name
+  #   ipv6_address = "2a06:de00:50:cafe:100::b"
+  # }
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::103"
@@ -207,5 +207,34 @@ resource "docker_container" "redpanda" {
   volumes {
     container_path = "/var/lib/redpanda/data"
     host_path = "/home/matthieugouel/nxthdr/redpanda/data"
+  }
+}
+
+## Risotto
+data "docker_registry_image" "risotto" {
+  name = "ghcr.io/nxthdr/risotto:main"
+}
+
+resource "docker_image" "risotto" {
+  name          = data.docker_registry_image.risotto.name
+  pull_triggers = [data.docker_registry_image.risotto.sha256_digest]
+}
+
+resource "docker_container" "risotto" {
+  image = docker_image.risotto.image_id
+  name  = "risotto"
+  command = ["--config", "/config/risotto"]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.dmz.name
+    ipv6_address = "2a06:de00:50:cafe:100::c"
+  }
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::104"
+  }
+  volumes {
+    container_path = "/config/risotto.yml"
+    host_path = "/home/matthieugouel/nxthdr/risotto/config/risotto.yml"
   }
 }
