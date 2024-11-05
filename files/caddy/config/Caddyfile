@@ -1,6 +1,10 @@
 {
     acme_ca https://acme-v02.api.letsencrypt.org/directory
     email admin@nxthdr.dev
+    servers {
+        metrics
+    }
+
 }
 
 # as215011.net {
@@ -20,6 +24,10 @@ clickhouse.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::102]:9090
 }
 
+prometheus.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::104]:9090
+}
+
 api.risotto.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:10::104]:3000
+    reverse_proxy [2a06:de00:50:cafe:10::1000]:3000
 }

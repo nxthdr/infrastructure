@@ -43,6 +43,7 @@ resource "docker_container" "caddy" {
   name  = "caddy"
   dns = [ "1.1.1.1" ]
   network_mode = "bridge"
+  env = ["CADDY_ADMIN=[::]:2019"]
   networks_advanced {
     name = docker_network.dmz.name
     ipv6_address = "2a06:de00:50:cafe:100::a"
@@ -211,6 +212,30 @@ resource "docker_container" "redpanda" {
   }
 }
 
+## Prometheus 
+resource "docker_image" "prometheus" {
+  name = "prom/prometheus:latest"
+}
+
+resource "docker_container" "prometheus" {
+  image = docker_image.prometheus.image_id
+  name  = "prometheus"
+  dns = [ "1.1.1.1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::104"
+  }
+  volumes {
+    container_path = "/etc/prometheus/prometheus.yml"
+    host_path = "/home/matthieugouel/nxthdr/prometheus/config/prometheus.yml"
+  }
+  volumes {
+    container_path = "/prometheus"
+    host_path = "/home/matthieugouel/nxthdr/prometheus/data"
+  }
+}
+
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"
@@ -232,7 +257,7 @@ resource "docker_container" "risotto" {
   }
   networks_advanced {
     name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::104"
+    ipv6_address = "2a06:de00:50:cafe:10::1000"
   }
   volumes {
     container_path = "/config/risotto.yml"
