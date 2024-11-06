@@ -298,6 +298,84 @@ resource "docker_container" "alertmanager" {
   }
 }
 
+## Node Exporter
+resource "docker_image" "node_exporter" {
+  name = "prom/node-exporter:latest"
+}
+
+resource "docker_container" "node_exporter" {
+  image = docker_image.node_exporter.image_id
+  name  = "node_exporter"
+  command = [ 
+    "--path.procfs=/host/proc",
+    "--path.rootfs=/rootfs",
+    "--path.sysfs=/host/sys",
+    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+  ]
+  user = "1000:1000"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::107"
+  }
+  volumes {
+    container_path = "/host/proc"
+    host_path = "/proc"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/host/sys"
+    host_path = "/sys"
+    read_only = "true"
+  }
+    volumes {
+    container_path = "/rootfs"
+    host_path = "/"
+    read_only = "true"
+  }
+}
+
+## Cadvisor
+resource "docker_image" "cadvisor" {
+  name = "gcr.io/cadvisor/cadvisor:latest"
+}
+
+resource "docker_container" "cadvisor" {
+  image = docker_image.cadvisor.image_id
+  name  = "cadvisor"
+  privileged = "true"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::108"
+  }
+  volumes {
+    container_path = "/rootfs"
+    host_path = "/"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/run"
+    host_path = "/var/run"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/sys"
+    host_path = "/sys"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/lib/docker"
+    host_path = "/var/lib/docker"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/dev/disk"
+    host_path = "/dev/disk"
+    read_only = "true"
+  }
+}
+
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"

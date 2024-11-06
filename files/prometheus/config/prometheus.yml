@@ -14,12 +14,10 @@ rule_files:
 
 scrape_configs:
   - job_name: prometheus
-    scheme: http
     static_configs:
       - targets: ['localhost:9090']
   
   - job_name: caddy
-    scheme: http
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::a]:2019']
 
@@ -40,3 +38,11 @@ scrape_configs:
       - source_labels: [__name__]
         target_label: __name__
         replacement: chproxy_$1
+
+  - job_name: node
+    static_configs:
+      - targets: ['[2a06:de00:50:cafe:10::107]:9100']
+
+  - job_name: cadvisor
+    static_configs:
+      - targets: ['[2a06:de00:50:cafe:10::108]:8080']
