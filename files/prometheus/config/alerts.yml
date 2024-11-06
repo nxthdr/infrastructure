@@ -1,0 +1,26 @@
+groups:
+- name: core-service-down
+  rules:
+  - alert: Core_Service_Caddy_Down
+    expr: up{job="caddy"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+
+  - alert: Core_Service_Redpanda_Down
+    expr: up{job="redpanda"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+
+  - alert: Core_Service_Chproxy_Down
+    expr: up{job="chproxy"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'

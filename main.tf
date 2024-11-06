@@ -130,6 +130,7 @@ resource "docker_image" "clickhouse" {
 resource "docker_container" "clickhouse" {
   image = docker_image.clickhouse.image_id
   name  = "clickhouse"
+  user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -193,6 +194,7 @@ resource "docker_container" "redpanda" {
     "--node-id", "0",
     "--check=false"
   ]
+  user = "1000:1000"
   network_mode = "bridge"
   # networks_advanced {
   #   name = docker_network.dmz.name
@@ -221,18 +223,78 @@ resource "docker_container" "prometheus" {
   image = docker_image.prometheus.image_id
   name  = "prometheus"
   dns = [ "1.1.1.1" ]
+  command = [ 
+    "--config.file=/config/prometheus.yml",
+    "--web.external-url=https://prometheus.nxthdr.dev" 
+  ]
+  user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::104"
   }
   volumes {
-    container_path = "/etc/prometheus/prometheus.yml"
+    container_path = "/config/prometheus.yml"
     host_path = "/home/matthieugouel/nxthdr/prometheus/config/prometheus.yml"
+  }
+  volumes {
+    container_path = "/config/alerts.yml"
+    host_path = "/home/matthieugouel/nxthdr/prometheus/config/alerts.yml"
   }
   volumes {
     container_path = "/prometheus"
     host_path = "/home/matthieugouel/nxthdr/prometheus/data"
+  }
+}
+
+## Grafana 
+resource "docker_image" "grafana" {
+  name = "grafana/grafana:latest"
+}
+
+resource "docker_container" "grafana" {
+  image = docker_image.grafana.image_id
+  name  = "grafana"
+  user = "1000:1000"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::105"
+  }
+  volumes {
+    container_path = "/etc/grafana/grafana.ini"
+    host_path = "/home/matthieugouel/nxthdr/grafana/config/grafana.ini"
+  }
+  volumes {
+    container_path = "/var/lib/grafana"
+    host_path = "/home/matthieugouel/nxthdr/grafana/data"
+  }
+}
+
+## Alertmanager 
+resource "docker_image" "alertmanager" {
+  name = "prom/alertmanager:latest"
+}
+
+resource "docker_container" "alertmanager" {
+  image = docker_image.alertmanager.image_id
+  name  = "alertmanager"
+  command = [ 
+    "--config.file=/config/alertmanager.yml",
+    "--storage.path=/data"
+  ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::106"
+  }
+  volumes {
+    container_path = "/config/alertmanager.yml"
+    host_path = "/home/matthieugouel/nxthdr/alertmanager/config/alertmanager.yml"
+  }
+  volumes {
+    container_path = "/data"
+    host_path = "/home/matthieugouel/nxthdr/alertmanager/data"
   }
 }
 

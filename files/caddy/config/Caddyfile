@@ -28,6 +28,10 @@ prometheus.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::104]:9090
 }
 
+grafana.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::105]:3000
+}
+
 api.risotto.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::1000]:3000
 }
