@@ -137,6 +137,10 @@ resource "docker_container" "clickhouse" {
     ipv6_address = "2a06:de00:50:cafe:10::101"
   }
   volumes {
+    container_path = "/etc/clickhouse-server/config.d"
+    host_path = "/home/matthieugouel/nxthdr/clickhouse/config/config.d"
+  }
+  volumes {
     container_path = "/etc/clickhouse-server/users.d"
     host_path = "/home/matthieugouel/nxthdr/clickhouse/config/users.d"
   }
