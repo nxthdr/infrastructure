@@ -51,6 +51,10 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::108]:8080']
 
+  - job_name: loki
+    static_configs:
+      - targets: ['[2a06:de00:50:cafe:10::109]:3100']
+
   - job_name: risotto
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::1000]:3000']

@@ -41,7 +41,11 @@ resource "docker_image" "caddy" {
 resource "docker_container" "proxy" {
   image = docker_image.caddy.image_id
   name  = "proxy"
-  dns = [ "1.1.1.1" ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2606:4700:4700::1111", "2606:4700:4700::1001" ]
   env = ["CADDY_ADMIN=[::]:2019"]
   user = "1000:1000"
   network_mode = "bridge"
@@ -77,6 +81,10 @@ resource "docker_image" "website_nxthdr" {
 resource "docker_container" "website_as215011" {
   image = docker_image.website_nxthdr.image_id
   name  = "website_as215011"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -92,6 +100,10 @@ resource "docker_image" "nginx" {
 resource "docker_container" "geofeed" {
   image = docker_image.nginx.image_id
   name  = "geofeed"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -112,6 +124,10 @@ resource "docker_container" "geofeed" {
 resource "docker_container" "website_nxthdr" {
   image = docker_image.website_nxthdr.image_id
   name  = "website_nxthdr"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -127,6 +143,10 @@ resource "docker_image" "clickhouse" {
 resource "docker_container" "clickhouse" {
   image = docker_image.clickhouse.image_id
   name  = "clickhouse"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
@@ -163,11 +183,15 @@ resource "docker_image" "chproxy" {
 resource "docker_container" "chproxy" {
   image = docker_image.chproxy.image_id
   name  = "chproxy"
-  network_mode = "bridge"
   command = [
     "-config", "/config/config.yml",
     "-enableTCP6"
   ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::102"
@@ -195,6 +219,10 @@ resource "docker_container" "redpanda" {
     "--node-id", "0",
     "--check=false"
   ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   user = "1000:1000"
   network_mode = "bridge"
   # networks_advanced {
@@ -223,7 +251,10 @@ resource "docker_image" "prometheus" {
 resource "docker_container" "prometheus" {
   image = docker_image.prometheus.image_id
   name  = "prometheus"
-  dns = [ "1.1.1.1" ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   command = [ 
     "--config.file=/config/prometheus.yml",
     "--web.external-url=https://prometheus.nxthdr.dev" 
@@ -256,6 +287,10 @@ resource "docker_image" "grafana" {
 resource "docker_container" "grafana" {
   image = docker_image.grafana.image_id
   name  = "grafana"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
@@ -284,6 +319,10 @@ resource "docker_container" "alertmanager" {
     "--config.file=/config/alertmanager.yml",
     "--storage.path=/data"
   ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -313,6 +352,10 @@ resource "docker_container" "node_exporter" {
     "--path.sysfs=/host/sys",
     "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
@@ -344,6 +387,10 @@ resource "docker_image" "cadvisor" {
 resource "docker_container" "cadvisor" {
   image = docker_image.cadvisor.image_id
   name  = "cadvisor"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   privileged = "true"
   network_mode = "bridge"
   networks_advanced {
@@ -377,6 +424,69 @@ resource "docker_container" "cadvisor" {
   }
 }
 
+## Loki
+resource "docker_image" "loki" {
+  name = "grafana/loki:latest"
+}
+
+resource "docker_container" "loki" {
+  image = docker_image.loki.image_id
+  name  = "loki"
+  command = [ 
+    "-config.file=/config/loki.yml"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  user = "1000:1000"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::109"
+  }
+  volumes {
+    container_path = "/config/loki.yml"
+    host_path = "/home/matthieugouel/nxthdr/loki/config/loki.yml"
+  }
+  volumes {
+    container_path = "/loki"
+    host_path = "/home/matthieugouel/nxthdr/loki/data"
+  }
+}
+
+## Promtail
+resource "docker_image" "promtail" {
+  name = "grafana/promtail:latest"
+}
+
+resource "docker_container" "promtail" {
+  image = docker_image.promtail.image_id
+  name  = "promtail"
+  command = [ 
+    "-config.file=/config/promtail.yml"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  privileged = "true"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::110"
+  }
+  volumes {
+    container_path = "/config/promtail.yml"
+    host_path = "/home/matthieugouel/nxthdr/promtail/config/promtail.yml"
+  }
+  volumes {
+    container_path = "/var/lib/docker/containers"
+    host_path = "/var/lib/docker/containers"
+    read_only = "true"
+  }
+}
+
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"
@@ -391,6 +501,10 @@ resource "docker_container" "risotto" {
   image = docker_image.risotto.image_id
   name  = "risotto"
   command = [ "--config", "/config/risotto" ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name

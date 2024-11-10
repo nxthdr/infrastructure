@@ -24,15 +24,15 @@
 # }
 
 # # DMZ 
-# resource "porkbun_dns_record" "lb" {
+# resource "porkbun_dns_record" "proxy" {
 #   domain   = "nxthdr.dev"
-#   name     = "lb"
+#   name     = "proxy"
 #   type     = "AAAA"
 #   content  = "2a06:de00:50:cafe:100::a"
 
 # }
 
-# # Services behind LB
+# # Services behind reverse proxy
 # resource "porkbun_dns_record" "backends" {
 #   domain   = "nxthdr.dev"
 #   name     = "*"
