@@ -38,12 +38,13 @@ resource "docker_image" "caddy" {
   name = "caddy:latest"
 }
 
-resource "docker_container" "caddy" {
+resource "docker_container" "proxy" {
   image = docker_image.caddy.image_id
-  name  = "caddy"
+  name  = "proxy"
   dns = [ "1.1.1.1" ]
-  network_mode = "bridge"
   env = ["CADDY_ADMIN=[::]:2019"]
+  user = "1000:1000"
+  network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
     ipv6_address = "2a06:de00:50:cafe:100::a"
@@ -54,15 +55,11 @@ resource "docker_container" "caddy" {
   }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
-    host_path = "/home/matthieugouel/nxthdr/caddy/config/Caddyfile"
+    host_path = "/home/matthieugouel/nxthdr/proxy/config/Caddyfile"
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/matthieugouel/nxthdr/caddy/data"
-  }
-  volumes {
-    container_path = "/certs"
-    host_path = "/home/matthieugouel/nxthdr/caddy/certs"
+    host_path = "/home/matthieugouel/nxthdr/proxy/data"
   }
 }
 

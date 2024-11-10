@@ -1,8 +1,8 @@
 groups:
 - name: core-service-down
   rules:
-  - alert: Core_Service_Caddy_Down
-    expr: up{job="caddy"} == 0
+  - alert: Core_Service_Proxy_Down
+    expr: up{job="proxy"} == 0
     for: 1m
     labels:
       severity: critical
@@ -17,6 +17,14 @@ groups:
     annotations:
       title: 'core service {{ $labels.job }} is down'
 
+  - alert: Core_Service_Clickhouse_Down
+    expr: up{job="clickhouse"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+
   - alert: Core_Service_Chproxy_Down
     expr: up{job="chproxy"} == 0
     for: 1m
@@ -24,3 +32,49 @@ groups:
       severity: critical
     annotations:
       title: 'core service {{ $labels.job }} is down'
+
+  - alert: Core_Service_Cadvisor_Down
+    expr: up{job="cadvisor"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+
+  - alert: Core_Service_Node_Exporter_Down
+    expr: up{job="node-exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+
+  - alert: Core_Service_Risotto_Down
+    expr: up{job="risotto"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'core service {{ $labels.job }} is down'
+  
+
+- name: hardware
+  rules:
+  - alert: Disk_Full
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'disk is almost full'
+
+
+- name: risotto
+  rules:
+  - alert: Risotto_No_BGP_Peers
+    expr: absent(risotto_bgp_peers)
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'risotto reports no BGP peers'

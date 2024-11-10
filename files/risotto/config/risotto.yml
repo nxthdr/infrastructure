@@ -11,4 +11,4 @@ kafka:
   port: 9092
   topic: bgp-updates
   batch_max_size: 1000
-  batch_wait: 5
+  batch_interval: 5

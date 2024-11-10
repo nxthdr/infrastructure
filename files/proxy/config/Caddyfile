@@ -4,12 +4,11 @@
     servers {
         metrics
     }
-
 }
 
-# as215011.net {
-#     reverse_proxy [2a06:de00:50:cafe:10::10]:80
-# }
+as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:10::10]:80
+}
 
 geofeed.as215011.net {
     reverse_proxy [2a06:de00:50:cafe:10::11]:80
@@ -17,7 +16,6 @@ geofeed.as215011.net {
 
 nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::100]:80
-    tls /certs/nxthdr.dev/certificate.crt /certs/nxthdr.dev/private.key
 }
 
 clickhouse.nxthdr.dev {
