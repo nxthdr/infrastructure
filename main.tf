@@ -85,6 +85,7 @@ resource "docker_container" "website_as215011" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
+  env = ["CADDY_ADMIN=[::]:2019"]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -93,28 +94,25 @@ resource "docker_container" "website_as215011" {
 }
 
 ## Geofeed
-resource "docker_image" "nginx" {
-  name = "nginx:latest"
-}
-
 resource "docker_container" "geofeed" {
-  image = docker_image.nginx.image_id
+  image = docker_image.caddy.image_id
   name  = "geofeed"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
+  env = ["CADDY_ADMIN=[::]:2019"]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::11"
   }
   volumes {
-    container_path = "/etc/nginx/conf.d/default.conf"
-    host_path = "/home/matthieugouel/nxthdr/geofeed/config/default.conf"
+    container_path = "/etc/caddy/Caddyfile"
+    host_path = "/home/matthieugouel/nxthdr/geofeed/config/Caddyfile"
   }
   volumes {
-    container_path = "/usr/share/nginx/html"
+    container_path = "/www/html"
     host_path = "/home/matthieugouel/nxthdr/geofeed/data/html"
   }
 }
@@ -128,6 +126,7 @@ resource "docker_container" "website_nxthdr" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
+  env = ["CADDY_ADMIN=[::]:2019"]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name

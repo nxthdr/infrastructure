@@ -1,0 +1,10 @@
+{
+    servers {
+        metrics
+    }
+}
+
+:80 {
+    root * /www/html
+    file_server   
+}
