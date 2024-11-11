@@ -380,7 +380,7 @@ resource "docker_container" "node_exporter" {
 
 ## Cadvisor
 resource "docker_image" "cadvisor" {
-  name = "gcr.io/cadvisor/cadvisor:v0.49.1"
+  name = "gcr.io/cadvisor/cadvisor:v0.51.0"
 }
 
 resource "docker_container" "cadvisor" {
