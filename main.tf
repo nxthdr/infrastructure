@@ -35,7 +35,7 @@ resource "docker_network" "backend" {
 # DMZ services
 ## Reverse Proxy
 resource "docker_image" "caddy" {
-  name = "caddy:2.8"
+  name = "caddy:2.9"
 }
 
 resource "docker_container" "proxy" {
