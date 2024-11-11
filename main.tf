@@ -45,7 +45,7 @@ resource "docker_container" "proxy" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2606:4700:4700::1111", "2606:4700:4700::1001" ]
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
   env = ["CADDY_ADMIN=[::]:2019"]
   user = "1000:1000"
   network_mode = "bridge"
@@ -516,5 +516,37 @@ resource "docker_container" "risotto" {
   volumes {
     container_path = "/config/risotto.yml"
     host_path = "/home/matthieugouel/nxthdr/risotto/config/risotto.yml"
+  }
+}
+
+## chbot
+data "docker_registry_image" "chbot" {
+  name = "ghcr.io/nxthdr/chbot:main"
+}
+
+resource "docker_image" "chbot" {
+  name          = data.docker_registry_image.chbot.name
+  pull_triggers = [data.docker_registry_image.chbot.sha256_digest]
+}
+
+resource "docker_container" "chbot" {
+  image = docker_image.chbot.image_id
+  name  = "chbot"
+  command = [
+    "--url", "http://[2a06:de00:50:cafe:10::102]:9090", 
+    "--user", "read", 
+    "--password", "read",  # public read-only access
+    "--output-limit", "20",
+    "--token", var.chbot_discord_token
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1001"
   }
 }
