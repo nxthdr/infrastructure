@@ -35,7 +35,7 @@ resource "docker_network" "backend" {
 # DMZ services
 ## Reverse Proxy
 resource "docker_image" "caddy" {
-  name = "caddy:latest"
+  name = "caddy:2.8"
 }
 
 resource "docker_container" "proxy" {
@@ -136,7 +136,7 @@ resource "docker_container" "website_nxthdr" {
 
 ## ClickHouse
 resource "docker_image" "clickhouse" {
-  name = "docker.io/clickhouse/clickhouse-server:latest"
+  name = "docker.io/clickhouse/clickhouse-server:24.3.13"
 }
 
 resource "docker_container" "clickhouse" {
@@ -203,7 +203,7 @@ resource "docker_container" "chproxy" {
 
 ## Redpanda
 resource "docker_image" "redpanda" {
-  name = "docker.vectorized.io/vectorized/redpanda:latest"
+  name = "docker.vectorized.io/vectorized/redpanda:v24.2.9"
 }
 
 resource "docker_container" "redpanda" {
@@ -244,7 +244,7 @@ resource "docker_container" "redpanda" {
 
 ## Prometheus 
 resource "docker_image" "prometheus" {
-  name = "prom/prometheus:latest"
+  name = "prom/prometheus:v2.55.1"
 }
 
 resource "docker_container" "prometheus" {
@@ -280,7 +280,7 @@ resource "docker_container" "prometheus" {
 
 ## Grafana 
 resource "docker_image" "grafana" {
-  name = "grafana/grafana:latest"
+  name = "grafana/grafana:10.4.12"
 }
 
 resource "docker_container" "grafana" {
@@ -308,7 +308,7 @@ resource "docker_container" "grafana" {
 
 ## Alertmanager 
 resource "docker_image" "alertmanager" {
-  name = "prom/alertmanager:latest"
+  name = "prom/alertmanager:v0.27.0"
 }
 
 resource "docker_container" "alertmanager" {
@@ -339,7 +339,7 @@ resource "docker_container" "alertmanager" {
 
 ## Node Exporter
 resource "docker_image" "node_exporter" {
-  name = "prom/node-exporter:latest"
+  name = "prom/node-exporter:v1.8.2"
 }
 
 resource "docker_container" "node_exporter" {
@@ -380,7 +380,7 @@ resource "docker_container" "node_exporter" {
 
 ## Cadvisor
 resource "docker_image" "cadvisor" {
-  name = "gcr.io/cadvisor/cadvisor:latest"
+  name = "gcr.io/cadvisor/cadvisor:v0.49.1"
 }
 
 resource "docker_container" "cadvisor" {
@@ -425,7 +425,7 @@ resource "docker_container" "cadvisor" {
 
 ## Loki
 resource "docker_image" "loki" {
-  name = "grafana/loki:latest"
+  name = "grafana/loki:3.2.1"
 }
 
 resource "docker_container" "loki" {
@@ -456,7 +456,7 @@ resource "docker_container" "loki" {
 
 ## Promtail
 resource "docker_image" "promtail" {
-  name = "grafana/promtail:latest"
+  name = "grafana/promtail:3.1.2"
 }
 
 resource "docker_container" "promtail" {
