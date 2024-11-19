@@ -456,7 +456,7 @@ resource "docker_container" "loki" {
 
 ## Promtail
 resource "docker_image" "promtail" {
-  name = "grafana/promtail:3.2.1"
+  name = "grafana/promtail:3.3.0"
 }
 
 resource "docker_container" "promtail" {
