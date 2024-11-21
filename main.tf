@@ -176,7 +176,7 @@ resource "docker_container" "clickhouse" {
 
 ## Chproxy
 resource "docker_image" "chproxy" {
-  name = "contentsquareplatform/chproxy:v1.26.5"
+  name = "contentsquareplatform/chproxy:v1.26.6"
 }
 
 resource "docker_container" "chproxy" {
