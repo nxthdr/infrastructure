@@ -486,6 +486,30 @@ resource "docker_container" "promtail" {
   }
 }
 
+## Redis
+# resource "docker_image" "redis" {
+#   name = "redis:7.4.1"
+# }
+
+# resource "docker_container" "redis" {
+#   image = docker_image.redis.image_id
+#   name  = "redis"
+#   log_driver = "json-file"
+#   log_opts = {
+#     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+#   }
+#   user = "1000:1000"
+#   network_mode = "bridge"
+#   networks_advanced {
+#     name = docker_network.backend.name
+#     ipv6_address = "2a06:de00:50:cafe:10::111"
+#   }
+#   volumes {
+#     container_path = "/data"
+#     host_path = "/home/matthieugouel/nxthdr/redis/data"
+#   }
+# }
+
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"
@@ -516,6 +540,10 @@ resource "docker_container" "risotto" {
   volumes {
     container_path = "/config/risotto.yml"
     host_path = "/home/matthieugouel/nxthdr/risotto/config/risotto.yml"
+  }
+  volumes {
+    container_path = "/data"
+    host_path = "/home/matthieugouel/nxthdr/risotto/data"
   }
 }
 

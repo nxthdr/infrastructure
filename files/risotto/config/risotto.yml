@@ -12,3 +12,7 @@ kafka:
   topic: bgp-updates
   batch_max_size: 1000
   batch_interval: 5
+
+state:
+  path: /data/dump.json
+  save_interval: 10
