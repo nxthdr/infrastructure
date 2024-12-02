@@ -14,5 +14,6 @@ kafka:
   batch_interval: 5
 
 state:
+  enable: true
   path: /data/dump.json
   save_interval: 10

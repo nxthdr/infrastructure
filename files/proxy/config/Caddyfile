@@ -14,6 +14,10 @@ geofeed.as215011.net {
     reverse_proxy [2a06:de00:50:cafe:10::11]:80
 }
 
+peers.as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:10::12]:80
+}
+
 nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::100]:80
 }
@@ -37,3 +41,4 @@ grafana.nxthdr.dev {
 api.risotto.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::1000]:3000
 }
+

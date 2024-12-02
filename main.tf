@@ -1,7 +1,7 @@
 locals {
   network_dmz_ipv4_prefix = "172.18.0.0/16"
   network_dmz_ipv6_prefix = "2a06:de00:50:cafe:100::/80"
-  
+
   network_backend_ipv4_prefix = "172.19.0.0/16"
   network_backend_ipv6_prefix = "2a06:de00:50:cafe:10::/80"
 }
@@ -68,7 +68,7 @@ resource "docker_container" "proxy" {
 }
 
 # `as215011.net` backend services
-## as215011 Website 
+## as215011 Website
 data "docker_registry_image" "website_nxthdr" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
 }
@@ -114,6 +114,31 @@ resource "docker_container" "geofeed" {
   volumes {
     container_path = "/www/html"
     host_path = "/home/matthieugouel/nxthdr/geofeed/data/html"
+  }
+}
+
+## Peers
+data "docker_registry_image" "peers" {
+  name = "ghcr.io/nxthdr/peers:main"
+}
+
+resource "docker_image" "peers" {
+  name          = data.docker_registry_image.peers.name
+  pull_triggers = [data.docker_registry_image.peers.sha256_digest]
+}
+
+resource "docker_container" "peers" {
+  image = docker_image.peers.image_id
+  name  = "peers"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::12"
   }
 }
 
@@ -176,7 +201,7 @@ resource "docker_container" "clickhouse" {
 
 ## Chproxy
 resource "docker_image" "chproxy" {
-  name = "contentsquareplatform/chproxy:v1.26.6"
+  name = "ttl.sh/chproxy:1h"
 }
 
 resource "docker_container" "chproxy" {
@@ -242,7 +267,7 @@ resource "docker_container" "redpanda" {
   }
 }
 
-## Prometheus 
+## Prometheus
 resource "docker_image" "prometheus" {
   name = "prom/prometheus:v3.0.1"
 }
@@ -254,9 +279,9 @@ resource "docker_container" "prometheus" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  command = [ 
+  command = [
     "--config.file=/config/prometheus.yml",
-    "--web.external-url=https://prometheus.nxthdr.dev" 
+    "--web.external-url=https://prometheus.nxthdr.dev"
   ]
   user = "1000:1000"
   network_mode = "bridge"
@@ -278,7 +303,7 @@ resource "docker_container" "prometheus" {
   }
 }
 
-## Grafana 
+## Grafana
 resource "docker_image" "grafana" {
   name = "grafana/grafana:11.3.1"
 }
@@ -306,7 +331,7 @@ resource "docker_container" "grafana" {
   }
 }
 
-## Alertmanager 
+## Alertmanager
 resource "docker_image" "alertmanager" {
   name = "prom/alertmanager:v0.27.0"
 }
@@ -314,7 +339,7 @@ resource "docker_image" "alertmanager" {
 resource "docker_container" "alertmanager" {
   image = docker_image.alertmanager.image_id
   name  = "alertmanager"
-  command = [ 
+  command = [
     "--config.file=/config/alertmanager.yml",
     "--storage.path=/data"
   ]
@@ -345,7 +370,7 @@ resource "docker_image" "node_exporter" {
 resource "docker_container" "node_exporter" {
   image = docker_image.node_exporter.image_id
   name  = "node_exporter"
-  command = [ 
+  command = [
     "--path.procfs=/host/proc",
     "--path.rootfs=/rootfs",
     "--path.sysfs=/host/sys",
@@ -431,7 +456,7 @@ resource "docker_image" "loki" {
 resource "docker_container" "loki" {
   image = docker_image.loki.image_id
   name  = "loki"
-  command = [ 
+  command = [
     "-config.file=/config/loki.yml"
   ]
   log_driver = "json-file"
@@ -462,7 +487,7 @@ resource "docker_image" "promtail" {
 resource "docker_container" "promtail" {
   image = docker_image.promtail.image_id
   name  = "promtail"
-  command = [ 
+  command = [
     "-config.file=/config/promtail.yml"
   ]
   log_driver = "json-file"
@@ -561,8 +586,8 @@ resource "docker_container" "chbot" {
   image = docker_image.chbot.image_id
   name  = "chbot"
   command = [
-    "--url", "http://[2a06:de00:50:cafe:10::102]:9090", 
-    "--user", "read", 
+    "--url", "http://[2a06:de00:50:cafe:10::102]:9090",
+    "--user", "read",
     "--password", "read",  # public read-only access
     "--output-limit", "20",
     "--token", var.chbot_discord_token

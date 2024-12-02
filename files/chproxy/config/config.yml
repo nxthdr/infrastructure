@@ -5,9 +5,10 @@ server:
 
 users:
   - name: "read"
+    password: "read"
     to_cluster: "chproxy"
     to_user: "chproxy"
-    password: "read"
+    allow_cors: true
 
 clusters:
   - name: "chproxy"
