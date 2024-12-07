@@ -16,7 +16,7 @@ scrape_configs:
   - job_name: prometheus
     static_configs:
       - targets: ['localhost:9090']
-  
+
   - job_name: proxy
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::a]:2019']
@@ -29,7 +29,7 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::11]:2019']
 
-  - job_name: nexthdr.dev
+  - job_name: nxthdr.dev
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::100]:2019']
 
@@ -54,7 +54,7 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::103]:9644']
     metrics_path: /public_metrics
-  
+
   - job_name: node-exporter
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::107]:9100']
@@ -66,7 +66,7 @@ scrape_configs:
   - job_name: loki
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::109]:3100']
-      
+
   - job_name: risotto
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::1000]:3000']
