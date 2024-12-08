@@ -1,0 +1,31 @@
+{
+    acme_ca https://acme-v02.api.letsencrypt.org/directory
+    email admin@nxthdr.dev
+    servers {
+        metrics
+    }
+}
+
+geofeed.as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}

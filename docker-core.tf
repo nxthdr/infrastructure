@@ -36,11 +36,13 @@ resource "docker_network" "backend" {
 ## Reverse Proxy
 resource "docker_image" "caddy" {
   name = "caddy:2.9"
+  provider = docker.core
 }
 
 resource "docker_container" "proxy" {
   image = docker_image.caddy.image_id
   name  = "proxy"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -71,16 +73,19 @@ resource "docker_container" "proxy" {
 ## as215011 Website
 data "docker_registry_image" "website_nxthdr" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
+  provider = docker.core
 }
 
 resource "docker_image" "website_nxthdr" {
   name          = data.docker_registry_image.website_nxthdr.name
+  provider = docker.core
   pull_triggers = [data.docker_registry_image.website_nxthdr.sha256_digest]
 }
 
 resource "docker_container" "website_as215011" {
   image = docker_image.website_nxthdr.image_id
   name  = "website_as215011"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -97,6 +102,7 @@ resource "docker_container" "website_as215011" {
 resource "docker_container" "geofeed" {
   image = docker_image.caddy.image_id
   name  = "geofeed"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -120,16 +126,19 @@ resource "docker_container" "geofeed" {
 ## Peers
 data "docker_registry_image" "peers" {
   name = "ghcr.io/nxthdr/peers:main"
+  provider = docker.core
 }
 
 resource "docker_image" "peers" {
   name          = data.docker_registry_image.peers.name
+  provider = docker.core
   pull_triggers = [data.docker_registry_image.peers.sha256_digest]
 }
 
 resource "docker_container" "peers" {
   image = docker_image.peers.image_id
   name  = "peers"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -147,6 +156,7 @@ resource "docker_container" "peers" {
 resource "docker_container" "website_nxthdr" {
   image = docker_image.website_nxthdr.image_id
   name  = "website_nxthdr"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -162,11 +172,13 @@ resource "docker_container" "website_nxthdr" {
 ## ClickHouse
 resource "docker_image" "clickhouse" {
   name = "docker.io/clickhouse/clickhouse-server:24.11.1"
+  provider = docker.core
 }
 
 resource "docker_container" "clickhouse" {
   image = docker_image.clickhouse.image_id
   name  = "clickhouse"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -202,11 +214,13 @@ resource "docker_container" "clickhouse" {
 ## Chproxy
 resource "docker_image" "chproxy" {
   name = "ttl.sh/chproxy:1h"
+  provider = docker.core
 }
 
 resource "docker_container" "chproxy" {
   image = docker_image.chproxy.image_id
   name  = "chproxy"
+  provider = docker.core
   command = [
     "-config", "/config/config.yml",
     "-enableTCP6"
@@ -229,11 +243,13 @@ resource "docker_container" "chproxy" {
 ## Redpanda
 resource "docker_image" "redpanda" {
   name = "docker.vectorized.io/vectorized/redpanda:v24.2.9"
+  provider = docker.core
 }
 
 resource "docker_container" "redpanda" {
   image = docker_image.redpanda.image_id
   name  = "redpanda"
+  provider = docker.core
   command = [
     "redpanda", "start",
     "--overprovisioned",
@@ -270,11 +286,13 @@ resource "docker_container" "redpanda" {
 ## Prometheus
 resource "docker_image" "prometheus" {
   name = "prom/prometheus:v3.0.1"
+  provider = docker.core
 }
 
 resource "docker_container" "prometheus" {
   image = docker_image.prometheus.image_id
   name  = "prometheus"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -306,11 +324,13 @@ resource "docker_container" "prometheus" {
 ## Grafana
 resource "docker_image" "grafana" {
   name = "grafana/grafana:11.4.0"
+  provider = docker.core
 }
 
 resource "docker_container" "grafana" {
   image = docker_image.grafana.image_id
   name  = "grafana"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -334,11 +354,13 @@ resource "docker_container" "grafana" {
 ## Alertmanager
 resource "docker_image" "alertmanager" {
   name = "prom/alertmanager:v0.27.0"
+  provider = docker.core
 }
 
 resource "docker_container" "alertmanager" {
   image = docker_image.alertmanager.image_id
   name  = "alertmanager"
+  provider = docker.core
   command = [
     "--config.file=/config/alertmanager.yml",
     "--storage.path=/data"
@@ -365,11 +387,13 @@ resource "docker_container" "alertmanager" {
 ## Node Exporter
 resource "docker_image" "node_exporter" {
   name = "prom/node-exporter:v1.8.2"
+  provider = docker.core
 }
 
 resource "docker_container" "node_exporter" {
   image = docker_image.node_exporter.image_id
   name  = "node_exporter"
+  provider = docker.core
   command = [
     "--path.procfs=/host/proc",
     "--path.rootfs=/rootfs",
@@ -406,11 +430,13 @@ resource "docker_container" "node_exporter" {
 ## Cadvisor
 resource "docker_image" "cadvisor" {
   name = "gcr.io/cadvisor/cadvisor:v0.51.0"
+  provider = docker.core
 }
 
 resource "docker_container" "cadvisor" {
   image = docker_image.cadvisor.image_id
   name  = "cadvisor"
+  provider = docker.core
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -451,11 +477,13 @@ resource "docker_container" "cadvisor" {
 ## Loki
 resource "docker_image" "loki" {
   name = "grafana/loki:3.3.1"
+  provider = docker.core
 }
 
 resource "docker_container" "loki" {
   image = docker_image.loki.image_id
   name  = "loki"
+  provider = docker.core
   command = [
     "-config.file=/config/loki.yml"
   ]
@@ -482,11 +510,13 @@ resource "docker_container" "loki" {
 ## Promtail
 resource "docker_image" "promtail" {
   name = "grafana/promtail:3.3.1"
+  provider = docker.core
 }
 
 resource "docker_container" "promtail" {
   image = docker_image.promtail.image_id
   name  = "promtail"
+  provider = docker.core
   command = [
     "-config.file=/config/promtail.yml"
   ]
@@ -514,11 +544,13 @@ resource "docker_container" "promtail" {
 ## Redis
 # resource "docker_image" "redis" {
 #   name = "redis:7.4.1"
+#   provider = docker.core
 # }
 
 # resource "docker_container" "redis" {
 #   image = docker_image.redis.image_id
 #   name  = "redis"
+#   provider = docker.core
 #   log_driver = "json-file"
 #   log_opts = {
 #     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -538,16 +570,19 @@ resource "docker_container" "promtail" {
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"
+  provider = docker.core
 }
 
 resource "docker_image" "risotto" {
   name          = data.docker_registry_image.risotto.name
+  provider = docker.core
   pull_triggers = [data.docker_registry_image.risotto.sha256_digest]
 }
 
 resource "docker_container" "risotto" {
   image = docker_image.risotto.image_id
   name  = "risotto"
+  provider = docker.core
   command = [ "--config", "/config/risotto" ]
   log_driver = "json-file"
   log_opts = {
@@ -575,16 +610,19 @@ resource "docker_container" "risotto" {
 ## chbot
 data "docker_registry_image" "chbot" {
   name = "ghcr.io/nxthdr/chbot:main"
+  provider = docker.core
 }
 
 resource "docker_image" "chbot" {
   name          = data.docker_registry_image.chbot.name
+  provider = docker.core
   pull_triggers = [data.docker_registry_image.chbot.sha256_digest]
 }
 
 resource "docker_container" "chbot" {
   image = docker_image.chbot.image_id
   name  = "chbot"
+  provider = docker.core
   command = [
     "--url", "http://[2a06:de00:50:cafe:10::102]:9090",
     "--user", "read",
