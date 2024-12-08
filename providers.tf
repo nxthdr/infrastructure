@@ -18,8 +18,8 @@ provider "docker" {
 }
 
 provider "docker" {
-  host     = "ssh://root@ams.sc.infra.nxthdr.dev:22"
-  alias = "ams-sc"
+  host     = "ssh://root@ams.sw.infra.nxthdr.dev:22"
+  alias = "ams-sw"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 

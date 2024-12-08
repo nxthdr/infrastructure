@@ -1,12 +1,12 @@
-resource "docker_image" "ams-sc-caddy" {
+resource "docker_image" "ams-sw-caddy" {
   name = "caddy:2.9"
-  provider = docker.ams-sc
+  provider = docker.ams-sw
 }
 
-resource "docker_container" "ams-sc-proxy" {
-  image = docker_image.ams-sc-caddy.image_id
+resource "docker_container" "ams-sw-proxy" {
+  image = docker_image.ams-sw-caddy.image_id
   name  = "proxy"
-  provider = docker.ams-sc
+  provider = docker.ams-sw
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
