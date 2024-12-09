@@ -1,6 +1,6 @@
 .PHONY: sync
 sync:
-	rsync -r files/core/* core.infra.nxthdr.dev:~/nxthdr
+	rsync -r files/core/* nxthdr@core.infra.nxthdr.dev:~
 	rsync -r files/ams-sw/* nxthdr@ams.sw.infra.nxthdr.dev:~
 	rsync -r files/waw-sw/* nxthdr@waw.sw.infra.nxthdr.dev:~
 

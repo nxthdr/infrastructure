@@ -61,11 +61,11 @@ resource "docker_container" "proxy" {
   }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
-    host_path = "/home/matthieugouel/nxthdr/proxy/config/Caddyfile"
+    host_path = "/home/nxthdr/proxy/config/Caddyfile"
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/matthieugouel/nxthdr/proxy/data"
+    host_path = "/home/nxthdr/proxy/data"
   }
 }
 
@@ -115,11 +115,11 @@ resource "docker_container" "geofeed" {
   }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
-    host_path = "/home/matthieugouel/nxthdr/geofeed/config/Caddyfile"
+    host_path = "/home/nxthdr/geofeed/config/Caddyfile"
   }
   volumes {
     container_path = "/www/html"
-    host_path = "/home/matthieugouel/nxthdr/geofeed/data/html"
+    host_path = "/home/nxthdr/geofeed/data/html"
   }
 }
 
@@ -191,15 +191,15 @@ resource "docker_container" "clickhouse" {
   }
   volumes {
     container_path = "/etc/clickhouse-server/config.d"
-    host_path = "/home/matthieugouel/nxthdr/clickhouse/config/config.d"
+    host_path = "/home/nxthdr/clickhouse/config/config.d"
   }
   volumes {
     container_path = "/etc/clickhouse-server/users.d"
-    host_path = "/home/matthieugouel/nxthdr/clickhouse/config/users.d"
+    host_path = "/home/nxthdr/clickhouse/config/users.d"
   }
   volumes {
     container_path = "/var/lib/clickhouse"
-    host_path = "/home/matthieugouel/nxthdr/clickhouse/data"
+    host_path = "/home/nxthdr/clickhouse/data"
   }
   capabilities {
     add = [ "SYS_NICE", "NET_ADMIN", "IPC_LOCK" ]
@@ -236,7 +236,7 @@ resource "docker_container" "chproxy" {
   }
   volumes {
     container_path = "/config"
-    host_path = "/home/matthieugouel/nxthdr/chproxy/config"
+    host_path = "/home/nxthdr/chproxy/config"
   }
 }
 
@@ -275,11 +275,11 @@ resource "docker_container" "redpanda" {
   }
   volumes {
     container_path = "/etc/redpanda"
-    host_path = "/home/matthieugouel/nxthdr/redpanda/config"
+    host_path = "/home/nxthdr/redpanda/config"
   }
   volumes {
     container_path = "/var/lib/redpanda/data"
-    host_path = "/home/matthieugouel/nxthdr/redpanda/data"
+    host_path = "/home/nxthdr/redpanda/data"
   }
 }
 
@@ -309,15 +309,15 @@ resource "docker_container" "prometheus" {
   }
   volumes {
     container_path = "/config/prometheus.yml"
-    host_path = "/home/matthieugouel/nxthdr/prometheus/config/prometheus.yml"
+    host_path = "/home/nxthdr/prometheus/config/prometheus.yml"
   }
   volumes {
     container_path = "/config/alerts.yml"
-    host_path = "/home/matthieugouel/nxthdr/prometheus/config/alerts.yml"
+    host_path = "/home/nxthdr/prometheus/config/alerts.yml"
   }
   volumes {
     container_path = "/prometheus"
-    host_path = "/home/matthieugouel/nxthdr/prometheus/data"
+    host_path = "/home/nxthdr/prometheus/data"
   }
 }
 
@@ -343,11 +343,11 @@ resource "docker_container" "grafana" {
   }
   volumes {
     container_path = "/etc/grafana/grafana.ini"
-    host_path = "/home/matthieugouel/nxthdr/grafana/config/grafana.ini"
+    host_path = "/home/nxthdr/grafana/config/grafana.ini"
   }
   volumes {
     container_path = "/var/lib/grafana"
-    host_path = "/home/matthieugouel/nxthdr/grafana/data"
+    host_path = "/home/nxthdr/grafana/data"
   }
 }
 
@@ -376,11 +376,11 @@ resource "docker_container" "alertmanager" {
   }
   volumes {
     container_path = "/config/alertmanager.yml"
-    host_path = "/home/matthieugouel/nxthdr/alertmanager/config/alertmanager.yml"
+    host_path = "/home/nxthdr/alertmanager/config/alertmanager.yml"
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/matthieugouel/nxthdr/alertmanager/data"
+    host_path = "/home/nxthdr/alertmanager/data"
   }
 }
 
@@ -499,11 +499,11 @@ resource "docker_container" "loki" {
   }
   volumes {
     container_path = "/config/loki.yml"
-    host_path = "/home/matthieugouel/nxthdr/loki/config/loki.yml"
+    host_path = "/home/nxthdr/loki/config/loki.yml"
   }
   volumes {
     container_path = "/loki"
-    host_path = "/home/matthieugouel/nxthdr/loki/data"
+    host_path = "/home/nxthdr/loki/data"
   }
 }
 
@@ -532,7 +532,7 @@ resource "docker_container" "promtail" {
   }
   volumes {
     container_path = "/config/promtail.yml"
-    host_path = "/home/matthieugouel/nxthdr/promtail/config/promtail.yml"
+    host_path = "/home/nxthdr/promtail/config/promtail.yml"
   }
   volumes {
     container_path = "/var/lib/docker/containers"
@@ -563,7 +563,7 @@ resource "docker_container" "promtail" {
 #   }
 #   volumes {
 #     container_path = "/data"
-#     host_path = "/home/matthieugouel/nxthdr/redis/data"
+#     host_path = "/home/nxthdr/redis/data"
 #   }
 # }
 
@@ -599,11 +599,11 @@ resource "docker_container" "risotto" {
   }
   volumes {
     container_path = "/config/risotto.yml"
-    host_path = "/home/matthieugouel/nxthdr/risotto/config/risotto.yml"
+    host_path = "/home/nxthdr/risotto/config/risotto.yml"
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/matthieugouel/nxthdr/risotto/data"
+    host_path = "/home/nxthdr/risotto/data"
   }
 }
 
