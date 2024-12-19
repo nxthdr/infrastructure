@@ -171,7 +171,7 @@ resource "docker_container" "website_nxthdr" {
 
 ## ClickHouse
 resource "docker_image" "clickhouse" {
-  name = "docker.io/clickhouse/clickhouse-server:24.11.1"
+  name = "docker.io/clickhouse/clickhouse-server:24.11.2"
   provider = docker.core
 }
 
