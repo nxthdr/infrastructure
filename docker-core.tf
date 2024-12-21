@@ -641,3 +641,39 @@ resource "docker_container" "chbot" {
     ipv6_address = "2a06:de00:50:cafe:10::1001"
   }
 }
+
+## DynDNS
+data "docker_registry_image" "dyndns" {
+  name = "ghcr.io/nxthdr/dyndns:main"
+  provider = docker.core
+}
+
+resource "docker_image" "dyndns" {
+  name          = data.docker_registry_image.dyndns.name
+  provider = docker.core
+  pull_triggers = [data.docker_registry_image.dyndns.sha256_digest]
+}
+
+resource "docker_container" "dyndns" {
+  image = docker_image.dyndns.image_id
+  name  = "dyndns"
+  provider = docker.core
+  command = [
+    "--host", "[::]:3000",
+    "--porkbun-api-key", var.porkbun_api_key,
+    "--porkbun-secret-key", var.porkbun_secret_api_key,
+    "--domain", "nxthdr.dev",
+    "--subdomain", "dyndns",
+    "--token", var.dyndns_auth_token
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1002"
+  }
+}
