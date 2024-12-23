@@ -1,6 +1,6 @@
-# Infrastructure
+# Infrastructure As Code
 
-This directory contains the infrastructure configuration for NXTDHR.
+This directory contains the infrastructure configuration for [nxthdr](nxthdr.dev).
 
 ## Usage
 
