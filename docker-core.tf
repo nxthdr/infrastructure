@@ -662,8 +662,7 @@ resource "docker_container" "dyndns" {
     "--host", "[::]:3000",
     "--porkbun-api-key", var.porkbun_api_key,
     "--porkbun-secret-key", var.porkbun_secret_api_key,
-    "--domain", "nxthdr.dev",
-    "--subdomain", "dyndns",
+    "--domain", "dyndns.nxthdr.dev",
     "--token", var.dyndns_auth_token
   ]
   log_driver = "json-file"
