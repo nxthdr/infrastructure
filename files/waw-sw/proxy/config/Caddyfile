@@ -6,14 +6,6 @@
     }
 }
 
-geofeed.as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
-        transport http {
-           tls_server_name {host}
-        }
-    }
-}
-
 as215011.net {
     reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
         transport http {
@@ -22,7 +14,71 @@ as215011.net {
     }
 }
 
+geofeed.as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+peers.as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
 nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+clickhouse.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+prometheus.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+loki.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+grafana.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+api.risotto.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+dyndns.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
         transport http {
            tls_server_name {host}

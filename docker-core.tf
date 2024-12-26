@@ -8,6 +8,7 @@ locals {
 
 resource "docker_network" "dmz" {
   name = "dmz"
+  provider = docker.core
   driver = "bridge"
   ipv6 = true
   ipam_config {
@@ -21,6 +22,7 @@ resource "docker_network" "dmz" {
 
 resource "docker_network" "backend" {
   name = "backend"
+  provider = docker.core
   driver = "bridge"
   ipv6 = true
   ipam_config {

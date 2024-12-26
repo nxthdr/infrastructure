@@ -1,13 +1,13 @@
 terraform {
   required_providers {
-    # porkbun = {
-    #   source = "kyswtn/porkbun"
-    #   version = "0.1.2"
-    # }
     docker = {
       source  = "kreuzwerker/docker"
       version = "3.0.2"
     }
+    # porkbun = {
+    #   source = "kyswtn/porkbun"
+    #   version = "0.1.2"
+    # }
   }
 }
 
@@ -19,13 +19,13 @@ provider "docker" {
 
 provider "docker" {
   host     = "ssh://nxthdr@ams.sw.infra.nxthdr.dev:22"
-  alias = "ams-sw"
+  alias = "ams_sw"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
 provider "docker" {
   host     = "ssh://nxthdr@waw.sw.infra.nxthdr.dev:22"
-  alias = "waw-sw"
+  alias = "waw_sw"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
