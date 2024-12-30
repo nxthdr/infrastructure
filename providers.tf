@@ -18,13 +18,13 @@ provider "docker" {
 }
 
 provider "docker" {
-  host     = "ssh://nxthdr@ams.sw.infra.nxthdr.dev:22"
+  host     = "ssh://nxthdr@ams.scw.infra.nxthdr.dev:22"
   alias = "ams_sw"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
 provider "docker" {
-  host     = "ssh://nxthdr@waw.sw.infra.nxthdr.dev:22"
+  host     = "ssh://nxthdr@waw.scw.infra.nxthdr.dev:22"
   alias = "waw_sw"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
