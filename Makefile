@@ -4,11 +4,12 @@ sync-cert:
 
 .PHONY: sync-config
 sync-config:
-	ANSIBLE_DISPLAY_SKIPPED_HOSTS=false ansible-playbook -e @secrets/secrets.yml -i inventory/ --ask-vault-pass sync-config.yml
+	ANSIBLE_DISPLAY_SKIPPED_HOSTS=false \
+	ansible-playbook -e "base_dir=$$(pwd)" -e @secrets/secrets.yml -i inventory/ --ask-vault-pass playbooks/sync-config.yml
 
 .PHONY: apply
 apply: sync-config
-	terraform apply -auto-approve -parallelism=1
+	terraform -chdir=./terraform apply -auto-approve -parallelism=1
 
 .PHONY: destroy
 destroy:

@@ -3,26 +3,26 @@
   tasks:
   - name: Remove `.templated` directory
     ansible.builtin.file:
-      path: .templated
+      path: "{{base_dir}}/.templated"
       state: absent
 
   - name: Copy configuration files to `.templated` directory
-    ansible.builtin.command: rsync -av --exclude '*.j2' templates/ .templated/
+    ansible.builtin.command: "rsync -av --exclude '*.j2' {{ base_dir }}/templates/ {{ base_dir }}/.templated/"
 
   - name: Template configuration files to `.templated` directory
     ansible.builtin.template:
-      src: "{{ item.path }}"
-      dest: .templated/{{ item.path | regex_replace('\.j2$', '') }}
-    with_filetree: templates
+      src: "{{ item.src }}"
+      dest: "{{ base_dir }}/.templated/{{ item.path | regex_replace('\\.j2$', '') }}"
+    with_filetree: "{{ base_dir }}/templates"
     when: item.state == 'file' and item.path.endswith('.j2')
 
   - name: Move terraform `terraform.tfvars` from `.templated` directory
-    ansible.builtin.command: mv .templated/terraform.tfvars .
+    ansible.builtin.command: "mv {{ base_dir }}/.templated/terraform.tfvars {{ base_dir}}/terraform"
 
 - hosts: core, scw
   tasks:
   - name: Copy templated configuration files to remote host
     ansible.posix.synchronize:
-      src: .templated/{{ inventory_hostname }}/
+      src: "{{ base_dir }}/.templated/{{ inventory_hostname }}/"
       dest: /home/nxthdr
       rsync_opts: "--omit-dir-times"

@@ -44,4 +44,4 @@ operations/variable-scripts/variable.json
 
 # Templated files (contains credentials)
 .templated
-/terraform.tfvars
+terraform/terraform.tfvars
