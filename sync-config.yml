@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Remove `.templated` directory
+    ansible.builtin.file:
+      path: .templated
+      state: absent
+
+  - name: Copy configuration files to `.templated` directory
+    ansible.builtin.command: rsync -av --exclude '*.j2' templates/ .templated/
+
+  - name: Template configuration files to `.templated` directory
+    ansible.builtin.template:
+      src: "{{ item.path }}"
+      dest: .templated/{{ item.path | regex_replace('\.j2$', '') }}
+    with_filetree: templates
+    when: item.state == 'file' and item.path.endswith('.j2')
+
+- hosts: core, scw
+  tasks:
+  - name: Copy templated configuration files to remote host
+    ansible.posix.synchronize:
+      src: .templated/{{ inventory_hostname }}/
+      dest: /home/nxthdr
+      rsync_opts: "--omit-dir-times"

@@ -4,8 +4,7 @@ sync-cert:
 
 .PHONY: sync-config
 sync-config:
-	rsync -r files/core/* nxthdr@core.infra.nxthdr.dev:~
-	rsync -r files/ams-sw/* nxthdr@ams.scw.infra.nxthdr.dev:~
+	ANSIBLE_DISPLAY_SKIPPED_HOSTS=false ansible-playbook -e @secrets/secrets.yml -i inventory/ --ask-vault-pass sync-config.yml
 
 .PHONY: apply
 apply: sync-config
