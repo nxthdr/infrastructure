@@ -16,6 +16,9 @@
     with_filetree: templates
     when: item.state == 'file' and item.path.endswith('.j2')
 
+  - name: Move terraform `terraform.tfvars` from `.templated` directory
+    ansible.builtin.command: mv .templated/terraform.tfvars .
+
 - hosts: core, scw
   tasks:
   - name: Copy templated configuration files to remote host

@@ -7,6 +7,11 @@ variable "porkbun_secret_api_key" {
   type        = string
 }
 
+variable "alertmanager_discord_webhook_url" {
+  description = "Alertmanager Discord Webhook URL"
+  type        = string
+}
+
 variable "chbot_discord_token" {
   description = "chbot Discord Token"
   type        = string
