@@ -1,4 +1,4 @@
-CREATE TABLE nxthdr.bgp_broker
+CREATE TABLE risotto.from_kafka
 (
 	timestamp DateTime64,
 	router_addr IPv6,
@@ -19,11 +19,11 @@ CREATE TABLE nxthdr.bgp_broker
 ENGINE = Kafka()
 SETTINGS
     kafka_broker_list = '[2a06:de00:50:cafe:10::103]:9092',
-    kafka_topic_list = 'bgp-updates',
-    kafka_group_name = 'clickhouse-bgp-group',
+    kafka_topic_list = 'risotto-updates',
+    kafka_group_name = 'clickhouse-risotto-group',
     kafka_format = 'CSV';
 
-CREATE TABLE nxthdr.bgp_updates
+CREATE TABLE risotto.updates
 (
 	timestamp DateTime64,
 	router_addr IPv6,
@@ -45,5 +45,5 @@ ENGINE = MergeTree()
 ORDER BY (timestamp, router_addr, peer_addr, prefix_addr, prefix_len)
 TTL toDateTime(timestamp) + INTERVAL 7 DAY DELETE;
 
-CREATE MATERIALIZED VIEW nxthdr.bgp_broker_mv TO nxthdr.bgp_updates
-AS SELECT * FROM nxthdr.bgp_broker;
+CREATE MATERIALIZED VIEW risotto.from_kafka_mv TO risotto.updates
+AS SELECT * FROM risotto.from_kafka;

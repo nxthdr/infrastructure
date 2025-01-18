@@ -9,7 +9,7 @@ bmp:
 kafka:
   address: 2a06:de00:50:cafe:10::103
   port: 9092
-  topic: bgp-updates
+  topic: risotto-updates
   batch_max_size: 1000
   batch_interval: 5
 

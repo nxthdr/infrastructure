@@ -16,6 +16,13 @@
     with_filetree: "{{ base_dir }}/templates"
     when: item.state == 'file' and item.path.endswith('.j2')
 
+  - name: Update permissions for templated executable files
+    ansible.builtin.file:
+      path: "{{ base_dir }}/.templated/{{ item.path }}"
+      mode: 0777
+    with_filetree: "{{ base_dir }}/.templated"
+    when: item.state == 'file' and item.path.endswith('.sh')
+
   - name: Move terraform `terraform.tfvars` from `.templated` directory
     ansible.builtin.command: "mv {{ base_dir }}/.templated/terraform.tfvars {{ base_dir}}/terraform"
 

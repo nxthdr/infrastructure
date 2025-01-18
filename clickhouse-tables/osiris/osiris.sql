@@ -1,0 +1,67 @@
+CREATE TABLE osiris.from_kafka
+(
+    timestamp DateTime64,
+    prober_id UInt16,
+    reply_src_addr IPv6,
+    reply_dst_addr IPv6,
+    reply_id UInt16,
+    reply_size UInt16,
+    reply_ttl UInt8,
+    reply_protocol UInt8,
+    reply_icmp_type UInt8,
+    reply_icmp_code UInt8,
+    reply_mpls_labels Array(Tuple(UInt32, UInt8, UInt8, UInt8)),
+    probe_src_addr IPv6,
+    probe_dst_addr IPv6,
+    probe_id UInt16,
+    probe_size UInt16,
+    probe_protocol UInt8,
+    quoted_ttl UInt8,
+    probe_src_port UInt16,
+    probe_dst_port UInt16,
+    probe_ttl UInt8,
+    rtt UInt16
+)
+ENGINE = Kafka()
+SETTINGS
+    kafka_broker_list = '[2a06:de00:50:cafe:10::103]:9092',
+    kafka_topic_list = 'osiris-results',
+    kafka_group_name = 'clickhouse-osiris-group',
+    kafka_format = 'CSV';
+
+CREATE TABLE osiris.results
+(
+    timestamp DateTime64,
+    prober_id UInt16,
+    reply_src_addr IPv6,
+    reply_dst_addr IPv6,
+    reply_id UInt16,
+    reply_size UInt16,
+    reply_ttl UInt8,
+    reply_protocol UInt8,
+    reply_icmp_type UInt8,
+    reply_icmp_code UInt8,
+    reply_mpls_labels Array(Tuple(UInt32, UInt8, UInt8, UInt8)),
+    probe_src_addr IPv6,
+    probe_dst_addr IPv6,
+    probe_id UInt16,
+    probe_size UInt16,
+    probe_protocol UInt8,
+    quoted_ttl UInt8,
+    probe_src_port UInt16,
+    probe_dst_port UInt16,
+    probe_ttl UInt8,
+    rtt UInt16
+)
+ENGINE = MergeTree()
+ORDER BY (
+    probe_protocol,
+    probe_src_addr,
+    probe_dst_addr,
+    probe_src_port,
+    probe_dst_port,
+    probe_ttl
+);
+
+CREATE MATERIALIZED VIEW osiris.from_kafka_mv TO osiris.results
+AS SELECT * FROM osiris.from_kafka;

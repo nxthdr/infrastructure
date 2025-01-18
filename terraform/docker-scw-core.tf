@@ -244,7 +244,7 @@ resource "docker_container" "chproxy" {
 
 ## Redpanda
 resource "docker_image" "redpanda" {
-  name = "docker.vectorized.io/vectorized/redpanda:v24.2.9"
+  name = "redpandadata/redpanda:v24.3.3"
   provider = docker.core
 }
 
@@ -252,28 +252,23 @@ resource "docker_container" "redpanda" {
   image = docker_image.redpanda.image_id
   name  = "redpanda"
   provider = docker.core
-  command = [
-    "redpanda", "start",
-    "--overprovisioned",
-    "--smp", "1",
-    "--memory", "2G",
-    "--reserve-memory", "200M",
-    "--node-id", "0",
-    "--check=false"
-  ]
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
   user = "1000:1000"
   network_mode = "bridge"
-  # networks_advanced {
-  #   name = docker_network.dmz.name
-  #   ipv6_address = "2a06:de00:50:cafe:100::b"
-  # }
+  networks_advanced {
+    name = docker_network.dmz.name
+    ipv6_address = "2a06:de00:50:cafe:100::b"
+  }
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::103"
+  }
+  volumes {
+    container_path = "/entrypoint.sh"
+    host_path = "/home/nxthdr/redpanda/config/entrypoint.sh"
   }
   volumes {
     container_path = "/etc/redpanda"
@@ -542,32 +537,6 @@ resource "docker_container" "promtail" {
     read_only = "true"
   }
 }
-
-## Redis
-# resource "docker_image" "redis" {
-#   name = "redis:7.4.1"
-#   provider = docker.core
-# }
-
-# resource "docker_container" "redis" {
-#   image = docker_image.redis.image_id
-#   name  = "redis"
-#   provider = docker.core
-#   log_driver = "json-file"
-#   log_opts = {
-#     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-#   }
-#   user = "1000:1000"
-#   network_mode = "bridge"
-#   networks_advanced {
-#     name = docker_network.backend.name
-#     ipv6_address = "2a06:de00:50:cafe:10::111"
-#   }
-#   volumes {
-#     container_path = "/data"
-#     host_path = "/home/nxthdr/redis/data"
-#   }
-# }
 
 ## Risotto
 data "docker_registry_image" "risotto" {

@@ -18,6 +18,14 @@ make apply
 
 ## Manual Configuration
 
+### Aliases
+
+In core, we have a few aliases to make it easier to manage the infrastructure.
+
+```sh
+alias rpk="docker exec -ti redpanda rpk -X'brokers=2a06:de00:50:cafe:10::103'"
+```
+
 ### Ip6tables
 
 By default, Docker network bridges are not accessible from the outside world.<br>

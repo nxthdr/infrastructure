@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -m
+rpkcmd="/usr/bin/rpk -X brokers=2a06:de00:50:cafe:10::103"
+
+# Start Redpanda in the background
+rpk redpanda start --overprovisioned --smp 1 --memory 2G --reserve-memory 200M --node-id 0 --check=false &
+
+# Wait for Redpanda to be ready
+sleep 3
+
+# Create `admin` superuser
+$rpkcmd cluster config set superusers ['{{ redpanda_superuser_username }}']
+$rpkcmd security user create {{ redpanda_superuser_username }}  -p '{{ redpanda_superuser_password }}' --mechanism=SCRAM-SHA-512
+
+# Enable SASL
+$rpkcmd cluster config set enable_sasl true
+
+# Create Osiris user and grant it access to the cluster and the `osiris-results` topic
+$rpkcmd security user create {{ redpanda_osiris_username }} -p '{{ redpanda_osiris_password }}' --mechanism SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda_osiris_username }} --operation all --cluster -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda_osiris_username }} --operation all --topic osiris-results -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
+fg %1

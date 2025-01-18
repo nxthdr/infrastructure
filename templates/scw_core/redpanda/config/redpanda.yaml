@@ -6,10 +6,10 @@ redpanda:
         address: 0.0.0.0
         port: 33145
     kafka_api:
-        # - address: 2a06:de00:50:cafe:100::b
-        #   name: dmz
-        #   port: 9092
-        #   authentication_method: sasl
+        - address: 2a06:de00:50:cafe:100::b
+          name: dmz
+          port: 9092
+          authentication_method: sasl
         - address: 2a06:de00:50:cafe:10::103
           name: backend
           port: 9092
@@ -21,9 +21,9 @@ redpanda:
         address: 127.0.0.1
         port: 33145
     advertised_kafka_api:
-        # - address: 2a06:de00:50:cafe:100::b
-        #   name: dmz
-        #   port: 9092
+        - address: 2a06:de00:50:cafe:100::b
+          name: dmz
+          port: 9092
         - address: 2a06:de00:50:cafe:10::103
           name: backend
           port: 9092
