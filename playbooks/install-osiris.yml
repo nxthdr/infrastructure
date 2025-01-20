@@ -1,0 +1,23 @@
+---
+- hosts: vlt
+  tasks:
+  - name: Install Rust
+    ansible.builtin.shell: |
+      curl "https://sh.rustup.rs" -sSf | sh -s -- -y
+
+  - name: Install required libraries for compilation
+    become: yes
+    ansible.builtin.apt:
+      pkg:
+      - libpcap-dev
+      - libsasl2-dev
+      - libssl-dev
+
+  - name: Install Osiris
+    ansible.builtin.command: |
+      CARGO_TARGET_DIR=/home/nxthdr/cargo-installANSIBLE cargo install osiris --git https://github.com/nxthdr/osiris.git
+
+  - name: Remove build artifacts
+    ansible.builtin.file:
+      path: /home/nxthdr/cargo-installANSIBLE
+      state: absent
