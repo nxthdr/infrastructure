@@ -13,9 +13,9 @@
       - libsasl2-dev
       - libssl-dev
 
-  - name: Install Osiris
+  - name: Install Saimiris
     ansible.builtin.command: |
-      CARGO_TARGET_DIR=/home/nxthdr/cargo-installANSIBLE cargo install osiris --git https://github.com/nxthdr/osiris.git
+      CARGO_TARGET_DIR=/home/nxthdr/cargo-installANSIBLE cargo install saimiris --git https://github.com/nxthdr/saimiris.git
 
   - name: Remove build artifacts
     ansible.builtin.file:

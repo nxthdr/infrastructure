@@ -22,13 +22,13 @@ variable "redpanda_superuser_password" {
   type        = string
 }
 
-variable "redpanda_osiris_username" {
-  description = "Redpanda Osiris Username"
+variable "redpanda_saimiris_username" {
+  description = "Redpanda Saimiris Username"
   type        = string
 }
 
-variable "redpanda_osiris_password" {
-  description = "Redpanda Osiris Password"
+variable "redpanda_saimiris_password" {
+  description = "Redpanda Saimiris Password"
   type        = string
 }
 
