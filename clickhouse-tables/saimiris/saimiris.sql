@@ -1,7 +1,7 @@
 CREATE TABLE saimiris.from_kafka
 (
     timestamp DateTime64,
-    prober_id UInt16,
+    prober_id String,
     reply_src_addr IPv6,
     reply_dst_addr IPv6,
     reply_id UInt16,
@@ -32,7 +32,7 @@ SETTINGS
 CREATE TABLE saimiris.results
 (
     timestamp DateTime64,
-    prober_id UInt16,
+    prober_id String,
     reply_src_addr IPv6,
     reply_dst_addr IPv6,
     reply_id UInt16,
