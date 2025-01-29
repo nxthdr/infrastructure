@@ -13,11 +13,16 @@
       - libsasl2-dev
       - libssl-dev
 
+  - name: Create `cargo-install-saimiris` directory
+    ansible.builtin.file:
+      path: /home/nxthdr/cargo-install-saimiris
+      state: directory
+
   - name: Install Saimiris
-    ansible.builtin.command: |
-      CARGO_TARGET_DIR=/home/nxthdr/cargo-installANSIBLE cargo install saimiris --git https://github.com/nxthdr/saimiris.git
+    ansible.builtin.shell: |
+      CARGO_TARGET_DIR=/home/nxthdr/cargo-install-saimiris /home/nxthdr/.cargo/bin/cargo install saimiris --git https://github.com/nxthdr/saimiris.git
 
   - name: Remove build artifacts
     ansible.builtin.file:
-      path: /home/nxthdr/cargo-installANSIBLE
+      path: /home/nxthdr/cargo-install-saimiris
       state: absent
