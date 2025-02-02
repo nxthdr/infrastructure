@@ -6,8 +6,8 @@ This directory contains Bird configuration for all servers announcing as215011. 
 
 ID         | Provider    | Location    |  IXPs
 ---------- | ------------|-------------|--------------------
-`ixp_fra`  | iFog        | Frankfurt   | `LocIX`, `FogIXP`
 `ixp_ams`  | iFog        | Amsterdam   | `NL-IX`
+`ixp_fra`  | iFog        | Frankfurt   | `LocIX`, `FogIXP`
 
 * Platform servers
 

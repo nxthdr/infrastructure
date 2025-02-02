@@ -8,9 +8,9 @@ core:
 
 ixp:
   hosts:
-    ixp_ifog_fra:
+    ixp_fra:
       ansible_host: fra.ixp.infra.nxthdr.dev
-    ixp_ifog_ams:
+    ixp_ams:
       ansible_host: ams.ixp.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
