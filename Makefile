@@ -6,13 +6,13 @@ sync-cert:
 edit-secrets:
 	ansible-vault edit secrets/secrets.yml
 
-.PHONY; sync-wireguard
+.PHONY: sync-wireguard
 sync-wireguard:
-	ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-wireguard.yml
+	ansible-playbook -i inventory/ -e "base_dir=$$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-wireguard.yml
 
 .PHONY: sync-bird
 sync-bird:
-	ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-bird.yml
+	ansible-playbook -i inventory/ -e "base_dir=$$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-bird.yml
 
 .PHONY: template
 template:

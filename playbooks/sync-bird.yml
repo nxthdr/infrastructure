@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-bird.yml
 ---
-- hosts: vlt_nyc
+- hosts: core, ixp, vlt
   become: yes
   tasks:
   - name: Ensure /etc/bird directory exists
