@@ -1,0 +1,13 @@
+[Unit]
+Description=BIRD routing daemon
+After=network.target
+
+[Service]
+Type=forking
+Restart=always
+ExecStart=/usr/local/sbin/bird -c /etc/bird/bird.conf
+ExecReload=/usr/local/sbin/birdc configure
+ExecStop=/usr/local/sbin/birdc down
+
+[Install]
+WantedBy=multi-user.target

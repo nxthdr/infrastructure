@@ -1,0 +1,47 @@
+# ansible-playbook -i inventory/ -e 'ansible_user=root' --ask-become-pass playbooks/install-bird.yml
+---
+- hosts: "{{ host }}"
+  become: yes
+  vars:
+    bird_version: '2.15.1'
+  tasks:
+  - name: Install packages for compilation
+    ansible.builtin.apt:
+      pkg:
+      - make
+      - gcc
+      - flex
+      - bison
+      - m4
+      - libreadline-dev
+      - libncurses-dev
+
+  - name: Download sources ({{ bird_version }})
+    ansible.builtin.unarchive:
+      src: 'https://bird.network.cz/download/bird-{{ bird_version }}.tar.gz'
+      dest: /tmp
+      remote_src: yes
+
+  - name: Install from sources
+    ansible.builtin.shell: "./configure --with-protocols='bmp,bgp,rpki,static' && make && make install"
+    args:
+      chdir: '/tmp/bird-{{ bird_version }}'
+
+  - name: Delete sources
+    ansible.builtin.file:
+      path: '/tmp/bird-{{ bird_version }}'
+      state: absent
+
+  - name: Enable `net.ipv4.ip_forward`
+    ansible.posix.sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      sysctl_set: true
+      state: present
+
+  - name: Enable `net.ipv6.conf.all.forwarding`
+    ansible.posix.sysctl:
+      name: net.ipv6.conf.all.forwarding
+      value: '1'
+      sysctl_set: true
+      state: present

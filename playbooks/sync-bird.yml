@@ -1,0 +1,28 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-bird.yml
+---
+- hosts: vlt_nyc
+  become: yes
+  tasks:
+  - name: Ensure /etc/bird directory exists
+    file:
+      path: "/etc/bird"
+      state: directory
+
+  - name: Copy configuration file
+    ansible.builtin.template:
+      src: "{{ base_dir }}/networks/{{ inventory_hostname }}/bird/bird.conf"
+      dest: /etc/bird/bird.conf
+
+  - name: Copy systemd file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/bird/bird.service"
+      dest: /lib/systemd/system/bird.service
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and restart bird
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: reloaded
+      name: bird

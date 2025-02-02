@@ -6,10 +6,14 @@ sync-cert:
 edit-secrets:
 	ansible-vault edit secrets/secrets.yml
 
-.PHONY: sync-config
-sync-config:
+.PHONY: template
+template:
 	ANSIBLE_DISPLAY_SKIPPED_HOSTS=false \
-	ansible-playbook -e "base_dir=$$(pwd)" -e @secrets/secrets.yml -i inventory/ --ask-vault-pass playbooks/sync-config.yml
+	ansible-playbook -e "base_dir=$$(pwd)" -e @secrets/secrets.yml -i inventory/ --ask-vault-pass playbooks/template.yml
+
+.PHONY: sync-config
+sync-config: template
+	ansible-playbook -e "base_dir=$$(pwd)" -i inventory/ playbooks/sync-config.yml
 
 .PHONY: apply
 apply: sync-config
