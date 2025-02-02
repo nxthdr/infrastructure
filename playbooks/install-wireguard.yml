@@ -1,0 +1,8 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-wireguard.yml
+---
+- hosts: core, ixp
+  become: yes
+  tasks:
+  - name: Install wireguard
+    ansible.builtin.apt:
+      name: wireguard

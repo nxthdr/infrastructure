@@ -1,0 +1,23 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-wireguard.yml
+---
+- hosts: core, ixp
+  become: yes
+  tasks:
+  - name: Template configuration files
+    ansible.builtin.template:
+      src: "{{ item.src }}"
+      dest: /etc
+    with_filetree: "{{ base_dir }}/networks/{{ inventory_hostname }}/wireguard"
+    when: item.state == 'file'
+
+  - name: Enable and restart wg0
+    ansible.builtin.systemd_service:
+      name: wg-quick@wg0.service
+      state: restarted
+      enabled: true
+
+  - name: Enable and restart wg1
+    ansible.builtin.systemd_service:
+      name: wg-quick@wg1.service
+      state: restarted
+      enabled: true
