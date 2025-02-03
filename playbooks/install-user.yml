@@ -1,6 +1,6 @@
-# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' -e 'host=vlt_nyc' --ask-vault-pass playbooks/install-user.yml
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --ask-vault-pass playbooks/install-user.yml
 ---
-- hosts: "{{ host }}"
+- hosts: core, ixp, scw, vlt
   tasks:
   - name: Create a user `nxthdr` with a home directory
     ansible.builtin.user:
@@ -15,7 +15,15 @@
       path: /home/nxthdr/.ssh
       state: directory
 
-  - name: Copy SSH public keys
+  - name: Copy SSH public keys for `root` user
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/authorized_keys"
+      dest: /root/.ssh/authorized_keys
+      owner: root
+      group: root
+      mode: '0600'
+
+  - name: Copy SSH public keys for `nxthdr` user
     ansible.builtin.copy:
       src: "{{ base_dir }}/templates/shared/authorized_keys"
       dest: /home/nxthdr/.ssh/authorized_keys
