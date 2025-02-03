@@ -14,6 +14,10 @@
       - libsasl2-dev
       - libssl-dev
 
+  - name: Remove existing Saimiris installation
+    ansible.builtin.shell: |
+      rm -rf /home/nxthdr/.cargo/bin/saimiris
+
   - name: Create `cargo-install-saimiris` directory
     ansible.builtin.file:
       path: /home/nxthdr/cargo-install-saimiris
