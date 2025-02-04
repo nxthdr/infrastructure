@@ -244,7 +244,7 @@ resource "docker_container" "chproxy" {
 
 ## Redpanda
 resource "docker_image" "redpanda" {
-  name = "redpandadata/redpanda:v24.3.4"
+  name = "redpandadata/redpanda:v24.3.5"
   provider = docker.core
 }
 
