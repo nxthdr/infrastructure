@@ -10,6 +10,14 @@
       groups: sudo
       shell: /bin/bash
 
+  - name: Configure passwordless sudo for `nxthdr` user
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/sudoers/nxthdr"
+      dest: /etc/sudoers.d/nxthdr
+      owner: root
+      group: root
+      mode: '0440'
+
   - name: Ensure the `.ssh` directory exists
     ansible.builtin.file:
       path: /home/nxthdr/.ssh
