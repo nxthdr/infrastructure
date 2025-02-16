@@ -21,7 +21,8 @@ SETTINGS
     kafka_broker_list = '[2a06:de00:50:cafe:10::103]:9092',
     kafka_topic_list = 'risotto-updates',
     kafka_group_name = 'clickhouse-risotto-group',
-    kafka_format = 'CSV';
+    kafka_format = 'CSV',
+    kafka_max_rows_per_message = 1048576;
 
 CREATE TABLE risotto.updates
 (

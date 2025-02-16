@@ -7,11 +7,9 @@ bmp:
   port: 4000
 
 kafka:
-  address: 2a06:de00:50:cafe:10::103
-  port: 9092
+  brokers: "[2a06:de00:50:cafe:10::103]:9092"
+  auth_protocol: PLAINTEXT
   topic: risotto-updates
-  batch_max_size: 1000
-  batch_interval: 5
 
 state:
   enable: true
