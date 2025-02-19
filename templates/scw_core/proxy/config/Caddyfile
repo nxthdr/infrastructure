@@ -7,7 +7,7 @@
 }
 
 as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:10::10]:80
+    reverse_proxy [2a06:de00:50:cafe:10::100]:80
 }
 
 geofeed.as215011.net {

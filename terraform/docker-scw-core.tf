@@ -72,34 +72,6 @@ resource "docker_container" "proxy" {
 }
 
 # `as215011.net` backend services
-## as215011 Website
-data "docker_registry_image" "website_nxthdr" {
-  name = "ghcr.io/nxthdr/nxthdr.dev:main"
-  provider = docker.core
-}
-
-resource "docker_image" "website_nxthdr" {
-  name          = data.docker_registry_image.website_nxthdr.name
-  provider = docker.core
-  pull_triggers = [data.docker_registry_image.website_nxthdr.sha256_digest]
-}
-
-resource "docker_container" "website_as215011" {
-  image = docker_image.website_nxthdr.image_id
-  name  = "website_as215011"
-  provider = docker.core
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  env = ["CADDY_ADMIN=[::]:2019"]
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::10"
-  }
-}
-
 ## Geofeed
 resource "docker_container" "geofeed" {
   image = docker_image.caddy.image_id
@@ -155,9 +127,20 @@ resource "docker_container" "peers" {
 
 # `nxthdr.dev` backend services
 ## nxthdr Website
-resource "docker_container" "website_nxthdr" {
-  image = docker_image.website_nxthdr.image_id
-  name  = "website_nxthdr"
+data "docker_registry_image" "nxthdr_dev" {
+  name = "ghcr.io/nxthdr/nxthdr.dev:main"
+  provider = docker.core
+}
+
+resource "docker_image" "nxthdr_dev" {
+  name          = data.docker_registry_image.nxthdr_dev.name
+  provider = docker.core
+  pull_triggers = [data.docker_registry_image.nxthdr_dev.sha256_digest]
+}
+
+resource "docker_container" "nxthdr_dev" {
+  image = docker_image.nxthdr_dev.image_id
+  name  = "nxthdr_dev"
   provider = docker.core
   log_driver = "json-file"
   log_opts = {
