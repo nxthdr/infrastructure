@@ -6,20 +6,42 @@
     }
 }
 
+(security_headers) {
+    header_down Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    header_down X-Content-Type-Options "nosniff"
+    header_down X-Frame-Options "DENY"
+    header_down Referrer-Policy "strict-origin"
+    header_down Permissions-Policy "microphone=()"
+}
+
 as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:10::100]:80
+    reverse_proxy {
+        import security_headers
+        to [2a06:de00:50:cafe:10::100]:80
+    }
 }
 
 geofeed.as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:10::11]:80
+    reverse_proxy {
+        import security_headers
+        header_down Content-Security-Policy "default-src 'self';"
+        to [2a06:de00:50:cafe:10::11]:80
+    }
 }
 
 peers.as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:10::12]:80
+    reverse_proxy {
+        import security_headers
+        header_down Content-Security-Policy "default-src 'self' clickhouse.nxthdr.dev;"
+        to [2a06:de00:50:cafe:10::12]:80
+    }
 }
 
 nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:10::100]:80
+    reverse_proxy {
+        import security_headers
+        to [2a06:de00:50:cafe:10::100]:80
+    }
 }
 
 clickhouse.nxthdr.dev {
