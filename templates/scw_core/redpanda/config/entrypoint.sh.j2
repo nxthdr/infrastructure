@@ -10,17 +10,17 @@ rpk redpanda start --overprovisioned --smp 1 --memory 2G --reserve-memory 200M -
 sleep 3
 
 # Create `admin` superuser
-$rpkcmd cluster config set superusers ['{{ redpanda_superuser_username }}']
-$rpkcmd security user create {{ redpanda_superuser_username }}  -p '{{ redpanda_superuser_password }}' --mechanism=SCRAM-SHA-512
+$rpkcmd cluster config set superusers ['{{ redpanda.superuser.username }}']
+$rpkcmd security user create {{ redpanda.superuser.username }}  -p '{{ redpanda.superuser.password }}' --mechanism=SCRAM-SHA-512
 
 # Enable SASL
 $rpkcmd cluster config set enable_sasl true
 
 # Create Saimiris user and grant it access to the cluster and the `saimiris-results` topic
 rpkcmd="/usr/bin/rpk -X brokers=2a06:de00:50:cafe:100::b"
-$rpkcmd security user create {{ redpanda_saimiris_username }} -p '{{ redpanda_saimiris_password }}' --mechanism SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda_saimiris_username }} --operation all --cluster -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda_saimiris_username }} --operation all --topic saimiris-targets -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda_saimiris_username }} --operation all --topic saimiris-results -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda_saimiris_username }} --operation all --group saimiris-agent --resource-pattern-type prefixed -X user={{ redpanda_superuser_username }} -X pass='{{ redpanda_superuser_password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security user create {{ redpanda.saimiris.username }} -p '{{ redpanda.saimiris.password }}' --mechanism SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --cluster -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-targets -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-results -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --group saimiris-agent --resource-pattern-type prefixed -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
 fg %1
