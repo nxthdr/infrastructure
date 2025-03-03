@@ -152,6 +152,9 @@ resource "docker_container" "nxthdr_dev" {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::100"
   }
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
 }
 
 ## ClickHouse

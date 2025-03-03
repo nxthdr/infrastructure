@@ -21,10 +21,6 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::a]:2019']
 
-  - job_name: as215011.net
-    static_configs:
-      - targets: ['[2a06:de00:50:cafe:10::10]:2019']
-
   - job_name: geofeed
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::11]:2019']

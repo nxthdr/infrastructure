@@ -19,18 +19,14 @@ scw:
   hosts:
     scw_ams:
       ansible_host: ams.scw.infra.nxthdr.dev
-    scw_waw:
-      ansible_host: waw.scw.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 vlt:
   hosts:
-    vlt_atl:
-      ansible_host: atl.vlt.infra.nxthdr.dev
-    vlt_nyc:
-      ansible_host: nyc.vlt.infra.nxthdr.dev
-    vlt_par:
-      ansible_host: par.vlt.infra.nxthdr.dev
+    vlt_atl01:
+      ansible_host: atl01.vlt.infra.nxthdr.dev
+    vlt_cdg01:
+      ansible_host: cdg01.vlt.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
