@@ -1,0 +1,18 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-vlt-interfaces.yml
+---
+- hosts: vlt
+  become: yes
+  tasks:
+  - name: Install anycast interface
+    ignore_errors: true
+    ansible.builtin.shell: |
+      ip link add dev anyprobe0 type dummy
+      ip link set anyprobe0 up
+      ip addr add dev anyprobe0 2a0e:97c0:8a0::10/48
+
+  - name: Install unicast interface
+    ignore_errors: true
+    ansible.builtin.shell: |
+      ip link add dev uniprobe0 type dummy
+      ip link set uniprobe0 up
+      ip addr add dev uniprobe0 {{ hostvars[inventory_hostname].uniprobe0 }}
