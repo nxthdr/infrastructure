@@ -1,6 +1,7 @@
-# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-saimiris.yml
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-saimiris.yml
 ---
 - hosts: vlt
+  become: yes
   tasks:
   - name: Install Rust
     ansible.builtin.shell: |
@@ -31,3 +32,17 @@
     ansible.builtin.file:
       path: /home/nxthdr/cargo-install-saimiris
       state: absent
+
+  - name: Copy systemd file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/saimiris/saimiris.service"
+      dest: /lib/systemd/system/saimiris.service
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and restart saimiris
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      name: saimiris
