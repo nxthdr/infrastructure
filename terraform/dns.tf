@@ -1,4 +1,4 @@
-# # Infrastructure 
+# # Infrastructure
 # resource "porkbun_dns_record" "core_A_record" {
 #   domain   = "nxthdr.dev"
 #   name     = "core.infra"
@@ -20,7 +20,7 @@
 #   content  = "193.148.248.249"
 # }
 
-# # DMZ 
+# # DMZ
 # resource "porkbun_dns_record" "proxy" {
 #   domain   = "nxthdr.dev"
 #   name     = "proxy"
