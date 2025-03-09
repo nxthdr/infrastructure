@@ -1,0 +1,23 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-saimprowler.yml
+---
+- hosts: core
+  become: yes
+  tasks:
+  - name: Copy systemd service file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/saimprowler/saimprowler.service"
+      dest: /lib/systemd/system/saimprowler.service
+
+  - name: Copy systemd timer file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/saimprowler/saimprowler.timer"
+      dest: /lib/systemd/system/saimprowler.timer
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and restart saimprowler
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      name: saimprowler.timer

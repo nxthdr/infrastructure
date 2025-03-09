@@ -1,0 +1,15 @@
+[Unit]
+Description=Saimprowler Cronjob
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+
+User=nxthdr
+Group=nxthdr
+
+ExecStart=/home/nxthdr/cronjobs/saimprowler/saimprowler.sh
+
+[Install]
+WantedBy=multi-user.target
