@@ -1,0 +1,10 @@
+[Unit]
+Description="Saimprowler Cronjob"
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=10min
+Unit=saimprowler.service
+
+[Install]
+WantedBy=multi-user.target
