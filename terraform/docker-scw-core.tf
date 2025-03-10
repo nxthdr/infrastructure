@@ -521,6 +521,36 @@ resource "docker_container" "promtail" {
   }
 }
 
+## Query Exporter
+resource "docker_image" "query_exporter" {
+  name = "ghcr.io/albertodonato/query-exporter:main"
+  provider = docker.core
+}
+
+resource "docker_container" "query_exporter" {
+  image = docker_image.query_exporter.image_id
+  name  = "query_exporter"
+  provider = docker.core
+  command = [
+    "--config", "/config/config.yml",
+    "--host", "2a06:de00:50:cafe:10::111",
+    "--port", "9560"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::111"
+  }
+  volumes {
+    container_path = "/config/config.yml"
+    host_path = "/home/nxthdr/query-exporter/config/config.yml"
+  }
+}
+
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"

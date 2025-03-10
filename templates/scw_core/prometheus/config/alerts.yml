@@ -56,7 +56,7 @@ groups:
       severity: critical
     annotations:
       title: 'core service {{ $labels.job }} is down'
-  
+
 
 - name: host
   rules:
