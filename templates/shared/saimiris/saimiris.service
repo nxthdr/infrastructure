@@ -9,7 +9,7 @@ Restart=on-failure
 User=root
 Group=root
 
-ExecStart=/home/nxthdr/.cargo/bin/saimiris agent --config=/home/nxthdr/saimiris/config.yml
+ExecStart=/root/.cargo/bin/saimiris agent --config=/home/nxthdr/saimiris/config.yml
 
 [Install]
 WantedBy=multi-user.target

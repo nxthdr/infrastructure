@@ -17,20 +17,20 @@
 
   - name: Remove existing Saimiris installation
     ansible.builtin.shell: |
-      rm -rf /home/nxthdr/.cargo/bin/saimiris
+      rm -rf /root/.cargo/bin/saimiris
 
   - name: Create `cargo-install-saimiris` directory
     ansible.builtin.file:
-      path: /home/nxthdr/cargo-install-saimiris
+      path:  /root/cargo-install-saimiris
       state: directory
 
   - name: Install Saimiris
     ansible.builtin.shell: |
-      CARGO_TARGET_DIR=/home/nxthdr/cargo-install-saimiris /home/nxthdr/.cargo/bin/cargo install saimiris --git https://github.com/nxthdr/saimiris.git
+      CARGO_TARGET_DIR= /root/cargo-install-saimiris  /root/.cargo/bin/cargo install saimiris --git https://github.com/nxthdr/saimiris.git
 
   - name: Remove build artifacts
     ansible.builtin.file:
-      path: /home/nxthdr/cargo-install-saimiris
+      path: /root/cargo-install-saimiris
       state: absent
 
   - name: Copy systemd file
