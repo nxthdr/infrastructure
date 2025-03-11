@@ -6,5 +6,5 @@
 
 :80 {
     root * /www/html
-    file_server   
+    file_server
 }
