@@ -15,7 +15,7 @@ ID         | Provider    | Location    |  IXPs
 `ixp_ams`  | iFog        | Amsterdam   | `NL-IX`
 `ixp_fra`  | iFog        | Frankfurt   | `LocIX`, `FogIXP`
 
-* Testbed servers
+* Probing servers
 
 ID           | Provider      | Location
 -------------| --------------|-----------

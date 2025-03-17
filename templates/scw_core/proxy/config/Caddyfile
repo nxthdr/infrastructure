@@ -14,29 +14,6 @@
     header_down Permissions-Policy "microphone=()"
 }
 
-as215011.net {
-    reverse_proxy {
-        import security_headers
-        to [2a06:de00:50:cafe:10::100]:80
-    }
-}
-
-geofeed.as215011.net {
-    reverse_proxy {
-        import security_headers
-        header_down Content-Security-Policy "default-src 'self';"
-        to [2a06:de00:50:cafe:10::11]:80
-    }
-}
-
-peers.as215011.net {
-    reverse_proxy {
-        import security_headers
-        header_down Content-Security-Policy "default-src 'self' clickhouse.nxthdr.dev;"
-        to [2a06:de00:50:cafe:10::12]:80
-    }
-}
-
 nxthdr.dev {
     reverse_proxy {
         import security_headers
@@ -66,4 +43,20 @@ api.risotto.nxthdr.dev {
 
 dyndns.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::1002]:3000
+}
+
+geofeed.nxthdr.dev {
+    reverse_proxy {
+        import security_headers
+        header_down Content-Security-Policy "default-src 'self';"
+        to [2a06:de00:50:cafe:10::1003]:80
+    }
+}
+
+peers.nxthdr.dev {
+    reverse_proxy {
+        import security_headers
+        header_down Content-Security-Policy "default-src 'self' clickhouse.nxthdr.dev;"
+        to [2a06:de00:50:cafe:10::1004]:80
+    }
 }

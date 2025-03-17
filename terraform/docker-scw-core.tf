@@ -71,61 +71,6 @@ resource "docker_container" "proxy" {
   }
 }
 
-# `as215011.net` backend services
-## Geofeed
-resource "docker_container" "geofeed" {
-  image = docker_image.caddy.image_id
-  name  = "geofeed"
-  provider = docker.core
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  env = ["CADDY_ADMIN=[::]:2019"]
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::11"
-  }
-  volumes {
-    container_path = "/etc/caddy/Caddyfile"
-    host_path = "/home/nxthdr/geofeed/config/Caddyfile"
-  }
-  volumes {
-    container_path = "/www/html"
-    host_path = "/home/nxthdr/geofeed/data/html"
-  }
-}
-
-## Peers
-data "docker_registry_image" "peers" {
-  name = "ghcr.io/nxthdr/peers:main"
-  provider = docker.core
-}
-
-resource "docker_image" "peers" {
-  name          = data.docker_registry_image.peers.name
-  provider = docker.core
-  pull_triggers = [data.docker_registry_image.peers.sha256_digest]
-}
-
-resource "docker_container" "peers" {
-  image = docker_image.peers.image_id
-  name  = "peers"
-  provider = docker.core
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::12"
-  }
-}
-
-# `nxthdr.dev` backend services
 ## nxthdr Website
 data "docker_registry_image" "nxthdr_dev" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
@@ -658,5 +603,58 @@ resource "docker_container" "dyndns" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::1002"
+  }
+}
+
+## Geofeed
+resource "docker_container" "geofeed" {
+  image = docker_image.caddy.image_id
+  name  = "geofeed"
+  provider = docker.core
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  env = ["CADDY_ADMIN=[::]:2019"]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1003"
+  }
+  volumes {
+    container_path = "/etc/caddy/Caddyfile"
+    host_path = "/home/nxthdr/geofeed/config/Caddyfile"
+  }
+  volumes {
+    container_path = "/www/html"
+    host_path = "/home/nxthdr/geofeed/data/html"
+  }
+}
+
+## Peers
+data "docker_registry_image" "peers" {
+  name = "ghcr.io/nxthdr/peers:main"
+  provider = docker.core
+}
+
+resource "docker_image" "peers" {
+  name          = data.docker_registry_image.peers.name
+  provider = docker.core
+  pull_triggers = [data.docker_registry_image.peers.sha256_digest]
+}
+
+resource "docker_container" "peers" {
+  image = docker_image.peers.image_id
+  name  = "peers"
+  provider = docker.core
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1004"
   }
 }
