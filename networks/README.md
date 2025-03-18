@@ -6,14 +6,14 @@ This directory contains Bird configuration for all servers announcing as215011. 
 
 ID          | Provider     | Location
 ------------| -------------|-----------
-`scw_core`  | Scaleway     | Amsterdam
+`core_ams01`  | Scaleway     | Amsterdam
 
 * IXP servers
 
 ID         | Provider    | Location    |  IXPs
 -----------| ------------|-------------|--------------------
-`ixp_ams`  | iFog        | Amsterdam   | `NL-IX`
-`ixp_fra`  | iFog        | Frankfurt   | `LocIX`, `FogIXP`
+`ixp_ams01`  | iFog        | Amsterdam   | `NL-IX`
+`ixp_fra01`  | iFog        | Frankfurt   | `LocIX`, `FogIXP`
 
 * Probing servers
 

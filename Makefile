@@ -1,6 +1,6 @@
 .PHONY: sync-cert
 sync-cert:
-	scp -r root@core.infra.nxthdr.dev:/home/nxthdr/proxy/data/caddy/certificates/ root@ams.scw.infra.nxthdr.dev:/home/nxthdr/proxy/data/caddy/
+	scp -r root@ams01.core.infra.nxthdr.dev:/home/nxthdr/proxy/data/caddy/certificates/ root@ams01.scw.infra.nxthdr.dev:/home/nxthdr/proxy/data/caddy/
 
 .PHONY: edit-secrets
 edit-secrets:

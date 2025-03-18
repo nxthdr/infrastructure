@@ -1,24 +1,24 @@
 ---
 core:
   hosts:
-    scw_core:
-      ansible_host: core.infra.nxthdr.dev
+    core_ams01:
+      ansible_host: ams01.core.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 ixp:
   hosts:
-    ixp_fra:
-      ansible_host: fra.ixp.infra.nxthdr.dev
-    ixp_ams:
-      ansible_host: ams.ixp.infra.nxthdr.dev
+    ixp_fra01:
+      ansible_host: fra01.ixp.infra.nxthdr.dev
+    ixp_ams01:
+      ansible_host: ams01.ixp.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 scw:
   hosts:
-    scw_ams:
-      ansible_host: ams.scw.infra.nxthdr.dev
+    scw_ams01:
+      ansible_host: ams01.scw.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
