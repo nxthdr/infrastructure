@@ -1,11 +1,13 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-docker.yml
 ---
-- host: core, scw
+- hosts: core, ixp, scw
+  become: yes
   tasks:
   - name: Update and upgrade packages
     ansible.builtin.apt:
-    update_cache: true
-    upgrade: dist
-    cache_valid_time: 3600
+      update_cache: true
+      upgrade: dist
+      cache_valid_time: 3600
 
   - name: Install dependecy packages
     ansible.builtin.apt:
@@ -22,19 +24,37 @@
       state: directory
       mode: '0755'
 
-  - name: Add Docker official GPG key
+  - name: Add Docker official GPG key (Ubuntu)
     ansible.builtin.apt_key:
       url: https://download.docker.com/linux/ubuntu/gpg
       keyring: /etc/apt/keyrings/docker.gpg
       state: present
+    when: ansible_distribution == 'Ubuntu'
 
-  - name: Add Docker repository
+  - name: Add Docker official GPG key (Debian)
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/debian/gpg
+      keyring: /etc/apt/keyrings/docker.gpg
+      state: present
+    when: ansible_distribution == 'Debian'
+
+  - name: Add Docker repository (Ubuntu)
     ansible.builtin.apt_repository:
       repo: >-
         deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
         https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
       filename: docker
       state: present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Add Docker repository (Debian)
+    ansible.builtin.apt_repository:
+      repo: >-
+        deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
+        https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable
+      filename: docker
+      state: present
+    when: ansible_distribution == 'Debian'
 
   - name: Install Docker and related packages
     ansible.builtin.apt:
