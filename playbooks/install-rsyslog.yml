@@ -1,0 +1,19 @@
+# TODO
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Install rsyslog
+    apt:
+      name: rsyslog
+      state: present
+
+  - name: Copy rsyslog configuration
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/shared/rsyslog/rsyslog.conf"
+      dest: /etc/rsyslog.conf
+
+  - name: Restart rsyslog
+    ansible.builtin.systemd:
+      name: rsyslog
+      state: restarted

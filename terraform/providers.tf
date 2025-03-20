@@ -13,13 +13,19 @@ terraform {
 
 provider "docker" {
   host     = "ssh://nxthdr@ams01.core.infra.nxthdr.dev:22"
-  alias = "core"
+  alias = "core_ams01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
 provider "docker" {
   host     = "ssh://nxthdr@ams01.scw.infra.nxthdr.dev:22"
-  alias = "ams_sw"
+  alias = "scw_ams01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@fra01.ixp.infra.nxthdr.dev:22"
+  alias = "ixp_fra01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 

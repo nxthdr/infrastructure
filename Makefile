@@ -29,4 +29,4 @@ apply: sync-config
 
 .PHONY: destroy
 destroy:
-	terraform destroy
+	terraform -chdir=./terraform destroy -auto-approve

@@ -8,7 +8,7 @@ locals {
 
 resource "docker_network" "dmz" {
   name = "dmz"
-  provider = docker.core
+  provider = docker.core_ams01
   driver = "bridge"
   ipv6 = true
   ipam_config {
@@ -22,7 +22,7 @@ resource "docker_network" "dmz" {
 
 resource "docker_network" "backend" {
   name = "backend"
-  provider = docker.core
+  provider = docker.core_ams01
   driver = "bridge"
   ipv6 = true
   ipam_config {
@@ -37,13 +37,13 @@ resource "docker_network" "backend" {
 ## Reverse Proxy
 resource "docker_image" "caddy" {
   name = "caddy:2.9"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "proxy" {
   image = docker_image.caddy.image_id
   name  = "proxy"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -73,19 +73,19 @@ resource "docker_container" "proxy" {
 ## nxthdr Website
 data "docker_registry_image" "nxthdr_dev" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_image" "nxthdr_dev" {
   name          = data.docker_registry_image.nxthdr_dev.name
-  provider = docker.core
+  provider = docker.core_ams01
   pull_triggers = [data.docker_registry_image.nxthdr_dev.sha256_digest]
 }
 
 resource "docker_container" "nxthdr_dev" {
   image = docker_image.nxthdr_dev.image_id
   name  = "nxthdr_dev"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -101,13 +101,13 @@ resource "docker_container" "nxthdr_dev" {
 ## ClickHouse
 resource "docker_image" "clickhouse" {
   name = "docker.io/clickhouse/clickhouse-server:25.2.2"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "clickhouse" {
   image = docker_image.clickhouse.image_id
   name  = "clickhouse"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -143,13 +143,13 @@ resource "docker_container" "clickhouse" {
 ## Chproxy
 resource "docker_image" "chproxy" {
   name = "contentsquareplatform/chproxy:v1.27.0"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "chproxy" {
   image = docker_image.chproxy.image_id
   name  = "chproxy"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "-config", "/config/config.yml",
     "-enableTCP6"
@@ -172,13 +172,13 @@ resource "docker_container" "chproxy" {
 ## Redpanda
 resource "docker_image" "redpanda" {
   name = "redpandadata/redpanda:v24.3.8"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "redpanda" {
   image = docker_image.redpanda.image_id
   name  = "redpanda"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -210,20 +210,22 @@ resource "docker_container" "redpanda" {
 ## Prometheus
 resource "docker_image" "prometheus" {
   name = "prom/prometheus:v3.2.1"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "prometheus" {
   image = docker_image.prometheus.image_id
   name  = "prometheus"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
   command = [
     "--config.file=/config/prometheus.yml",
-    "--web.external-url=https://prometheus.nxthdr.dev"
+    "--web.external-url=https://prometheus.nxthdr.dev",
+    "--storage.tsdb.path=/prometheus",
+    "--storage.tsdb.retention.time=30d"  # 30 days retention
   ]
   user = "1000:1000"
   network_mode = "bridge"
@@ -248,13 +250,13 @@ resource "docker_container" "prometheus" {
 ## Grafana
 resource "docker_image" "grafana" {
   name = "grafana/grafana:11.5.2"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "grafana" {
   image = docker_image.grafana.image_id
   name  = "grafana"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -270,7 +272,19 @@ resource "docker_container" "grafana" {
     host_path = "/home/nxthdr/grafana/config/grafana.ini"
   }
   volumes {
-    container_path = "/var/lib/grafana"
+    container_path = "/etc/grafana/provisioning/datasources/datasources.yml"
+    host_path = "/home/nxthdr/grafana/config/datasources.yml"
+  }
+  volumes {
+    container_path = "/etc/grafana/provisioning/dashboards/dashboards.yml"
+    host_path = "/home/nxthdr/grafana/config/dashboards.yml"
+  }
+  volumes {
+    container_path = "/var/lib/grafana/dashboards"
+    host_path = "/home/nxthdr/grafana/config/dashboards"
+  }
+  volumes {
+    container_path = "/var/log/grafana"
     host_path = "/home/nxthdr/grafana/data"
   }
 }
@@ -278,13 +292,13 @@ resource "docker_container" "grafana" {
 ## Alertmanager
 resource "docker_image" "alertmanager" {
   name = "prom/alertmanager:v0.28.1"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "alertmanager" {
   image = docker_image.alertmanager.image_id
   name  = "alertmanager"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "--config.file=/config/alertmanager.yml",
     "--storage.path=/data"
@@ -311,13 +325,13 @@ resource "docker_container" "alertmanager" {
 ## Node Exporter
 resource "docker_image" "node_exporter" {
   name = "prom/node-exporter:v1.9.0"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "node_exporter" {
   image = docker_image.node_exporter.image_id
   name  = "node_exporter"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "--path.procfs=/host/proc",
     "--path.rootfs=/rootfs",
@@ -360,7 +374,7 @@ resource "docker_image" "cadvisor" {
 resource "docker_container" "cadvisor" {
   image = docker_image.cadvisor.image_id
   name  = "cadvisor"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -401,13 +415,13 @@ resource "docker_container" "cadvisor" {
 ## Loki
 resource "docker_image" "loki" {
   name = "grafana/loki:3.4.2"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "loki" {
   image = docker_image.loki.image_id
   name  = "loki"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "-config.file=/config/loki.yml"
   ]
@@ -415,7 +429,7 @@ resource "docker_container" "loki" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1000:1000"
+  # user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -426,7 +440,7 @@ resource "docker_container" "loki" {
     host_path = "/home/nxthdr/loki/config/loki.yml"
   }
   volumes {
-    container_path = "/loki"
+    container_path = "/data"
     host_path = "/home/nxthdr/loki/data"
   }
 }
@@ -434,13 +448,13 @@ resource "docker_container" "loki" {
 ## Promtail
 resource "docker_image" "promtail" {
   name = "grafana/promtail:3.4.2"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "promtail" {
   image = docker_image.promtail.image_id
   name  = "promtail"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "-config.file=/config/promtail.yml"
   ]
@@ -468,13 +482,13 @@ resource "docker_container" "promtail" {
 ## Query Exporter
 resource "docker_image" "query_exporter" {
   name = "ghcr.io/albertodonato/query-exporter:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "query_exporter" {
   image = docker_image.query_exporter.image_id
   name  = "query_exporter"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "--config", "/config/config.yml",
     "--host", "2a06:de00:50:cafe:10::111",
@@ -498,19 +512,19 @@ resource "docker_container" "query_exporter" {
 ## Risotto
 data "docker_registry_image" "risotto" {
   name = "ghcr.io/nxthdr/risotto:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_image" "risotto" {
   name          = data.docker_registry_image.risotto.name
-  provider = docker.core
+  provider = docker.core_ams01
   pull_triggers = [data.docker_registry_image.risotto.sha256_digest]
 }
 
 resource "docker_container" "risotto" {
   image = docker_image.risotto.image_id
   name  = "risotto"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [ "--config", "/config/risotto" ]
   log_driver = "json-file"
   log_opts = {
@@ -538,19 +552,19 @@ resource "docker_container" "risotto" {
 ## chbot
 data "docker_registry_image" "chbot" {
   name = "ghcr.io/nxthdr/chbot:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_image" "chbot" {
   name          = data.docker_registry_image.chbot.name
-  provider = docker.core
+  provider = docker.core_ams01
   pull_triggers = [data.docker_registry_image.chbot.sha256_digest]
 }
 
 resource "docker_container" "chbot" {
   image = docker_image.chbot.image_id
   name  = "chbot"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "--url", "http://[2a06:de00:50:cafe:10::102]:9090",
     "--user", "read",
@@ -573,19 +587,19 @@ resource "docker_container" "chbot" {
 ## DynDNS
 data "docker_registry_image" "dyndns" {
   name = "ghcr.io/nxthdr/dyndns:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_image" "dyndns" {
   name          = data.docker_registry_image.dyndns.name
-  provider = docker.core
+  provider = docker.core_ams01
   pull_triggers = [data.docker_registry_image.dyndns.sha256_digest]
 }
 
 resource "docker_container" "dyndns" {
   image = docker_image.dyndns.image_id
   name  = "dyndns"
-  provider = docker.core
+  provider = docker.core_ams01
   command = [
     "--host", "[::]:3000",
     "--porkbun-api-key", var.porkbun_api_key,
@@ -609,7 +623,7 @@ resource "docker_container" "dyndns" {
 resource "docker_container" "geofeed" {
   image = docker_image.caddy.image_id
   name  = "geofeed"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -633,19 +647,19 @@ resource "docker_container" "geofeed" {
 ## Peers
 data "docker_registry_image" "peers" {
   name = "ghcr.io/nxthdr/peers:main"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_image" "peers" {
   name          = data.docker_registry_image.peers.name
-  provider = docker.core
+  provider = docker.core_ams01
   pull_triggers = [data.docker_registry_image.peers.sha256_digest]
 }
 
 resource "docker_container" "peers" {
   image = docker_image.peers.image_id
   name  = "peers"
-  provider = docker.core
+  provider = docker.core_ams01
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"

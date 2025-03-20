@@ -10,14 +10,14 @@ docker pull $DOCKER_IMAGE_PROWL
 docker pull $DOCKER_IMAGE_SAIMIRIS
 
 # Probes generation
-docker run --rm \
+docker run --rm --name cron-saimprowler-prowl \
     -v $SCRIPTPATH/data/targets.csv:/data/targets.csv \
     $DOCKER_IMAGE_PROWL \
     --tool traceroute --mapper sequential \
     /data/targets.csv > $SCRIPTPATH/data/probes.csv
 
 # Probes execution
-docker run --rm --network=host \
+docker run --rm --name cron-saimprowler-saimiris --network=host \
     -v $SCRIPTPATH/config/config.yml:/config/config.yml \
     -v $SCRIPTPATH/data/probes.csv:/data/probes.csv \
     $DOCKER_IMAGE_SAIMIRIS \
