@@ -368,7 +368,7 @@ resource "docker_container" "node_exporter" {
 ## Cadvisor
 resource "docker_image" "cadvisor" {
   name = "gcr.io/cadvisor/cadvisor:v0.52.1"
-  provider = docker.core
+  provider = docker.core_ams01
 }
 
 resource "docker_container" "cadvisor" {
@@ -445,32 +445,46 @@ resource "docker_container" "loki" {
   }
 }
 
-## Promtail
-resource "docker_image" "promtail" {
-  name = "grafana/promtail:3.4.2"
+## Alloy
+resource "docker_image" "alloy" {
+  name = "grafana/alloy:v1.7.5"
   provider = docker.core_ams01
 }
 
-resource "docker_container" "promtail" {
-  image = docker_image.promtail.image_id
-  name  = "promtail"
+resource "docker_container" "alloy" {
+  image = docker_image.alloy.image_id
+  name  = "alloy"
   provider = docker.core_ams01
   command = [
-    "-config.file=/config/promtail.yml"
+    "run", "--storage.path=/var/lib/alloy/data",
+    "/etc/alloy/config.alloy"
   ]
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  privileged = "true"
-  network_mode = "bridge"
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::110"
   }
+  ports {
+    internal = 514
+    external = 514
+    protocol = "udp"
+  }
+  ports {
+    internal = 601
+    external = 601
+    protocol = "tcp"
+  }
   volumes {
-    container_path = "/config/promtail.yml"
-    host_path = "/home/nxthdr/promtail/config/promtail.yml"
+    container_path = "/etc/alloy/config.alloy"
+    host_path = "/home/nxthdr/alloy/config/config.alloy"
+  }
+  volumes {
+    container_path = "/var/lib/alloy/data"
+    host_path = "/home/nxthdr/alloy/data"
   }
   volumes {
     container_path = "/var/lib/docker/containers"

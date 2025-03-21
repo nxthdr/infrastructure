@@ -1,0 +1,65 @@
+local.file_match "containers" {
+        path_targets = [{
+                __address__ = "localhost",
+                __path__    = "/var/lib/docker/containers/*/*log",
+                host        = "core",
+                job         = "containerlogs",
+        }]
+}
+
+loki.process "containers" {
+        forward_to = [loki.write.default.receiver]
+
+        stage.json {
+                expressions = {
+                        attrs  = "",
+                        output = "log",
+                        stream = "stream",
+                }
+        }
+
+        stage.json {
+                expressions = {
+                        tag = "",
+                }
+                source = "attrs"
+        }
+
+        stage.regex {
+                expression = "(?P<image_name>(?:[^|]*[^|])).(?P<container_name>(?:[^|]*[^|])).(?P<image_id>(?:[^|]*[^|])).(?P<container_id>(?:[^|]*[^|]))"
+                source     = "tag"
+        }
+
+        stage.timestamp {
+                source = "time"
+                format = "RFC3339Nano"
+        }
+
+        stage.labels {
+                values = {
+                        container_id   = null,
+                        container_name = null,
+                        image_id       = null,
+                        image_name     = null,
+                        stream         = null,
+                        tag            = null,
+                }
+        }
+
+        stage.output {
+                source = "output"
+        }
+}
+
+loki.source.file "containers" {
+        targets               = local.file_match.containers.targets
+        forward_to            = [loki.process.containers.receiver]
+        legacy_positions_file = "/tmp/positions.yaml"
+}
+
+loki.write "default" {
+        endpoint {
+                url = "http://loki:3100/loki/api/v1/push"
+        }
+        external_labels = {}
+}

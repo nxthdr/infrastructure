@@ -41,7 +41,7 @@ analytics:
 
 # Retention configuration
 limits_config:
-  retention_period: 24h
+  retention_period: 24h  # TODO Set to 7d
 
 compactor:
   working_directory: /tmp/loki/retention  # Should be on /data but I have permissio denied right now
