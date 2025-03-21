@@ -1,6 +1,6 @@
-# TODO
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-rsyslog.yml
 ---
-- hosts: all
+- hosts: ixp
   become: yes
   tasks:
   - name: Install rsyslog
@@ -16,4 +16,5 @@
   - name: Restart rsyslog
     ansible.builtin.systemd:
       name: rsyslog
+      enabled: true
       state: restarted
