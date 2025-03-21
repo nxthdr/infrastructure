@@ -22,6 +22,26 @@ To sync the network configuration files:
 make sync-bird
 ```
 
+## Provisioning
+
+### IXP servers
+
+* user
+* rsyslog
+* docker
+* wireguard
+* bird
+* alloy, cadvisor
+
+### Probing servers
+
+* user
+* rsyslog
+* docker
+* vlt-interfaces
+* alloy, cadvisor
+* saimiris
+
 ## Manual Configuration
 
 ### Aliases
