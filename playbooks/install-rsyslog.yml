@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-rsyslog.yml
 ---
-- hosts: ixp
+- hosts: core, ixp
   become: yes
   tasks:
   - name: Install rsyslog
