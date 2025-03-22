@@ -343,6 +343,8 @@ resource "docker_container" "node_exporter" {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
   user = "1000:1000"
+  pid_mode = "host"
+  hostname = "coreams01"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
