@@ -5,6 +5,7 @@ resource "docker_network" "vlt_atl01_backend" {
   ipv6 = true
 }
 
+# Alloy
 resource "docker_image" "vlt_atl01_alloy" {
   name = "grafana/alloy:v1.7.5"
   provider = docker.vlt_atl01
@@ -44,5 +45,49 @@ resource "docker_container" "vlt_atl01_alloy" {
   volumes {
     container_path = "/var/lib/alloy/data"
     host_path = "/home/nxthdr/alloy/data"
+  }
+}
+
+# Node Exporter
+resource "docker_image" "vlt_atl01_node_exporter" {
+  name = "prom/node-exporter:v1.9.0"
+  provider = docker.vlt_atl01
+}
+
+resource "docker_container" "vlt_atl01_node_exporter" {
+  image = docker_image.vlt_atl01_node_exporter.image_id
+  name  = "node_exporter"
+  provider = docker.vlt_atl01
+  command = [
+    "--path.procfs=/host/proc",
+    "--path.rootfs=/rootfs",
+    "--path.sysfs=/host/sys",
+    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  user = "1000:1000"
+  pid_mode = "host"
+  hostname = "vltatl01"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.vlt_atl01_backend.name
+  }
+  volumes {
+    container_path = "/host/proc"
+    host_path = "/proc"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/host/sys"
+    host_path = "/sys"
+    read_only = "true"
+  }
+    volumes {
+    container_path = "/rootfs"
+    host_path = "/"
+    read_only = "true"
   }
 }

@@ -1,3 +1,4 @@
+// Syslog configuration
 discovery.relabel "syslog" {
     targets = []
 
@@ -62,4 +63,40 @@ loki.write "syslog" {
         //  password = "admin"
         // }
     }
+}
+
+// Prometheus configuration
+prometheus.remote_write "default" {
+    endpoint {
+        url = "https://prometheus.nxthdr.dev/api/v1/write"
+
+        // basic_auth {
+        //  username = "admin"
+        //  password = "admin"
+        // }
+    }
+}
+
+prometheus.relabel "instance_relabel" {
+    rule {
+        source_labels = ["job"]
+        target_label  = "job"
+        replacement   = "node-exporter"
+    }
+
+    rule {
+        source_labels = ["instance"]
+        target_label  = "instance"
+        replacement   = "vltatl01"
+    }
+
+    forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "node_exporter" {
+    targets = [{
+    __address__ = "node_exporter:9100",
+    }]
+
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
 }
