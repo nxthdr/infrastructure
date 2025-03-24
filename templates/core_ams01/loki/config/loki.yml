@@ -41,10 +41,10 @@ analytics:
 
 # Retention configuration
 limits_config:
-  retention_period: 24h  # TODO Set to 7d
+  retention_period: 7d
 
 compactor:
-  working_directory: /tmp/loki/retention  # Should be on /data but I have permissio denied right now
+  working_directory: /tmp/loki/retention  # TODO should be on /data (resolve permission denied issue)
   retention_enabled: true
   retention_delete_delay: 2h
   delete_request_store: filesystem
