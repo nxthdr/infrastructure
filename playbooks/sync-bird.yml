@@ -21,7 +21,7 @@
   - name: Reload systemd
     ansible.builtin.command: systemctl daemon-reload
 
-  - name: Enable and restart bird
+  - name: Enable and reload bird
     ansible.builtin.systemd_service:
       enabled: true
       state: reloaded
