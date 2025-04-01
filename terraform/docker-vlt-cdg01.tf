@@ -50,7 +50,7 @@ resource "docker_container" "vlt_cdg01_alloy" {
 
 # Node Exporter
 resource "docker_image" "vlt_cdg01_node_exporter" {
-  name = "prom/node-exporter:v1.9.0"
+  name = "prom/node-exporter:v1.9.1"
   provider = docker.vlt_cdg01
 }
 

@@ -77,7 +77,7 @@ resource "docker_container" "scw_ams01_alloy" {
 
 # Node Exporter
 resource "docker_image" "scw_ams01_node_exporter" {
-  name = "prom/node-exporter:v1.9.0"
+  name = "prom/node-exporter:v1.9.1"
   provider = docker.scw_ams01
 }
 

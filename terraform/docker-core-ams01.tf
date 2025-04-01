@@ -325,7 +325,7 @@ resource "docker_container" "alertmanager" {
 
 # Node Exporter
 resource "docker_image" "node_exporter" {
-  name = "prom/node-exporter:v1.9.0"
+  name = "prom/node-exporter:v1.9.1"
   provider = docker.core_ams01
 }
 
