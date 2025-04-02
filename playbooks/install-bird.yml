@@ -1,9 +1,9 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-bird.yml
 ---
-- hosts: vlt
+- hosts: core, ixp, vlt
   become: yes
   vars:
-    bird_version: '2.15.1'
+    bird_version: '2.16.1'
   tasks:
   - name: Install packages for compilation
     ansible.builtin.apt:
