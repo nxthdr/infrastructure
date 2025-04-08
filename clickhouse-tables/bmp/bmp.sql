@@ -1,4 +1,4 @@
-CREATE TABLE risotto.from_kafka
+CREATE TABLE bmp.from_kafka
 (
 	timestamp DateTime64,
 	router_addr IPv6,
@@ -24,7 +24,7 @@ SETTINGS
     kafka_format = 'CSV',
     kafka_max_rows_per_message = 1048576;
 
-CREATE TABLE risotto.updates
+CREATE TABLE bmp.updates
 (
 	timestamp DateTime64,
 	router_addr IPv6,
@@ -46,5 +46,5 @@ ENGINE = MergeTree()
 ORDER BY (timestamp, router_addr, peer_addr, prefix_addr, prefix_len)
 TTL toDateTime(timestamp) + INTERVAL 7 DAY DELETE;
 
-CREATE MATERIALIZED VIEW risotto.from_kafka_mv TO risotto.updates
-AS SELECT * FROM risotto.from_kafka;
+CREATE MATERIALIZED VIEW bmp.from_kafka_mv TO bmp.updates
+AS SELECT * FROM bmp.from_kafka;

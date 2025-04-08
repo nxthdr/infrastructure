@@ -21,7 +21,7 @@ queries:
     sql: |
       WITH toStartOfMinute(now() - INTERVAL 1 MINUTE) AS timeStart, toStartOfMinute(now()) as timeEnd
       SELECT router_addr, Count() AS risotto_updates_per_minute
-      FROM risotto.updates
+      FROM bmp.updates
       WHERE timestamp >= timeStart
       AND timestamp < timeEnd
       GROUP BY router_addr
