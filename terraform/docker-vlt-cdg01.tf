@@ -7,7 +7,7 @@ resource "docker_network" "vlt_cdg01_backend" {
 
 # Alloy
 resource "docker_image" "vlt_cdg01_alloy" {
-  name = "grafana/alloy:v1.7.5"
+  name = "grafana/alloy:v1.8.0"
   provider = docker.vlt_cdg01
 }
 
