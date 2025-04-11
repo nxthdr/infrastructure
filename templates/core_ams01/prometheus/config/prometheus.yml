@@ -21,10 +21,6 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::a]:2019']
 
-  - job_name: geofeed
-    static_configs:
-      - targets: ['[2a06:de00:50:cafe:10::11]:2019']
-
   - job_name: nxthdr.dev
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::100]:2019']
@@ -73,4 +69,4 @@ scrape_configs:
 
   - job_name: risotto
     static_configs:
-      - targets: ['[2a06:de00:50:cafe:10::1000]:3000']
+      - targets: ['[2a06:de00:50:cafe:10::112]:3000']

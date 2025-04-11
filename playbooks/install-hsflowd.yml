@@ -1,0 +1,29 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-hsflowd.yml
+---
+- hosts: ixp, vlt
+  become: yes
+  tasks:
+  - name: Install .deb package (Ubuntu)
+    ansible.builtin.apt:
+      deb: https://github.com/sflow/host-sflow/releases/download/v2.0.25-3/hsflowd-ubuntu18_2.0.25-3_amd64.deb
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: Install .deb package (Debian)
+    ansible.builtin.apt:
+      deb: https://github.com/sflow/host-sflow/releases/download/v2.0.53-1/hsflowd-debian12_2.0.53-1_amd64.deb
+    when: ansible_distribution == 'Debian'
+
+  - name: Copy configuration file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/{{ inventory_hostname }}/hsflowd/hsflowd.conf"
+      dest: /etc/hsflowd.conf
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and restart hsflowd
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      name: hsflowd
+

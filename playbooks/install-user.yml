@@ -7,6 +7,8 @@
       name: nxthdr
       password: "{{ nxthdr_hashed_password }}"
       create_home: yes
+      uid: 1001
+      gid: 1001
       groups: sudo
       shell: /bin/bash
 

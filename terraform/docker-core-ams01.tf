@@ -50,7 +50,7 @@ resource "docker_container" "proxy" {
   }
   dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
   env = ["CADDY_ADMIN=[::]:2019"]
-  user = "1000:1000"
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
@@ -112,7 +112,7 @@ resource "docker_container" "clickhouse" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1000:1000"
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -183,7 +183,7 @@ resource "docker_container" "redpanda" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1000:1000"
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz.name
@@ -228,7 +228,7 @@ resource "docker_container" "prometheus" {
     "--web.enable-remote-write-receiver",
     "--web.external-url=https://prometheus.nxthdr.dev"
   ]
-  user = "1000:1000"
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -262,7 +262,7 @@ resource "docker_container" "grafana" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1000:1000"
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -343,7 +343,7 @@ resource "docker_container" "node_exporter" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1000:1000"
+  user = "1001:1001"
   pid_mode = "host"
   hostname = "coreams01"
   network_mode = "bridge"
@@ -432,7 +432,6 @@ resource "docker_container" "loki" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  # user = "1000:1000"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -555,7 +554,7 @@ resource "docker_container" "risotto" {
   }
   networks_advanced {
     name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::1000"
+    ipv6_address = "2a06:de00:50:cafe:10::112"
   }
   volumes {
     container_path = "/config/risotto.yml"
@@ -564,6 +563,38 @@ resource "docker_container" "risotto" {
   volumes {
     container_path = "/data"
     host_path = "/home/nxthdr/risotto/data"
+  }
+}
+
+# Goflow
+resource "docker_image" "goflow" {
+  name = "ghcr.io/netsampler/goflow2:v2.2.2"
+  provider = docker.core_ams01
+}
+
+resource "docker_container" "goflow" {
+  image = docker_image.goflow.image_id
+  name  = "goflow"
+  provider = docker.core_ams01
+  command = [
+    "-format=bin",
+    "-transport=kafka",
+    "-transport.kafka.brokers=[2a06:de00:50:cafe:10::103]:9092",
+    "-transport.kafka.topic=goflow-flows",
+    "-transport.kafka.flushbytes=1000"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.dmz.name
+    ipv6_address = "2a06:de00:50:cafe:100::d"
+  }
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::113"
   }
 }
 
