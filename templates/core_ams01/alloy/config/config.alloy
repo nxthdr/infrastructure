@@ -112,3 +112,14 @@ loki.source.syslog "syslog" {
     forward_to    = [loki.write.default.receiver]
     relabel_rules = discovery.relabel.syslog.rules
 }
+
+loki.write "default" {
+    endpoint {
+        url = "https://loki.nxthdr.dev/loki/api/v1/push"
+
+        // basic_auth {
+        //  username = "admin"
+        //  password = "admin"
+        // }
+    }
+}

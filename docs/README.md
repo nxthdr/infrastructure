@@ -28,6 +28,7 @@ make sync-bird
 
 * user
 * rsyslog
+* hsflowd
 * docker
 * wireguard
 * bird
@@ -37,6 +38,7 @@ make sync-bird
 
 * user
 * rsyslog
+* hsflowd
 * docker
 * vlt-interfaces
 * alloy, cadvisor
