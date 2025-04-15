@@ -28,9 +28,9 @@ SETTINGS
 CREATE TABLE flows.flows
 (
     date Date,
-    time_inserted_ns DateTime64,
-    time_received_ns DateTime64,
-    time_flow_start_ns DateTime64,
+    time_inserted_ns DateTime64(9),
+    time_received_ns DateTime64(9),
+    time_flow_start_ns DateTime64(9),
     sequence_num UInt32,
     sampling_rate UInt64,
     sampler_address FixedString(16),
@@ -51,4 +51,22 @@ ORDER BY time_received_ns
 TTL date + INTERVAL 7 DAY DELETE;
 
 CREATE MATERIALIZED VIEW flows.from_kafka_mv TO flows.flows
-AS SELECT * FROM flows.from_kafka;
+AS SELECT
+    toDate(time_received_ns) AS date,
+    now() AS time_inserted_ns,
+    toDateTime64(time_received_ns/1000000000, 9) AS time_received_ns,
+    toDateTime64(time_flow_start_ns/1000000000, 9) AS time_flow_start_ns,
+    sequence_num,
+    sampling_rate,
+    sampler_address,
+    src_addr,
+    dst_addr,
+    src_as,
+    dst_as,
+    etype,
+    proto,
+    src_port,
+    dst_port,
+    bytes,
+    packets
+FROM flows.from_kafka;
