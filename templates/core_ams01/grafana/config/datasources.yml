@@ -9,6 +9,7 @@ datasources:
   isDefault: false
   version: 1
   editable: false
+
 - name: Prometheus
   type: prometheus
   orgId: 1
@@ -17,3 +18,12 @@ datasources:
   isDefault: true
   version: 1
   editable: false
+
+- name: ClickHouse
+  type: grafana-clickhouse-datasource
+  jsonData:
+    defaultDatabase: default
+    port: 9000
+    host: "[2a06:de00:50:cafe:10::101]"
+    username: chproxy
+    sslSkipVerify: true

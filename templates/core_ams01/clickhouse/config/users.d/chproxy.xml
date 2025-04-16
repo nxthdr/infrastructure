@@ -1,4 +1,10 @@
 <clickhouse>
+    <profiles>
+        <readonly>
+            <readonly>2</readonly>
+        </readonly>
+    </profiles>
+
     <users>
         <chproxy>
             <password></password>

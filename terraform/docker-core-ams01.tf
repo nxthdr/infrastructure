@@ -268,6 +268,9 @@ resource "docker_container" "grafana" {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::105"
   }
+  env = [
+    "GF_INSTALL_PLUGINS=grafana-clickhouse-datasource",
+  ]
   volumes {
     container_path = "/etc/grafana/grafana.ini"
     host_path = "/home/nxthdr/grafana/config/grafana.ini"
@@ -493,36 +496,6 @@ resource "docker_container" "alloy" {
     container_path = "/var/lib/docker/containers"
     host_path = "/var/lib/docker/containers"
     read_only = "true"
-  }
-}
-
-# Query Exporter
-resource "docker_image" "query_exporter" {
-  name = "ghcr.io/albertodonato/query-exporter:main"
-  provider = docker.core_ams01
-}
-
-resource "docker_container" "query_exporter" {
-  image = docker_image.query_exporter.image_id
-  name  = "query_exporter"
-  provider = docker.core_ams01
-  command = [
-    "--config", "/config/config.yml",
-    "--host", "2a06:de00:50:cafe:10::111",
-    "--port", "9560"
-  ]
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::111"
-  }
-  volumes {
-    container_path = "/config/config.yml"
-    host_path = "/home/nxthdr/query-exporter/config/config.yml"
   }
 }
 

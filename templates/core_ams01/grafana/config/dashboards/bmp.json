@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 9,
   "links": [],
   "panels": [
     {
@@ -211,8 +211,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "type": "grafana-clickhouse-datasource",
+        "uid": "PDEE91DDB90597936"
       },
       "fieldConfig": {
         "defaults": {
@@ -316,10 +316,25 @@
       "pluginVersion": "11.6.0",
       "targets": [
         {
-          "editorMode": "code",
-          "expr": "risotto_updates_per_minute{router_addr='$router'}",
-          "legendFormat": "{{router_addr}}",
-          "range": true,
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "editorType": "sql",
+          "format": 0,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "timeseries",
+          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time, Count() AS \"${router}\"\nFROM bmp.updates\nWHERE $__timeFilter(time) AND router_addr == toIPv6('${router}')\nGROUP BY time\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -362,5 +377,5 @@
   "timezone": "browser",
   "title": "BMP",
   "uid": "eegfao8dj905cb",
-  "version": 2
+  "version": 3
 }
