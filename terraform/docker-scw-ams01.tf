@@ -19,9 +19,21 @@ resource "docker_container" "scw_ams01_proxy" {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
   dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
-  env = ["CADDY_ADMIN=[::]:2019"]
-#   user = "1000:1000"
-  network_mode = "host"
+  env = [ "CADDY_ADMIN=[::]:2019" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.scw_ams01_backend.name
+  }
+  ports {
+    internal = 80
+    external = 80
+    protocol = "tcp"
+  }
+  ports {
+    internal = 443
+    external = 443
+    protocol = "tcp"
+  }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
     host_path = "/home/nxthdr/proxy/config/Caddyfile"

@@ -87,6 +87,17 @@ prometheus.relabel "node_exporter_job_relabel" {
     forward_to = [prometheus.relabel.instance_relabel.receiver]
 }
 
+prometheus.relabel "job_relabel" {
+    rule {
+        source_labels = ["job"]
+        target_label  = "job"
+        regex    = `(.+)\.(.+)\.(.+)`
+        replacement   = "$3"
+    }
+
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
+}
+
 prometheus.relabel "instance_relabel" {
     rule {
         source_labels = ["instance"]
@@ -110,5 +121,13 @@ prometheus.scrape "cadvisor" {
     __address__ = "cadvisor:8080",
     }]
 
-    forward_to = [prometheus.relabel.instance_relabel.receiver]
+    forward_to = [prometheus.relabel.job_relabel.receiver]
+}
+
+prometheus.scrape "proxy" {
+    targets = [{
+    __address__ = "proxy:2019",
+    }]
+
+    forward_to = [prometheus.relabel.job_relabel.receiver]
 }
