@@ -108,7 +108,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "risotto_bgp_peers{router='$router'}",
+          "expr": "risotto_state_bgp_peers{router='$router'}",
           "legendFormat": "{{router}}",
           "range": true,
           "refId": "A"
@@ -200,7 +200,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "risotto_bgp_updates{router='$router'}",
+          "expr": "risotto_state_bgp_updates{router='$router'}",
           "legendFormat": "{{peer}}",
           "range": true,
           "refId": "A"
@@ -377,5 +377,5 @@
   "timezone": "browser",
   "title": "BMP",
   "uid": "eegfao8dj905cb",
-  "version": 3
+  "version": 6
 }
