@@ -77,13 +77,17 @@ prometheus.remote_write "default" {
     }
 }
 
-prometheus.relabel "instance_relabel" {
+prometheus.relabel "node_exporter_job_relabel" {
     rule {
         source_labels = ["job"]
         target_label  = "job"
         replacement   = "node-exporter"
     }
 
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
+}
+
+prometheus.relabel "instance_relabel" {
     rule {
         source_labels = ["instance"]
         target_label  = "instance"
@@ -96,6 +100,14 @@ prometheus.relabel "instance_relabel" {
 prometheus.scrape "node_exporter" {
     targets = [{
     __address__ = "node_exporter:9100",
+    }]
+
+    forward_to = [prometheus.relabel.node_exporter_job_relabel.receiver]
+}
+
+prometheus.scrape "cadvisor" {
+    targets = [{
+    __address__ = "cadvisor:8080",
     }]
 
     forward_to = [prometheus.relabel.instance_relabel.receiver]

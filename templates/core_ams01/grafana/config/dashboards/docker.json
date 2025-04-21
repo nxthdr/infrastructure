@@ -93,7 +93,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "count(count(container_last_seen) by (name))",
+          "expr": "count(count(container_last_seen{instance=\"$instance\"}) by (name))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -195,7 +195,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_cpu_usage_seconds_total{name=~\".+\"}[10m])) by (name) * 100",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{instance=\"$instance\",name=~\".+\"}[10m])) by (name) * 100",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -306,7 +306,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_memory_usage_bytes{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_memory_usage_bytes{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -405,7 +405,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_memory_cache{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_memory_cache{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -520,7 +520,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_fs_reads_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_fs_reads_bytes_total{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -622,7 +622,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_fs_writes_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_fs_writes_bytes_total{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -729,7 +729,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
@@ -737,7 +737,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_network_receive_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_network_receive_bytes_total{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -831,7 +831,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
@@ -839,7 +839,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_network_transmit_bytes_total{name=~\".+\"}[10m])) by (name)",
+          "expr": "sum(rate(container_network_transmit_bytes_total{instance=\"$instance\",name=~\".+\"}[10m])) by (name)",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -924,7 +924,7 @@
           "reverse": false
         }
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "11.6.0",
       "targets": [
         {
           "datasource": {
@@ -932,7 +932,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "count by(name) (count_over_time(container_last_seen{name=~\".+\"}[$__range]))",
+          "expr": "count by(name) (count_over_time(container_last_seen{instance=\"$instance\",name=~\".+\"}[$__range]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -950,7 +950,26 @@
     "core"
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "[2a06:de00:50:cafe:10::108]:8080",
+          "value": "[2a06:de00:50:cafe:10::108]:8080"
+        },
+        "definition": "label_values(container_last_seen,instance)",
+        "label": "instance",
+        "name": "instance",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(container_last_seen,instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-3h",
@@ -960,5 +979,5 @@
   "timezone": "",
   "title": "Docker",
   "uid": "ae3c41d7-cea5-4cca-a918-5708706b4d1a",
-  "version": 2
+  "version": 3
 }

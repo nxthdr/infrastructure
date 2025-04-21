@@ -49,7 +49,7 @@ resource "docker_container" "proxy" {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
   dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
-  env = ["CADDY_ADMIN=[::]:2019"]
+  env = [ "CADDY_ADMIN=[::]:2019" ]
   user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
@@ -79,7 +79,7 @@ data "docker_registry_image" "nxthdr_dev" {
 resource "docker_image" "nxthdr_dev" {
   name          = data.docker_registry_image.nxthdr_dev.name
   provider = docker.core_ams01
-  pull_triggers = [data.docker_registry_image.nxthdr_dev.sha256_digest]
+  pull_triggers = [ data.docker_registry_image.nxthdr_dev.sha256_digest ]
 }
 
 resource "docker_container" "nxthdr_dev" {
@@ -90,7 +90,7 @@ resource "docker_container" "nxthdr_dev" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  env = ["CADDY_ADMIN=[::]:2019"]
+  env = [ "CADDY_ADMIN=[::]:2019" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -508,7 +508,7 @@ data "docker_registry_image" "risotto" {
 resource "docker_image" "risotto" {
   name          = data.docker_registry_image.risotto.name
   provider = docker.core_ams01
-  pull_triggers = [data.docker_registry_image.risotto.sha256_digest]
+  pull_triggers = [ data.docker_registry_image.risotto.sha256_digest ]
 }
 
 resource "docker_container" "risotto" {
@@ -580,7 +580,7 @@ data "docker_registry_image" "chbot" {
 resource "docker_image" "chbot" {
   name          = data.docker_registry_image.chbot.name
   provider = docker.core_ams01
-  pull_triggers = [data.docker_registry_image.chbot.sha256_digest]
+  pull_triggers = [ data.docker_registry_image.chbot.sha256_digest ]
 }
 
 resource "docker_container" "chbot" {
@@ -615,7 +615,7 @@ data "docker_registry_image" "dyndns" {
 resource "docker_image" "dyndns" {
   name          = data.docker_registry_image.dyndns.name
   provider = docker.core_ams01
-  pull_triggers = [data.docker_registry_image.dyndns.sha256_digest]
+  pull_triggers = [ data.docker_registry_image.dyndns.sha256_digest ]
 }
 
 resource "docker_container" "dyndns" {
@@ -675,7 +675,7 @@ data "docker_registry_image" "peers" {
 resource "docker_image" "peers" {
   name          = data.docker_registry_image.peers.name
   provider = docker.core_ams01
-  pull_triggers = [data.docker_registry_image.peers.sha256_digest]
+  pull_triggers = [ data.docker_registry_image.peers.sha256_digest ]
 }
 
 resource "docker_container" "peers" {

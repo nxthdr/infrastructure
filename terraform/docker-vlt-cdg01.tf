@@ -91,3 +91,49 @@ resource "docker_container" "vlt_cdg01_node_exporter" {
     read_only = "true"
   }
 }
+
+
+resource "docker_image" "vlt_cdg01_cadvisor" {
+  name = "gcr.io/cadvisor/cadvisor:v0.52.1"
+  provider = docker.vlt_cdg01
+}
+
+resource "docker_container" "vlt_cdg01_cadvisor" {
+  image = docker_image.vlt_cdg01_cadvisor.image_id
+  name  = "cadvisor"
+  provider = docker.vlt_cdg01
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  privileged = "true"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.vlt_cdg01_backend.name
+  }
+  volumes {
+    container_path = "/rootfs"
+    host_path = "/"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/run"
+    host_path = "/var/run"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/sys"
+    host_path = "/sys"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/lib/docker"
+    host_path = "/var/lib/docker"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/dev/disk"
+    host_path = "/dev/disk"
+    read_only = "true"
+  }
+}

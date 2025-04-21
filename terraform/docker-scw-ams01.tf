@@ -118,3 +118,49 @@ resource "docker_container" "scw_ams01_node_exporter" {
     read_only = "true"
   }
 }
+
+# Cadvisor
+resource "docker_image" "scw_ams01_cadvisor" {
+  name = "gcr.io/cadvisor/cadvisor:v0.52.1"
+  provider = docker.scw_ams01
+}
+
+resource "docker_container" "scw_ams01_cadvisor" {
+  image = docker_image.scw_ams01_cadvisor.image_id
+  name  = "cadvisor"
+  provider = docker.scw_ams01
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  privileged = "true"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.scw_ams01_backend.name
+  }
+  volumes {
+    container_path = "/rootfs"
+    host_path = "/"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/run"
+    host_path = "/var/run"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/sys"
+    host_path = "/sys"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/var/lib/docker"
+    host_path = "/var/lib/docker"
+    read_only = "true"
+  }
+  volumes {
+    container_path = "/dev/disk"
+    host_path = "/dev/disk"
+    read_only = "true"
+  }
+}
