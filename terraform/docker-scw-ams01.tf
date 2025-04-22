@@ -6,7 +6,7 @@ resource "docker_network" "scw_ams01_backend" {
 }
 
 resource "docker_image" "scw_ams01_caddy" {
-  name = "caddy:2.9"
+  name = "caddy:2.10"
   provider = docker.scw_ams01
 }
 

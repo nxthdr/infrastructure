@@ -36,7 +36,7 @@ resource "docker_network" "backend" {
 
 # Reverse Proxy
 resource "docker_image" "caddy" {
-  name = "caddy:2.9"
+  name = "caddy:2.10"
   provider = docker.core_ams01
 }
 
