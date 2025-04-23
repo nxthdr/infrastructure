@@ -355,12 +355,12 @@
           "text": "2a06:de00:50:ffff:beef::1",
           "value": "2a06:de00:50:ffff:beef::1"
         },
-        "definition": "label_values(risotto_bgp_peers,router)",
+        "definition": "label_values(risotto_state_bgp_peers,router)",
         "name": "router",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(risotto_bgp_peers,router)",
+          "query": "label_values(risotto_state_bgp_peers,router)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -377,5 +377,5 @@
   "timezone": "browser",
   "title": "BMP",
   "uid": "eegfao8dj905cb",
-  "version": 6
+  "version": 8
 }
