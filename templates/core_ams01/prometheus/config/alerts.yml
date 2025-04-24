@@ -88,7 +88,7 @@ groups:
 - name: risotto
   rules:
   - alert: Risotto_No_BGP_Peers
-    expr: absent(risotto_state_bgp_peers)
+    expr: absent(risotto_peer_established)
     for: 1m
     labels:
       severity: critical
