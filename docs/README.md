@@ -8,9 +8,15 @@ There are currently four roles:
 * `scw`  - Scaleway servers (used by the core)
 * `vlt`  - Probing servers
 
-```sh
-
 ## Deploy Docker Containers
+
+All servers are running Docker containers. You can find the configuration in the `templates` directory.
+
+The configuration is rendered dynamically using the [render](../render/) python scripts.
+The `ixp`  and `vlt` servers are using the same configuration within a role, but with different parameters.
+
+* `render_config.py` - Templating the configuration files
+* `render_terraform.py` - Templating the terraform files
 
 To template the configuration and terraform files:
 
