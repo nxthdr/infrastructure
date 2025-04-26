@@ -4,6 +4,6 @@
   tasks:
   - name: Copy templated configuration files to remote host
     ansible.posix.synchronize:
-      src: "{{ base_dir }}/.templated/{{ inventory_hostname }}/"
+      src: "{{ base_dir }}/.rendered/{{ inventory_hostname }}/"
       dest: /home/nxthdr
       rsync_opts: "--omit-dir-times"

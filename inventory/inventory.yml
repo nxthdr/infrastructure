@@ -1,33 +1,33 @@
 ---
 core:
   hosts:
-    core_ams01:
+    coreams01:
       ansible_host: ams01.core.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 ixp:
   hosts:
-    ixp_fra01:
+    ixpfra01:
       ansible_host: fra01.ixp.infra.nxthdr.dev
-    ixp_ams01:
+    ixpams01:
       ansible_host: ams01.ixp.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 scw:
   hosts:
-    scw_ams01:
+    scwams01:
       ansible_host: ams01.scw.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
 vlt:
   hosts:
-    vlt_atl01:
+    vltatl01:
       ansible_host: atl01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a3::10/48
-    vlt_cdg01:
+    vltcdg01:
       ansible_host: cdg01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a4::10/48
   vars:

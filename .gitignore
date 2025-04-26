@@ -42,6 +42,9 @@ operations/variable-scripts/variable.json
 # Sentinel runtime directory
 .sentinel
 
-# Templated files (contains credentials)
-.templated
+# Password files
+.password
+
+# Rendered files (contains credentials)
+.rendered
 terraform/terraform.tfvars
