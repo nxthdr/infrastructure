@@ -5,7 +5,6 @@ import jinja2
 import yaml
 from ansible_vault import Vault
 
-# Configuration
 BASE_DIR = Path(__file__).resolve().parent.parent
 INVENTORY_FILE = BASE_DIR / "inventory" / "inventory.yml"
 SECRETS_FILE = BASE_DIR / "secrets" / "secrets.yml"
@@ -16,7 +15,6 @@ TERRAFORM_TFVARS_TEMPLATE = "terraform.tfvars.j2"
 TERRAFORM_PROVIDERS_TEMPLATE = "providers.tf.j2"
 
 
-# Helper Functions
 def render_template(template_path, output_path, context, jinja_env):
     """Renders a single Jinja2 template."""
     try:
@@ -67,7 +65,6 @@ def load_vault_secrets(password):
 
 
 def main():
-    print("Reading vault password from stdin...", file=sys.stderr)
     vault_password = sys.stdin.readline().strip()
     if not vault_password:
         print("Error: No vault password provided.", file=sys.stderr)
@@ -101,8 +98,8 @@ def main():
         undefined=jinja2.StrictUndefined,
     )
 
-    # Render global providers.tf
-    print(f"Processing global template: {TERRAFORM_PROVIDERS_TEMPLATE}")
+    # Render providers.tf
+    print(f"Processing template: {TERRAFORM_PROVIDERS_TEMPLATE}")
     providers_template_path = TEMPLATES_DIR / TERRAFORM_PROVIDERS_TEMPLATE
     providers_output_path = OUTPUT_DIR / "providers.tf"
     if providers_template_path.is_file():
@@ -114,12 +111,12 @@ def main():
         )
     else:
         print(
-            f"  Warning: Global providers template {providers_template_path} not found.",
+            f"  Warning: providers template {providers_template_path} not found.",
             file=sys.stderr,
         )
 
-    # Render global terraform.tfvars
-    print(f"Processing global template: {TERRAFORM_TFVARS_TEMPLATE}")
+    # Render terraform.tfvars
+    print(f"Processing template: {TERRAFORM_TFVARS_TEMPLATE}")
     tfvars_template_path = TEMPLATES_DIR / TERRAFORM_TFVARS_TEMPLATE
     tfvars_output_path = OUTPUT_DIR / "terraform.tfvars"
     if tfvars_template_path.is_file():
@@ -131,17 +128,17 @@ def main():
         )
     else:
         print(
-            f"  Warning: Global tfvars template {tfvars_template_path} not found.",
+            f"  Warning: terraform.tfvars template {tfvars_template_path} not found.",
             file=sys.stderr,
         )
 
     # Process Terraform Host Templates for SPECIAL_GROUPS
-    print("Processing Terraform host files for special groups...")
+    print("Processing Terraform host files for ixp/vlt groups")
     for group_name, group_data in inventory.items():
         if group_name not in SPECIAL_GROUPS:
             continue
 
-        print(f"Processing special group: {group_name}")
+        print(f"Processing group: {group_name}")
         group_vars = group_data.get("vars", {})
         hosts = group_data.get("hosts", {})
 

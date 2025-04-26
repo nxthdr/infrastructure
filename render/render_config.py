@@ -27,7 +27,6 @@ def set_executable(file_path):
         os.chmod(
             file_path, current_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IROTH
         )
-        # Alternative simpler: os.chmod(file_path, 0o755) # Sets rwxr-xr-x directly
         print(f"    Set executable: {file_path}")
     except Exception as e:
         print(f"    Error setting executable bit for {file_path}: {e}", file=sys.stderr)
@@ -134,7 +133,6 @@ def load_vault_secrets(password):
 
 def main():
     # Read password from standard input
-    print("Reading vault password from stdin...", file=sys.stderr)  # Info message
     vault_password = sys.stdin.readline().strip()
     if not vault_password:
         print("Error: No vault password received via stdin.", file=sys.stderr)
