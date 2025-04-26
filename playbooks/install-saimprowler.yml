@@ -5,12 +5,12 @@
   tasks:
   - name: Copy systemd service file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/saimprowler/saimprowler.service"
+      src: "{{ base_dir }}/templates/config/shared/saimprowler/saimprowler.service"
       dest: /lib/systemd/system/saimprowler.service
 
   - name: Copy systemd timer file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/saimprowler/saimprowler.timer"
+      src: "{{ base_dir }}/templates/config/shared/saimprowler/saimprowler.timer"
       dest: /lib/systemd/system/saimprowler.timer
 
   - name: Reload systemd
