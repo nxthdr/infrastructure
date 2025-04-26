@@ -10,29 +10,29 @@ There are currently four roles:
 
 ## Vault
 
-All secrets of the infrastructure are stored as a Ansible Vault secret that can be found [here](../secrets/secrets.yml) (`secrets/secrets.yml`).
+All secrets of the infrastructure are stored as an Ansible Vault secret that can be found [here](../secrets/secrets.yml) (`secrets/secrets.yml`).
 
-The render scripts and Ansible playbooks are using those secrets to configure the servers. To make them work the first time, you need to create in the root of the repository a file called `.password` with the vault password. This file is added to the `.gitignore` file, so it won't be pushed to the repository.
+The render scripts and Ansible playbooks are using those secrets to configure the servers. To make them work the first time, you need to create a file called `.password` with the vault password in the root of the repository. This file is added to the `.gitignore` file, so it won't be pushed to the repository.
 
 ```sh
 echo "<PASSWORD>" > .password
 ```
 
-Note: several Ansible playbooks are running with superuser privileges, so you need to prompt the root password (called the "BECOME password" by Ansible).
+Note: several Ansible playbooks are running with superuser privileges, so you need to provide the root password (called the "BECOME password" by Ansible).
 
 ## Deploy Docker Containers
 
 All servers are running Docker containers. You can find the configuration in the `templates` [directory](../templates/).
 
-The configuration is rendered dynamically using the [render](../render/) python scripts.
+The configuration is rendered dynamically using the [render](../render/) Python scripts.
 The `ixp`  and `vlt` servers are using the same configuration within a role, but with different parameters.
 
 * `render_config.py` - Templating the configuration files
 * `render_terraform.py` - Templating the terraform files
 
-The configuration files are rendered in a `.rendered` directory. This directory contain plaintext passwords, so ignored by git and not pushed to the repository.
+The configuration files are rendered in a `.rendered` directory. This directory contains plaintext passwords, so ignored by git and not pushed to the repository.
 
-The terraform files are rendered in a `terraform` directory. This directory is used to deploy the Docker containers. Those files are not ignored by git. When a file is rendered, there is a warning in the top file to indicate that the file is generated and should not be modified directly.
+The terraform files are rendered in a `terraform` directory. This directory is used to deploy the Docker containers. Those files are not ignored by git. When a file is rendered, there is a warning at the top file to indicate that the file is generated and should not be modified directly.
 
 To template the configuration and terraform files:
 
