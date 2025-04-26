@@ -8,9 +8,21 @@ There are currently four roles:
 * `scw`  - Scaleway servers (used by the core)
 * `vlt`  - Probing servers
 
+## Vault
+
+All secrets of the infrastructure are stored as a Ansible Vault secret that can be found [here](../secrets/secrets.yml) (`secrets/secrets.yml`).
+
+The render scripts and Ansible playbooks are using those secrets to configure the servers. To make them work the first time, you need to create in the root of the repository a file called `.password` with the vault password. This file is added to the `.gitignore` file, so it won't be pushed to the repository.
+
+```sh
+echo "<PASSWORD>" > .password
+```
+
+Note: several Ansible playbooks are running with superuser privileges, so you need to prompt the root password (called the "BECOME password" by Ansible).
+
 ## Deploy Docker Containers
 
-All servers are running Docker containers. You can find the configuration in the `templates` directory.
+All servers are running Docker containers. You can find the configuration in the `templates` [directory](../templates/).
 
 The configuration is rendered dynamically using the [render](../render/) python scripts.
 The `ixp`  and `vlt` servers are using the same configuration within a role, but with different parameters.
@@ -18,27 +30,37 @@ The `ixp`  and `vlt` servers are using the same configuration within a role, but
 * `render_config.py` - Templating the configuration files
 * `render_terraform.py` - Templating the terraform files
 
+The configuration files are rendered in a `.rendered` directory. This directory contain plaintext passwords, so ignored by git and not pushed to the repository.
+
+The terraform files are rendered in a `terraform` directory. This directory is used to deploy the Docker containers. Those files are not ignored by git. When a file is rendered, there is a warning in the top file to indicate that the file is generated and should not be modified directly.
+
 To template the configuration and terraform files:
 
 ```sh
 make template
 ```
 
-To template and sync the configuration files:
+Once rendererd, the configuration files needs to be synced to the servers. To template and sync the configuration files in to the servers:
 
 ```sh
 make sync-config
 ```
 
-To template, sync and apply the entire configuration:
+Finally, if we changed the terraform files, we need to apply the changes. To template, sync and apply the entire configuration:
 
 ```sh
 make apply
 ```
 
+Note that if you want to apply a configuration change that did not changed the terraform files, you can simply run, an apply will not work. The simplest is to restart the container on the server directly:
+
+```sh
+docker restart <CONTAINER>
+```
+
 ## Deploy Network Configuration
 
-Pretty much all servers are running BIRD to announce routes. The configuration can be found in the `network` directory.
+Pretty much all servers are running BIRD to announce routes. The configuration can be found in the `networks` [directory](../networks/).
 
 To sync the network configuration files:
 

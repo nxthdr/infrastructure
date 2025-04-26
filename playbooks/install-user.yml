@@ -1,4 +1,4 @@
-# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --ask-vault-pass playbooks/install-user.yml
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --vault-password-file .password playbooks/install-user.yml
 ---
 - hosts: core, ixp, scw, vlt
   tasks:

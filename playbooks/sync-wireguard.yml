@@ -1,4 +1,4 @@
-# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --ask-vault-pass playbooks/sync-wireguard.yml
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --vault-password-file .password playbooks/sync-wireguard.yml
 ---
 - hosts: core, ixp
   become: yes
