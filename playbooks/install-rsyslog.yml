@@ -10,7 +10,7 @@
 
   - name: Copy rsyslog configuration
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/rsyslog/rsyslog.conf"
+      src: "{{ base_dir }}/templates/config/shared/rsyslog/rsyslog.conf"
       dest: /etc/rsyslog.conf
 
   - name: Restart rsyslog

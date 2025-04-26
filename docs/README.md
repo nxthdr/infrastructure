@@ -1,20 +1,38 @@
 # Documentation
 
+First check out the [inventory](../inventory/inventory.yml) file (`inventory/inventory.yml`) which contains the list of servers and their roles.
+There are currently four roles:
+
+* `core` - Core servers
+* `ixp`  - IXP servers
+* `scw`  - Scaleway servers (used by the core)
+* `vlt`  - Probing servers
+
+```sh
+
 ## Deploy Docker Containers
 
-To sync the configuration files:
+To template the configuration and terraform files:
+
+```sh
+make template
+```
+
+To template and sync the configuration files:
 
 ```sh
 make sync-config
 ```
 
-To sync and apply the configuration:
+To template, sync and apply the entire configuration:
 
 ```sh
 make apply
 ```
 
 ## Deploy Network Configuration
+
+Pretty much all servers are running BIRD to announce routes. The configuration can be found in the `network` directory.
 
 To sync the network configuration files:
 

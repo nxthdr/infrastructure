@@ -14,7 +14,7 @@
 
   - name: Configure passwordless sudo for `nxthdr` user
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/sudoers/nxthdr"
+      src: "{{ base_dir }}/templates/config/shared/sudoers/nxthdr"
       dest: /etc/sudoers.d/nxthdr
       owner: root
       group: root
@@ -27,7 +27,7 @@
 
   - name: Copy SSH public keys for `root` user
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/authorized_keys"
+      src: "{{ base_dir }}/templates/config/shared/authorized_keys"
       dest: /root/.ssh/authorized_keys
       owner: root
       group: root
@@ -35,7 +35,7 @@
 
   - name: Copy SSH public keys for `nxthdr` user
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/authorized_keys"
+      src: "{{ base_dir }}/templates/config/shared/authorized_keys"
       dest: /home/nxthdr/.ssh/authorized_keys
       owner: nxthdr
       group: nxthdr

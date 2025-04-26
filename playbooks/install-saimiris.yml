@@ -36,7 +36,7 @@
 
   - name: Copy systemd file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/saimiris/saimiris.service"
+      src: "{{ base_dir }}/templates/config/shared/saimiris/saimiris.service"
       dest: /lib/systemd/system/saimiris.service
 
   - name: Reload systemd

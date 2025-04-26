@@ -15,7 +15,7 @@
 
   - name: Copy configuration file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/{{ inventory_hostname }}/hsflowd/hsflowd.conf"
+      src: "{{ base_dir }}/templates/config/{{ inventory_hostname }}/hsflowd/hsflowd.conf"
       dest: /etc/hsflowd.conf
 
   - name: Reload systemd

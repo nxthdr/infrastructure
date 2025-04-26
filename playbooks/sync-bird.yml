@@ -15,7 +15,7 @@
 
   - name: Copy systemd file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/shared/bird/bird.service"
+      src: "{{ base_dir }}/templates/config/shared/bird/bird.service"
       dest: /lib/systemd/system/bird.service
 
   - name: Reload systemd
