@@ -58,10 +58,10 @@ loki.write "syslog" {
     endpoint {
         url = "https://loki.nxthdr.dev/loki/api/v1/push"
 
-        // basic_auth {
-        //  username = "admin"
-        //  password = "admin"
-        // }
+        basic_auth {
+            username = "admin"
+            password = "{{ loki.password }}"
+        }
     }
 }
 

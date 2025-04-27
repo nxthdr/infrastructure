@@ -31,6 +31,9 @@ prometheus.nxthdr.dev {
 
 loki.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::109]:3100
+    basic_auth {
+		admin {{ loki.hashed_password }}
+	}
 }
 
 grafana.nxthdr.dev {
