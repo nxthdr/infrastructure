@@ -8,10 +8,10 @@ core:
 
 ixp:
   hosts:
-    ixpfra01:
-      ansible_host: fra01.ixp.infra.nxthdr.dev
     ixpams01:
       ansible_host: ams01.ixp.infra.nxthdr.dev
+    ixpfra01:
+      ansible_host: fra01.ixp.infra.nxthdr.dev
   vars:
     ansible_user: nxthdr
 
