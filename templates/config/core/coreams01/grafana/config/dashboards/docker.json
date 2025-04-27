@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -957,8 +957,8 @@
           "value": "coreams01"
         },
         "definition": "label_values(container_last_seen,instance)",
-        "label": "instance",
-        "name": "instance",
+        "label": "Host",
+        "name": "host",
         "options": [],
         "query": {
           "qryType": 1,
@@ -979,5 +979,5 @@
   "timezone": "",
   "title": "Docker",
   "uid": "ae3c41d7-cea5-4cca-a918-5708706b4d1a",
-  "version": 2
+  "version": 1
 }

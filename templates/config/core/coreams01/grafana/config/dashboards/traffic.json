@@ -1,0 +1,1039 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 8,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "sum"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.6.1",
+        "targets": [
+          {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "sum",
+                  "alias": "bytes",
+                  "column": "bytes"
+                }
+              ],
+              "columns": [
+                {
+                  "alias": "time_flow_start",
+                  "hint": "time",
+                  "name": "time_flow_start",
+                  "type": "DateTime64(9)"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "time_flow_start"
+              ],
+              "limit": 1000,
+              "meta": {},
+              "mode": "trend",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "flows_raw_view"
+            },
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "PDEE91DDB90597936"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "aggregates": [
+                  {
+                    "aggregateType": "sum",
+                    "alias": "bytes",
+                    "column": "bytes"
+                  }
+                ],
+                "columns": [
+                  {
+                    "alias": "time_flow_start",
+                    "hint": "time",
+                    "name": "time_flow_start",
+                    "type": "DateTime64(9)"
+                  }
+                ],
+                "database": "default",
+                "filters": [
+                  {
+                    "condition": "AND",
+                    "filterType": "custom",
+                    "hint": "time",
+                    "key": "",
+                    "operator": "WITH IN DASHBOARD TIME RANGE",
+                    "type": "datetime"
+                  }
+                ],
+                "groupBy": [
+                  "time_flow_start"
+                ],
+                "limit": 1000,
+                "meta": {},
+                "mode": "trend",
+                "orderBy": [
+                  {
+                    "default": true,
+                    "dir": "ASC",
+                    "hint": "time",
+                    "name": ""
+                  }
+                ],
+                "queryType": "timeseries",
+                "table": "flows_raw_view"
+              }
+            },
+            "pluginVersion": "4.8.2",
+            "queryType": "timeseries",
+            "rawSql": "SELECT\n    toStartOfSecond(time_flow_start_ns) AS \"time\",\n    sum(bytes * max2(sampling_rate, 1)) AS bytes\nFROM flows.records\nWHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\nGROUP BY time\nORDER BY time",
+            "refId": "A"
+          }
+        ],
+        "title": "Instant traffic",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 10
+        },
+        "id": 2,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true,
+            "sortBy": "Total",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.6.1",
+        "targets": [
+          {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "sum",
+                  "alias": "bytes",
+                  "column": "bytes"
+                }
+              ],
+              "columns": [
+                {
+                  "alias": "time_flow_start",
+                  "hint": "time",
+                  "name": "time_flow_start",
+                  "type": "DateTime64(9)"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "time_flow_start",
+                "src_addr"
+              ],
+              "limit": 1000,
+              "meta": {},
+              "mode": "trend",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "flows_raw_view"
+            },
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "PDEE91DDB90597936"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "aggregates": [
+                  {
+                    "aggregateType": "sum",
+                    "alias": "bytes",
+                    "column": "bytes"
+                  }
+                ],
+                "columns": [
+                  {
+                    "alias": "time_flow_start",
+                    "hint": "time",
+                    "name": "time_flow_start",
+                    "type": "DateTime64(9)"
+                  }
+                ],
+                "database": "default",
+                "filters": [
+                  {
+                    "condition": "AND",
+                    "filterType": "custom",
+                    "hint": "time",
+                    "key": "",
+                    "operator": "WITH IN DASHBOARD TIME RANGE",
+                    "type": "datetime"
+                  }
+                ],
+                "groupBy": [
+                  "time_flow_start",
+                  "src_addr"
+                ],
+                "limit": 1000,
+                "meta": {},
+                "mode": "trend",
+                "orderBy": [
+                  {
+                    "default": true,
+                    "dir": "ASC",
+                    "hint": "time",
+                    "name": ""
+                  }
+                ],
+                "queryType": "timeseries",
+                "table": "flows_raw_view"
+              }
+            },
+            "pluginVersion": "4.8.2",
+            "queryType": "timeseries",
+            "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        src_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, src_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(src_addr),\n    bytes,\nFROM flows_agg\nWHERE src_addr IN (\n    SELECT src_addr\n    FROM flows_agg\n    GROUP BY src_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+            "refId": "A"
+          }
+        ],
+        "title": "Top source IPs",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 10
+        },
+        "id": 3,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true,
+            "sortBy": "Total",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.6.1",
+        "targets": [
+          {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "sum",
+                  "alias": "bytes",
+                  "column": "bytes"
+                }
+              ],
+              "columns": [
+                {
+                  "alias": "time_flow_start",
+                  "hint": "time",
+                  "name": "time_flow_start",
+                  "type": "DateTime64(9)"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "time_flow_start",
+                "src_port"
+              ],
+              "limit": 1000,
+              "meta": {},
+              "mode": "trend",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                },
+                {
+                  "dir": "DESC",
+                  "name": "bytes"
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "flows_raw_view"
+            },
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "PDEE91DDB90597936"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "aggregates": [
+                  {
+                    "aggregateType": "sum",
+                    "alias": "bytes",
+                    "column": "bytes"
+                  }
+                ],
+                "columns": [
+                  {
+                    "alias": "time_flow_start",
+                    "hint": "time",
+                    "name": "time_flow_start",
+                    "type": "DateTime64(9)"
+                  }
+                ],
+                "database": "default",
+                "filters": [
+                  {
+                    "condition": "AND",
+                    "filterType": "custom",
+                    "hint": "time",
+                    "key": "",
+                    "operator": "WITH IN DASHBOARD TIME RANGE",
+                    "type": "datetime"
+                  }
+                ],
+                "groupBy": [
+                  "time_flow_start",
+                  "src_port"
+                ],
+                "limit": 1000,
+                "meta": {},
+                "mode": "trend",
+                "orderBy": [
+                  {
+                    "default": true,
+                    "dir": "ASC",
+                    "hint": "time",
+                    "name": ""
+                  },
+                  {
+                    "dir": "DESC",
+                    "name": "bytes"
+                  }
+                ],
+                "queryType": "timeseries",
+                "table": "flows_raw_view"
+              }
+            },
+            "pluginVersion": "4.8.2",
+            "queryType": "timeseries",
+            "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        tuple(proto, src_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as src_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+            "refId": "A"
+          }
+        ],
+        "title": "Top source ports",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 19
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true,
+            "sortBy": "Total",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.6.1",
+        "targets": [
+          {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "sum",
+                  "alias": "bytes",
+                  "column": "bytes"
+                }
+              ],
+              "columns": [
+                {
+                  "alias": "time_flow_start",
+                  "hint": "time",
+                  "name": "time_flow_start",
+                  "type": "DateTime64(9)"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "time_flow_start",
+                "dst_addr"
+              ],
+              "limit": 1000,
+              "meta": {},
+              "mode": "trend",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "flows_raw_view"
+            },
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "PDEE91DDB90597936"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "aggregates": [
+                  {
+                    "aggregateType": "sum",
+                    "alias": "bytes",
+                    "column": "bytes"
+                  }
+                ],
+                "columns": [
+                  {
+                    "alias": "time_flow_start",
+                    "hint": "time",
+                    "name": "time_flow_start",
+                    "type": "DateTime64(9)"
+                  }
+                ],
+                "database": "default",
+                "filters": [
+                  {
+                    "condition": "AND",
+                    "filterType": "custom",
+                    "hint": "time",
+                    "key": "",
+                    "operator": "WITH IN DASHBOARD TIME RANGE",
+                    "type": "datetime"
+                  }
+                ],
+                "groupBy": [
+                  "time_flow_start",
+                  "dst_addr"
+                ],
+                "limit": 1000,
+                "meta": {},
+                "mode": "trend",
+                "orderBy": [
+                  {
+                    "default": true,
+                    "dir": "ASC",
+                    "hint": "time",
+                    "name": ""
+                  }
+                ],
+                "queryType": "timeseries",
+                "table": "flows_raw_view"
+              }
+            },
+            "pluginVersion": "4.8.2",
+            "queryType": "timeseries",
+            "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        dst_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, dst_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(dst_addr),\n    bytes,\nFROM flows_agg\nWHERE dst_addr IN (\n    SELECT dst_addr\n    FROM flows_agg\n    GROUP BY dst_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+            "refId": "A"
+          }
+        ],
+        "title": "Top destination IPs",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "barWidthFactor": 0.6,
+              "drawStyle": "line",
+              "fillOpacity": 20,
+              "gradientMode": "hue",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "Bps"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 19
+        },
+        "id": 5,
+        "options": {
+          "legend": {
+            "calcs": [
+              "mean",
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true,
+            "sortBy": "Total",
+            "sortDesc": true
+          },
+          "tooltip": {
+            "hideZeros": false,
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.6.1",
+        "targets": [
+          {
+            "builderOptions": {
+              "aggregates": [
+                {
+                  "aggregateType": "sum",
+                  "alias": "bytes",
+                  "column": "bytes"
+                }
+              ],
+              "columns": [
+                {
+                  "alias": "time_flow_start",
+                  "hint": "time",
+                  "name": "time_flow_start",
+                  "type": "DateTime64(9)"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                }
+              ],
+              "groupBy": [
+                "time_flow_start",
+                "dst_port"
+              ],
+              "limit": 0,
+              "meta": {},
+              "mode": "trend",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "ASC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "timeseries",
+              "table": "flows_raw_view"
+            },
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "PDEE91DDB90597936"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "aggregates": [
+                  {
+                    "aggregateType": "sum",
+                    "alias": "bytes",
+                    "column": "bytes"
+                  }
+                ],
+                "columns": [
+                  {
+                    "alias": "time_flow_start",
+                    "hint": "time",
+                    "name": "time_flow_start",
+                    "type": "DateTime64(9)"
+                  }
+                ],
+                "database": "default",
+                "filters": [
+                  {
+                    "condition": "AND",
+                    "filterType": "custom",
+                    "hint": "time",
+                    "key": "",
+                    "operator": "WITH IN DASHBOARD TIME RANGE",
+                    "type": "datetime"
+                  }
+                ],
+                "groupBy": [
+                  "time_flow_start",
+                  "dst_port"
+                ],
+                "limit": 0,
+                "meta": {},
+                "mode": "trend",
+                "orderBy": [
+                  {
+                    "default": true,
+                    "dir": "ASC",
+                    "hint": "time",
+                    "name": ""
+                  }
+                ],
+                "queryType": "timeseries",
+                "table": "flows_raw_view"
+              }
+            },
+            "pluginVersion": "4.8.2",
+            "queryType": "timeseries",
+            "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        tuple(proto, dst_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as dst_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+            "refId": "A"
+          }
+        ],
+        "title": "Top destination ports",
+        "type": "timeseries"
+      }
+    ],
+    "preload": false,
+    "refresh": "",
+    "schemaVersion": 41,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "::ffff:193.148.248.249",
+            "value": "::ffff:193.148.248.249"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "PDEE91DDB90597936"
+          },
+          "definition": "SELECT DISTINCT IPv6NumToString(sampler_address) FROM flows.records",
+          "label": "Host",
+          "name": "host",
+          "options": [],
+          "query": "SELECT DISTINCT IPv6NumToString(sampler_address) FROM flows.records",
+          "refresh": 1,
+          "regex": "",
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30m",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Traffic",
+    "uid": "cebjemmrj6oe8a",
+    "version": 8
+  }

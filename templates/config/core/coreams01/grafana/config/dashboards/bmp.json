@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -632,6 +632,7 @@
           "value": "2a06:de00:50:ffff:cafe::1"
         },
         "definition": "label_values(risotto_peer_established,router)",
+        "label": "Router",
         "name": "router",
         "options": [],
         "query": {
@@ -653,5 +654,5 @@
   "timezone": "browser",
   "title": "BMP",
   "uid": "eegfao8dj905cb",
-  "version": 12
+  "version": 1
 }
