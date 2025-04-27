@@ -33,9 +33,9 @@ CREATE TABLE flows.records
     time_flow_start_ns DateTime64(9),
     sequence_num UInt32,
     sampling_rate UInt64,
-    sampler_address FixedString(16),
-    src_addr FixedString(16),
-    dst_addr FixedString(16),
+    sampler_address IPv6,
+    src_addr IPv6,
+    dst_addr IPv6,
     src_as UInt32,
     dst_as UInt32,
     etype UInt32,
@@ -50,7 +50,7 @@ PARTITION BY date
 ORDER BY time_received_ns
 TTL date + INTERVAL 7 DAY DELETE;
 
-CREATE FUNCTION convertToIPv6 AS (addr) ->
+CREATE FUNCTION IF NOT EXISTS convertToIPv6 AS (addr) ->
 (
     -- if the first 12 bytes are zero, then it's an IPv4 address, otherwise it's an IPv6 address
     -- convert to IPv4-mapped IPv6 address or return the original IPv6 address
