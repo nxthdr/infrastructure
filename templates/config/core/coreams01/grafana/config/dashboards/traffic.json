@@ -1004,7 +1004,9 @@
     "preload": false,
     "refresh": "",
     "schemaVersion": 41,
-    "tags": [],
+    "tags": [
+      "core"
+    ],
     "templating": {
       "list": [
         {

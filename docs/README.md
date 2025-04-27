@@ -34,10 +34,10 @@ The configuration files are rendered in a `.rendered` directory. This directory 
 
 The terraform files are rendered in a `terraform` directory. This directory is used to deploy the Docker containers. Those files are not ignored by git. When a file is rendered, there is a warning at the top file to indicate that the file is generated and should not be modified directly.
 
-To template the configuration and terraform files:
+To render the configuration and terraform files:
 
 ```sh
-make template
+make render
 ```
 
 Once rendererd, the configuration files needs to be synced to the servers. To template and sync the configuration files in to the servers:

@@ -14,21 +14,21 @@ sync-wireguard:
 sync-bird:
 	@ansible-playbook -i inventory/ -e "base_dir=$$(pwd)" -e @secrets/secrets.yml --ask-become-pass --vault-password-file .password playbooks/sync-bird.yml
 
-.PHONY: template-config
-template-config:
+.PHONY: render-config
+render-config:
 	@echo "Rendering configuration files..."
 	@cat .password | uv run --project=render/ --active render/render_config.py
 
-.PHONY: template-terraform
-template-terraform:
+.PHONY: render-terraform
+render-terraform:
 	@echo "Rendering Terraform files..."
 	@cat .password | uv run --project=render/ --active render/render_terraform.py
 
-.PHONY: template
-template: template-config template-terraform
+.PHONY: render
+render: render-config render-terraform
 
 .PHONY: sync-config
-sync-config: template
+sync-config: render
 	@ansible-playbook -e "base_dir=$$(pwd)" -i inventory/ playbooks/sync-config.yml
 
 .PHONY: apply

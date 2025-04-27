@@ -1,6 +1,7 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-hsflowd.yml
+# To render before running the playbook: `make template`
 ---
-- hosts: ixp, vlt
+- hosts: core, ixp, scw, vlt
   become: yes
   tasks:
   - name: Install .deb package (Ubuntu)
@@ -15,7 +16,7 @@
 
   - name: Copy configuration file
     ansible.builtin.copy:
-      src: "{{ base_dir }}/templates/config/{{ inventory_hostname }}/hsflowd/hsflowd.conf"
+      src: "{{ base_dir }}/.rendered/{{ inventory_hostname }}/hsflowd/hsflowd.conf"
       dest: /etc/hsflowd.conf
 
   - name: Reload systemd
