@@ -21,14 +21,14 @@ provider "docker" {
 
 ## ixp Servers
 provider "docker" {
-  host     = "ssh://nxthdr@fra01.ixp.infra.nxthdr.dev:22"
-  alias    = "ixpfra01"
+  host     = "ssh://nxthdr@ams01.ixp.infra.nxthdr.dev:22"
+  alias    = "ixpams01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
 provider "docker" {
-  host     = "ssh://nxthdr@ams01.ixp.infra.nxthdr.dev:22"
-  alias    = "ixpams01"
+  host     = "ssh://nxthdr@fra01.ixp.infra.nxthdr.dev:22"
+  alias    = "ixpfra01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 

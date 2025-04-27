@@ -70,10 +70,10 @@ prometheus.remote_write "default" {
     endpoint {
         url = "https://prometheus.nxthdr.dev/api/v1/write"
 
-        // basic_auth {
-        //  username = "admin"
-        //  password = "admin"
-        // }
+        basic_auth {
+            username = "admin"
+            password = "{{ prometheus.password }}"
+        }
     }
 }
 

@@ -226,7 +226,8 @@ resource "docker_container" "prometheus" {
     "--storage.tsdb.path=/prometheus",
     "--storage.tsdb.retention.time=30d",  # 30 days retention
     "--web.enable-remote-write-receiver",
-    "--web.external-url=https://prometheus.nxthdr.dev"
+    "--web.external-url=https://prometheus.nxthdr.dev",
+    "--web.config.file=/config/web.yml",
   ]
   user = "1001:1001"
   network_mode = "bridge"
@@ -241,6 +242,10 @@ resource "docker_container" "prometheus" {
   volumes {
     container_path = "/config/alerts.yml"
     host_path = "/home/nxthdr/prometheus/config/alerts.yml"
+  }
+  volumes {
+    container_path = "/config/web.yml"
+    host_path = "/home/nxthdr/prometheus/config/web.yml"
   }
   volumes {
     container_path = "/prometheus"

@@ -4,7 +4,7 @@ sync-cert:
 
 .PHONY: edit-secrets
 edit-secrets:
-	@ansible-vault edit secrets/secrets.yml
+	@ansible-vault edit --vault-password-file .password secrets/secrets.yml
 
 .PHONY: sync-wireguard
 sync-wireguard:

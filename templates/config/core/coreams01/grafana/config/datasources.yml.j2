@@ -14,7 +14,10 @@ datasources:
   type: prometheus
   orgId: 1
   url: https://prometheus.nxthdr.dev
-  basicAuth: false
+  basicAuth: true
+  basicAuthUser: admin
+  secureJsonData:
+    basicAuthPassword: "{{ prometheus.password }}"
   isDefault: true
   version: 1
   editable: false
