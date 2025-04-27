@@ -138,3 +138,34 @@ resource "docker_container" "vltatl01_cadvisor" {
     read_only      = true # Use boolean true, not string
   }
 }
+
+# Saimiris
+data "docker_registry_image" "vltatl01_saimiris" {
+  name     = "ghcr.io/nxthdr/saimiris:main"
+  provider = docker.vltatl01
+}
+
+resource "docker_image" "vltatl01_saimiris" {
+  name = data.docker_registry_image.vltatl01_saimiris.name
+  provider = docker.vltatl01
+  pull_triggers = [ data.docker_registry_image.vltatl01_saimiris.sha256_digest ]
+}
+
+resource "docker_container" "vltatl01_saimiris" {
+  image    = docker_image.vltatl01_saimiris.image_id
+  name     = "saimiris"
+  provider = docker.vltatl01
+  command = [
+    "agent",
+    "--config=/config/saimiris.yml"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
+  dns = ["2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1"]
+  network_mode = "host"
+  volumes {
+    container_path = "/config/saimiris.yml"
+    host_path      = "/home/nxthdr/saimiris/config/saimiris.yml"
+  }
+}

@@ -77,7 +77,7 @@ data "docker_registry_image" "nxthdr_dev" {
 }
 
 resource "docker_image" "nxthdr_dev" {
-  name          = data.docker_registry_image.nxthdr_dev.name
+  name = data.docker_registry_image.nxthdr_dev.name
   provider = docker.coreams01
   pull_triggers = [ data.docker_registry_image.nxthdr_dev.sha256_digest ]
 }
@@ -511,7 +511,7 @@ data "docker_registry_image" "risotto" {
 }
 
 resource "docker_image" "risotto" {
-  name          = data.docker_registry_image.risotto.name
+  name = data.docker_registry_image.risotto.name
   provider = docker.coreams01
   pull_triggers = [ data.docker_registry_image.risotto.sha256_digest ]
 }
@@ -583,7 +583,7 @@ data "docker_registry_image" "chbot" {
 }
 
 resource "docker_image" "chbot" {
-  name          = data.docker_registry_image.chbot.name
+  name = data.docker_registry_image.chbot.name
   provider = docker.coreams01
   pull_triggers = [ data.docker_registry_image.chbot.sha256_digest ]
 }
@@ -618,7 +618,7 @@ data "docker_registry_image" "dyndns" {
 }
 
 resource "docker_image" "dyndns" {
-  name          = data.docker_registry_image.dyndns.name
+  name = data.docker_registry_image.dyndns.name
   provider = docker.coreams01
   pull_triggers = [ data.docker_registry_image.dyndns.sha256_digest ]
 }
@@ -678,7 +678,7 @@ data "docker_registry_image" "peers" {
 }
 
 resource "docker_image" "peers" {
-  name          = data.docker_registry_image.peers.name
+  name = data.docker_registry_image.peers.name
   provider = docker.coreams01
   pull_triggers = [ data.docker_registry_image.peers.sha256_digest ]
 }

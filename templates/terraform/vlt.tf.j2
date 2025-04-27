@@ -141,3 +141,35 @@ resource "docker_container" "{{ inventory_hostname }}_cadvisor" {
     read_only      = true # Use boolean true, not string
   }
 }
+
+# Saimiris
+data "docker_registry_image" "{{ inventory_hostname }}_saimiris" {
+  name     = "ghcr.io/nxthdr/saimiris:main"
+  provider = docker.{{ inventory_hostname }}
+}
+
+resource "docker_image" "{{ inventory_hostname }}_saimiris" {
+  name = data.docker_registry_image.{{ inventory_hostname }}_saimiris.name
+  provider = docker.{{ inventory_hostname }}
+  pull_triggers = [ data.docker_registry_image.{{ inventory_hostname }}_saimiris.sha256_digest ]
+}
+
+resource "docker_container" "{{ inventory_hostname }}_saimiris" {
+  image    = docker_image.{{ inventory_hostname }}_saimiris.image_id
+  name     = "saimiris"
+  provider = docker.{{ inventory_hostname }}
+  command = [
+    "agent",
+    "--config=/config/saimiris.yml"
+  ]
+  log_driver = "json-file"
+  log_opts = {
+    tag = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
+  }
+  dns = ["2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1"]
+  network_mode = "host"
+  volumes {
+    container_path = "/config/saimiris.yml"
+    host_path      = "/home/nxthdr/saimiris/config/saimiris.yml"
+  }
+}
