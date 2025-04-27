@@ -7,7 +7,7 @@ groups:
     labels:
       severity: critical
     annotations:
-      title: 'core service {{ $labels.job }} is down'
+      title: 'core service {{ $labels.job }} is down in {{ $labels.instance }}'
 
   - alert: Core_Service_Redpanda_Down
     expr: up{job="redpanda"} == 0
@@ -33,16 +33,16 @@ groups:
     annotations:
       title: 'core service {{ $labels.job }} is down'
 
-  - alert: Core_Service_Cadvisor_Down
-    expr: up{job="cadvisor"} == 0
+  - alert: Core_Service_Loki_Down
+    expr: up{job="loki"} == 0
     for: 1m
     labels:
       severity: critical
     annotations:
       title: 'core service {{ $labels.job }} is down'
 
-  - alert: Core_Service_Node_Exporter_Down
-    expr: up{job="node-exporter"} == 0
+  - alert: Core_Service_Grafana_Down
+    expr: up{job="grafana"} == 0
     for: 1m
     labels:
       severity: critical
@@ -65,7 +65,6 @@ groups:
     annotations:
       title: 'core service {{ $labels.job }} is down'
 
-
 - name: host
   rules:
   - alert: Host_Disk_Full
@@ -74,7 +73,7 @@ groups:
     labels:
       severity: warning
     annotations:
-      title: host disk is almost full
+      title: host disk is almost full in {{ $labels.instance }}
 
   - alert: Host_Out_Of_Memory
     expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
@@ -82,8 +81,33 @@ groups:
     labels:
       severity: warning
     annotations:
-      summary: host almost out of memory
+      summary: host almost out of memory in {{ $labels.instance }}
 
+- name: monitoring-down
+  rules:
+  - alert: Monitoring_Service_Alloy_Down
+    expr: up{job="alloy"} == 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
+
+  - alert: Monitoring_Service_Node_Exporter_Down
+    expr: up{job="node-exporter"} == 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
+
+  - alert: Monitoring_Service_Cadvisor_Down
+    expr: up{job="cadvisor"} == 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
 
 - name: risotto
   rules:

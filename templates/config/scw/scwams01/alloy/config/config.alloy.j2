@@ -131,3 +131,22 @@ prometheus.scrape "proxy" {
 
     forward_to = [prometheus.relabel.job_relabel.receiver]
 }
+
+// Self monitoring
+prometheus.exporter.self "default" {
+}
+
+prometheus.scrape "metamonitoring" {
+  targets    = prometheus.exporter.self.default.targets
+  forward_to = [prometheus.relabel.alloy_job_relabel.receiver]
+}
+
+prometheus.relabel "alloy_job_relabel" {
+    rule {
+        source_labels = ["job"]
+        target_label  = "job"
+        replacement   = "alloy"
+    }
+
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
+}

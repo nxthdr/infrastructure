@@ -75,6 +75,10 @@ scrape_configs:
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::109]:3100']
 
+  - job_name: grafana
+    static_configs:
+      - targets: ['[2a06:de00:50:cafe:10::105]:3000']
+
   - job_name: risotto
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::112]:3000']
