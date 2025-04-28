@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -125,7 +125,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "11.6.1",
       "targets": [
         {
           "datasource": {
@@ -146,7 +146,7 @@
           },
           "pluginVersion": "4.8.2",
           "queryType": "table",
-          "rawSql": "SELECT toStartOfMinute(timestamp) AS time, Count() AS \"${agent}\"\nFROM saimiris.results\nWHERE $__timeFilter(time) AND agent_id == '${agent}'\nGROUP BY time\nORDER BY time",
+          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time, Count() AS \"${agent}\"\nFROM saimiris.results\nWHERE $__timeFilter(time) AND agent_id == '${agent}'\nGROUP BY time\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -167,14 +167,15 @@
           "text": "j7fph85rgr",
           "value": "j7fph85rgr"
         },
-        "definition": "label_values(saimiris_results_per_minute,agent_id)",
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "PDEE91DDB90597936"
+        },
+        "definition": "SELECT DISTINCT agent_id FROM saimiris.results",
+        "label": "Agent",
         "name": "agent",
         "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(saimiris_results_per_minute,agent_id)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
+        "query": "SELECT DISTINCT agent_id FROM saimiris.results",
         "refresh": 1,
         "regex": "",
         "type": "query"
@@ -189,5 +190,5 @@
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 4
+  "version": 3
 }
