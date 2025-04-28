@@ -156,6 +156,7 @@ resource "docker_container" "vltatl01_saimiris" {
   name     = "saimiris"
   provider = docker.vltatl01
   command = [
+    "-v",
     "agent",
     "--config=/config/saimiris.yml"
   ]

@@ -21,4 +21,4 @@ docker run --rm --name cron-saimprowler-saimiris --network=host \
     -v $SCRIPTPATH/config/config.yml:/config/config.yml \
     -v $SCRIPTPATH/data/probes.csv:/data/probes.csv \
     $DOCKER_IMAGE_SAIMIRIS \
-    client --config /config/config.yml --probes-file=/data/probes.csv d2nm65zx8n,j7fph85rgr
+    client --config /config/config.yml --probes-file=/data/probes.csv vltatl01,vltcdg01

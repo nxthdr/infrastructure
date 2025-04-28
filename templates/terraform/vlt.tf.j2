@@ -159,6 +159,7 @@ resource "docker_container" "{{ inventory_hostname }}_saimiris" {
   name     = "saimiris"
   provider = docker.{{ inventory_hostname }}
   command = [
+    "-v",
     "agent",
     "--config=/config/saimiris.yml"
   ]
