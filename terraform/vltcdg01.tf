@@ -155,11 +155,7 @@ resource "docker_container" "vltcdg01_saimiris" {
   image    = docker_image.vltcdg01_saimiris.image_id
   name     = "saimiris"
   provider = docker.vltcdg01
-  command = [
-    "-v",
-    "agent",
-    "--config=/config/saimiris.yml"
-  ]
+  command = [ "-v", "agent", "--config=/config/saimiris.yml" ]
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }

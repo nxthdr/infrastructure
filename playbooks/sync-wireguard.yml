@@ -6,7 +6,7 @@
   - name: Template configuration files
     ansible.builtin.template:
       src: "{{ item.src }}"
-      dest: /etc
+      dest: /etc/wireguard
     with_filetree: "{{ base_dir }}/networks/{{ inventory_hostname }}/wireguard"
     when: item.state == 'file'
 
