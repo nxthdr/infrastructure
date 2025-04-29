@@ -5,6 +5,8 @@ Requires=docker.service
 
 [Service]
 Type=simple
+Restart=on-failure
+RestartSec=30s
 
 User=nxthdr
 Group=nxthdr
