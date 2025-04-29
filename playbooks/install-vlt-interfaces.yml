@@ -3,6 +3,11 @@
 - hosts: vlt
   become: yes
   tasks:
+  - name: Update enp1s0 MTU
+    ignore_errors: true
+    ansible.builtin.shell: |
+      ip link set dev enp1s0 mtu 1420
+
   - name: Install anycast interface
     ignore_errors: true
     ansible.builtin.shell: |
