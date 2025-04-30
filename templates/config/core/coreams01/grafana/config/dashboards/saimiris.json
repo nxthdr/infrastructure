@@ -155,7 +155,7 @@
     }
   ],
   "preload": false,
-  "refresh": "",
+  "refresh": "1m",
   "schemaVersion": 41,
   "tags": [
     "service"
@@ -164,8 +164,8 @@
     "list": [
       {
         "current": {
-          "text": "j7fph85rgr",
-          "value": "j7fph85rgr"
+          "text": "vltatl01",
+          "value": "vltatl01"
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
@@ -183,12 +183,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 3
+  "version": 5
 }

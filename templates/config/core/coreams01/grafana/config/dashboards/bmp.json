@@ -628,8 +628,8 @@
     "list": [
       {
         "current": {
-          "text": "2a06:de00:50:ffff:cafe::1",
-          "value": "2a06:de00:50:ffff:cafe::1"
+          "text": "2001:19f0:5401:e0d:5400:5ff:fe52:35dc",
+          "value": "2001:19f0:5401:e0d:5400:5ff:fe52:35dc"
         },
         "definition": "label_values(risotto_peer_established,router)",
         "label": "Router",
@@ -647,12 +647,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "BMP",
   "uid": "eegfao8dj905cb",
-  "version": 1
+  "version": 4
 }
