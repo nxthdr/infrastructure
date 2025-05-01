@@ -520,7 +520,13 @@ resource "docker_container" "risotto" {
   image = docker_image.risotto.image_id
   name  = "risotto"
   provider = docker.coreams01
-  command = [ "--config", "/config/risotto" ]
+  command = [
+    "--bmp-address", "[::]:4000",
+    "--metrics-address", "[2a06:de00:50:cafe:10::112]:8080",
+    "--kafka-brokers", "[2a06:de00:50:cafe:10::103]:9092",
+    "--kafka-topic", "risotto-updates",
+    "--state-path", "/data/state.bin",
+  ]
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -533,10 +539,6 @@ resource "docker_container" "risotto" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::112"
-  }
-  volumes {
-    container_path = "/config/risotto.yml"
-    host_path = "/home/nxthdr/risotto/config/risotto.yml"
   }
   volumes {
     container_path = "/data"
