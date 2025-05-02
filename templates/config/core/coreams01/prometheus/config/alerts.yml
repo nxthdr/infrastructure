@@ -118,3 +118,13 @@ groups:
       severity: critical
     annotations:
       title: 'risotto reports no BGP peers'
+
+- name: saimiris
+  rules:
+  - alert: Probing_Service_Saimiris_Down
+    expr: up{job="saimiris"} == 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      title: 'probing service {{ $labels.job }} is down in {{ $labels.instance }}'

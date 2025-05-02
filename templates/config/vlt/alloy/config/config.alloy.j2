@@ -87,6 +87,17 @@ prometheus.relabel "node_exporter_job_relabel" {
     forward_to = [prometheus.relabel.instance_relabel.receiver]
 }
 
+prometheus.relabel "job_relabel" {
+    rule {
+        source_labels = ["job"]
+        target_label  = "job"
+        regex    = `(.+)\.(.+)\.(.+)`
+        replacement   = "$3"
+    }
+
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
+}
+
 prometheus.relabel "instance_relabel" {
     rule {
         source_labels = ["instance"]
@@ -110,7 +121,7 @@ prometheus.scrape "cadvisor" {
     __address__ = "cadvisor:8080",
     }]
 
-    forward_to = [prometheus.relabel.instance_relabel.receiver]
+    forward_to = [prometheus.relabel.job_relabel.receiver]
 }
 
 prometheus.scrape "saimiris" {
@@ -118,16 +129,11 @@ prometheus.scrape "saimiris" {
     __address__ = "172.18.0.1:8080",
     }]
 
-    forward_to = [prometheus.relabel.instance_relabel.receiver]
+    forward_to = [prometheus.relabel.job_relabel.receiver]
 }
 
 // Self monitoring
 prometheus.exporter.self "default" {
-}
-
-prometheus.scrape "metamonitoring" {
-  targets    = prometheus.exporter.self.default.targets
-  forward_to = [prometheus.relabel.alloy_job_relabel.receiver]
 }
 
 prometheus.relabel "alloy_job_relabel" {
@@ -138,4 +144,9 @@ prometheus.relabel "alloy_job_relabel" {
     }
 
     forward_to = [prometheus.relabel.instance_relabel.receiver]
+}
+
+prometheus.scrape "metamonitoring" {
+  targets    = prometheus.exporter.self.default.targets
+  forward_to = [prometheus.relabel.alloy_job_relabel.receiver]
 }
