@@ -14,6 +14,9 @@ rule_files:
 
 scrape_configs:
   - job_name: prometheus
+    basic_auth:
+      username: "{{ prometheus.username }}"
+      password: "{{ prometheus.password }}"
     static_configs:
       - targets: ['localhost:9090']
     metric_relabel_configs:

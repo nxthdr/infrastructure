@@ -6,7 +6,7 @@ datasources:
   orgId: 1
   url: https://loki.nxthdr.dev
   basicAuth: true
-  basicAuthUser: admin
+  basicAuthUser: "{{ loki.username }}"
   secureJsonData:
     basicAuthPassword: "{{ loki.password }}"
   isDefault: false
@@ -18,7 +18,7 @@ datasources:
   orgId: 1
   url: https://prometheus.nxthdr.dev
   basicAuth: true
-  basicAuthUser: admin
+  basicAuthUser: "{{ prometheus.username }}"
   secureJsonData:
     basicAuthPassword: "{{ prometheus.password }}"
   isDefault: true

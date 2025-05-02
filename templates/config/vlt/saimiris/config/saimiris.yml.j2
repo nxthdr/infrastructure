@@ -1,3 +1,7 @@
+agent:
+  id: "{{ inventory_hostname }}"
+  metrics_address: "0.0.0.0:8080"
+
 caracat:
   src_ipv6_addr: "2a0e:97c0:8a0::10"
   integrity_check: false
@@ -16,6 +20,3 @@ kafka:
 
   out_enable: true
   out_topic: saimiris-results
-
-agent:
-  id: "{{ inventory_hostname }}"

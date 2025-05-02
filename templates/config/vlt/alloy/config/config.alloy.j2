@@ -59,7 +59,7 @@ loki.write "syslog" {
         url = "https://loki.nxthdr.dev/loki/api/v1/push"
 
         basic_auth {
-            username = "admin"
+            username = "{{ loki.username }}"
             password = "{{ loki.password }}"
         }
     }
@@ -71,7 +71,7 @@ prometheus.remote_write "default" {
         url = "https://prometheus.nxthdr.dev/api/v1/write"
 
         basic_auth {
-            username = "admin"
+            username = "{{ prometheus.username }}"
             password = "{{ prometheus.password }}"
         }
     }
@@ -108,6 +108,14 @@ prometheus.scrape "node_exporter" {
 prometheus.scrape "cadvisor" {
     targets = [{
     __address__ = "cadvisor:8080",
+    }]
+
+    forward_to = [prometheus.relabel.instance_relabel.receiver]
+}
+
+prometheus.scrape "saimiris" {
+    targets = [{
+    __address__ = "172.18.0.1:8080",
     }]
 
     forward_to = [prometheus.relabel.instance_relabel.receiver]

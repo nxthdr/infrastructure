@@ -23,6 +23,192 @@
   "panels": [
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "rate(saimiris_sender_sent_total{agent='$agent'}[10m])",
+          "legendFormat": "{{ agent }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Packets Sent Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "rate(saimiris_receiver_received{agent='$agent'}[10m])",
+          "legendFormat": "{{ agent }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Packet Received Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
         "type": "grafana-clickhouse-datasource",
         "uid": "PDEE91DDB90597936"
       },
@@ -109,7 +295,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -171,11 +357,11 @@
           "type": "grafana-clickhouse-datasource",
           "uid": "PDEE91DDB90597936"
         },
-        "definition": "SELECT DISTINCT agent_id FROM saimiris.results",
+        "definition": "SELECT DISTINCT agent_id FROM saimiris.results ORDER BY agent_id",
         "label": "Agent",
         "name": "agent",
         "options": [],
-        "query": "SELECT DISTINCT agent_id FROM saimiris.results",
+        "query": "SELECT DISTINCT agent_id FROM saimiris.results ORDER BY agent_id",
         "refresh": 1,
         "regex": "",
         "type": "query"
@@ -190,5 +376,5 @@
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 5
+  "version": 10
 }

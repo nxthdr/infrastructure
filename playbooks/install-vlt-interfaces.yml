@@ -3,6 +3,10 @@
 - hosts: vlt
   become: yes
   tasks:
+  # We need to adapt the MTU of the probing servers because else it breaks the BMP collection.
+  # The reason is that the Route Monitoring BMP packets can fill up the entire MTU,
+  # except the IXP servers use Wireguard with a MTU of 1420 (to account for the Wireguard overhead). So the packets are dropped,
+  # and we don't received the ICMPv6 Packet Too Big notification because the IXP servers uses their non routable IPv6 address from the IX lan.
   - name: Update enp1s0 MTU
     ignore_errors: true
     ansible.builtin.shell: |

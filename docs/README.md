@@ -100,7 +100,7 @@ In core, we have a few aliases to make it easier to manage the infrastructure.
 alias rpk="docker exec -ti redpanda rpk"
 ```
 
-### Ip6tables
+### Firewall
 
 By default, Docker network bridges are not accessible from the outside world.
 

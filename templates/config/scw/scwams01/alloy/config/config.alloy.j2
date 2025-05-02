@@ -59,7 +59,7 @@ loki.write "syslog" {
         url = "https://loki.nxthdr.dev/loki/api/v1/push"
 
         basic_auth {
-            username = "admin"
+            username = "{{ loki.username }}"
             password = "{{ loki.password }}"
         }
     }
@@ -71,7 +71,7 @@ prometheus.remote_write "default" {
         url = "https://prometheus.nxthdr.dev/api/v1/write"
 
         basic_auth {
-            username = "admin"
+            username = "{{ prometheus.username }}"
             password = "{{ prometheus.password }}"
         }
     }

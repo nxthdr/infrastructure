@@ -7,6 +7,14 @@ resource "docker_network" "ixpfra01_backend" {
   provider = docker.ixpfra01
   driver   = "bridge"
   ipv6     = true
+  ipam_config {
+    subnet = "172.18.0.0/16"
+    gateway = "172.18.0.1"
+  }
+  ipam_config {
+    subnet = "fdf5:d891:ede::/64"
+    gateway = "fdf5:d891:ede::1"
+  }
 }
 
 # Alloy
@@ -80,17 +88,17 @@ resource "docker_container" "ixpfra01_node_exporter" {
   volumes {
     container_path = "/host/proc"
     host_path      = "/proc"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/host/sys"
     host_path      = "/sys"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/rootfs"
     host_path      = "/"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
 }
 
@@ -107,7 +115,7 @@ resource "docker_container" "ixpfra01_cadvisor" {
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
-  privileged   = true # Use boolean true, not string
+  privileged   = true
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.ixpfra01_backend.name
@@ -115,26 +123,26 @@ resource "docker_container" "ixpfra01_cadvisor" {
   volumes {
     container_path = "/rootfs"
     host_path      = "/"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/var/run"
     host_path      = "/var/run"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/sys"
     host_path      = "/sys"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/var/lib/docker"
     host_path      = "/var/lib/docker"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
   volumes {
     container_path = "/dev/disk"
     host_path      = "/dev/disk"
-    read_only      = true # Use boolean true, not string
+    read_only      = true
   }
 }

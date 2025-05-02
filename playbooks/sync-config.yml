@@ -1,6 +1,7 @@
 # ansible-playbook -e "base_dir=$(pwd)" -i inventory/ playbooks/sync-config.yml
 ---
 - hosts: core, ixp, scw, vlt
+  gather_facts: false
   tasks:
   - name: Copy templated configuration files to remote host
     ansible.posix.synchronize:
