@@ -31,6 +31,7 @@ resource "docker_container" "vltatl01_alloy" {
     "run", "--storage.path=/var/lib/alloy/data",
     "/etc/alloy/config.alloy"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
@@ -75,6 +76,7 @@ resource "docker_container" "vltatl01_node_exporter" {
     "--path.sysfs=/host/sys",
     "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
@@ -112,6 +114,7 @@ resource "docker_container" "vltatl01_cadvisor" {
   image    = docker_image.vltatl01_cadvisor.image_id
   name     = "cadvisor"
   provider = docker.vltatl01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
@@ -164,6 +167,7 @@ resource "docker_container" "vltatl01_saimiris" {
   name     = "saimiris"
   provider = docker.vltatl01
   command = [ "-v", "agent", "--config=/config/saimiris.yml" ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }

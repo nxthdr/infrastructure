@@ -31,6 +31,7 @@ resource "docker_container" "{{ inventory_hostname }}_alloy" {
     "run", "--storage.path=/var/lib/alloy/data",
     "/etc/alloy/config.alloy"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
@@ -76,6 +77,7 @@ resource "docker_container" "{{ inventory_hostname }}_node_exporter" {
     "--path.sysfs=/host/sys",
     "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
@@ -114,6 +116,7 @@ resource "docker_container" "{{ inventory_hostname }}_cadvisor" {
   image    = docker_image.{{ inventory_hostname }}_cadvisor.image_id
   name     = "cadvisor"
   provider = docker.{{ inventory_hostname }}
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
@@ -167,6 +170,7 @@ resource "docker_container" "{{ inventory_hostname }}_saimiris" {
   name     = "saimiris"
   provider = docker.{{ inventory_hostname }}
   command = [ "-v", "agent", "--config=/config/saimiris.yml" ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}

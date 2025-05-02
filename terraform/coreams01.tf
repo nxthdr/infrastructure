@@ -44,6 +44,7 @@ resource "docker_container" "proxy" {
   image = docker_image.caddy.image_id
   name  = "proxy"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -86,6 +87,7 @@ resource "docker_container" "nxthdr_dev" {
   image = docker_image.nxthdr_dev.image_id
   name  = "nxthdr_dev"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -108,6 +110,7 @@ resource "docker_container" "clickhouse" {
   image = docker_image.clickhouse.image_id
   name  = "clickhouse"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -154,6 +157,7 @@ resource "docker_container" "chproxy" {
     "-config", "/config/config.yml",
     "-enableTCP6"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -179,6 +183,7 @@ resource "docker_container" "redpanda" {
   image = docker_image.redpanda.image_id
   name  = "redpanda"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -217,6 +222,7 @@ resource "docker_container" "prometheus" {
   image = docker_image.prometheus.image_id
   name  = "prometheus"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -263,6 +269,7 @@ resource "docker_container" "grafana" {
   image = docker_image.grafana.image_id
   name  = "grafana"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -312,6 +319,7 @@ resource "docker_container" "alertmanager" {
     "--config.file=/config/alertmanager.yml",
     "--storage.path=/data"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -347,6 +355,7 @@ resource "docker_container" "node_exporter" {
     "--path.sysfs=/host/sys",
     "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -386,6 +395,7 @@ resource "docker_container" "cadvisor" {
   image = docker_image.cadvisor.image_id
   name  = "cadvisor"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -436,6 +446,7 @@ resource "docker_container" "loki" {
   command = [
     "-config.file=/config/loki.yml"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -469,6 +480,7 @@ resource "docker_container" "alloy" {
     "run", "--storage.path=/var/lib/alloy/data",
     "/etc/alloy/config.alloy"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -527,6 +539,7 @@ resource "docker_container" "risotto" {
     "--kafka-topic", "risotto-updates",
     "--state-path", "/data/state.bin",
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -563,6 +576,7 @@ resource "docker_container" "goflow" {
     "-transport.kafka.topic=goflow-flows",
     "-transport.kafka.flushbytes=1000"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -601,6 +615,7 @@ resource "docker_container" "chbot" {
     "--output-limit", "20",
     "--token", var.chbot_discord_token
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -636,6 +651,7 @@ resource "docker_container" "dyndns" {
     "--domain", "dyndns.nxthdr.dev",
     "--token", var.dyndns_auth_token
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -653,6 +669,7 @@ resource "docker_container" "geofeed" {
   image = docker_image.caddy.image_id
   name  = "geofeed"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
@@ -689,6 +706,7 @@ resource "docker_container" "peers" {
   image = docker_image.peers.image_id
   name  = "peers"
   provider = docker.coreams01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"

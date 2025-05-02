@@ -31,6 +31,7 @@ resource "docker_container" "ixpfra01_alloy" {
     "run", "--storage.path=/var/lib/alloy/data",
     "/etc/alloy/config.alloy"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
@@ -75,6 +76,7 @@ resource "docker_container" "ixpfra01_node_exporter" {
     "--path.sysfs=/host/sys",
     "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   ]
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
@@ -112,6 +114,7 @@ resource "docker_container" "ixpfra01_cadvisor" {
   image    = docker_image.ixpfra01_cadvisor.image_id
   name     = "cadvisor"
   provider = docker.ixpfra01
+  restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
