@@ -47,7 +47,7 @@ resource "docker_container" "scwams01_proxy" {
 
 # Alloy
 resource "docker_image" "scwams01_alloy" {
-  name = "grafana/alloy:v1.8.2"
+  name = "grafana/alloy:v1.8.3"
   provider = docker.scwams01
 }
 
