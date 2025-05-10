@@ -175,7 +175,7 @@ resource "docker_container" "chproxy" {
 
 # Redpanda
 resource "docker_image" "redpanda" {
-  name = "redpandadata/redpanda:v25.1.3"
+  name = "redpandadata/redpanda:v25.1.4"
   provider = docker.coreams01
 }
 
