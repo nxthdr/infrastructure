@@ -1,4 +1,4 @@
-# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --vault-password-file .password playbooks/install-user.yml
+# ansible-playbook -k -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --vault-password-file .password playbooks/install-user.yml
 ---
 - hosts: core, ixp, scw, vlt
   tasks:
@@ -8,7 +8,6 @@
       password: "{{ nxthdr_hashed_password }}"
       create_home: yes
       uid: 1001
-      gid: 1001
       groups: sudo
       shell: /bin/bash
 

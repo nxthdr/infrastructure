@@ -1,5 +1,5 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-hsflowd.yml
-# To render before running the playbook: `make template`
+# To render before running the playbook: `make render-config`
 ---
 - hosts: core, ixp, scw, vlt
   become: yes

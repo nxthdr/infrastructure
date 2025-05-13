@@ -1,0 +1,9 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-core-firewall.yml
+---
+- hosts: core
+  become: yes
+  tasks:
+  - name: Rule to allow any to reach dmz Docker network
+    community.general.ufw:
+      rule: allow
+      dst: 2a06:de00:50:cafe:100::/80

@@ -17,6 +17,7 @@
         - ca-certificates
         - curl
         - gnupg
+        - rsync
         - software-properties-common
 
   - name: Create directory for Docker's GPG key
