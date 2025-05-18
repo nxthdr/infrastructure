@@ -3,7 +3,7 @@
 - hosts: vlt
   become: yes
   tasks:
-  - name: Rule to allow alloy to reach saimris prometheus endpoint
+  - name: Rule to allow alloy to reach saimiris prometheus endpoint
     community.general.ufw:
       rule: allow
       port: 8080

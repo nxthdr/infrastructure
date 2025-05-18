@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -101,11 +101,11 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.0",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "rate(saimiris_sender_sent_total{agent='$agent'}[10m])",
+          "expr": "irate(saimiris_sender_sent_total{agent='$agent'}[10m])",
           "legendFormat": "{{ agent }}",
           "range": true,
           "refId": "A"
@@ -194,11 +194,11 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.0",
       "targets": [
         {
           "editorMode": "code",
-          "expr": "rate(saimiris_receiver_received{agent='$agent'}[10m])",
+          "expr": "irate(saimiris_receiver_received_total{agent='$agent'}[10m])",
           "legendFormat": "{{ agent }}",
           "range": true,
           "refId": "A"
@@ -311,7 +311,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.0.0",
       "targets": [
         {
           "datasource": {
@@ -369,12 +369,12 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 10
+  "version": 4
 }
