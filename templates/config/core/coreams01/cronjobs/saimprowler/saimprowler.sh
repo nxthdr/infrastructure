@@ -9,6 +9,15 @@ DOCKER_IMAGE_SAIMIRIS=ghcr.io/nxthdr/saimiris:main
 docker pull $DOCKER_IMAGE_PROWL
 docker pull $DOCKER_IMAGE_SAIMIRIS
 
+# Targets generation
+# Targets are generated from the ipv6-hitlist aliased prefixes list (see https://ipv6hitlist.github.io/)
+rm -rf $SCRIPTPATH/data/aliased-prefixes.txt*
+rm -rf $SCRIPTPATH/data/targets.csv
+curl -s https://alcatraz.net.in.tum.de/ipv6-hitlist-service/open/aliased-prefixes.txt.xz -o $SCRIPTPATH/data/aliased-prefixes.txt.xz
+xz -d $SCRIPTPATH/data/aliased-prefixes.txt.xz
+# Shuffle the prefixes, take 10k of them, and create a prowl compatible targets.csv file
+shuf $SCRIPTPATH/data/aliased-prefixes.txt | head -n 10000 | sed 's/$/,ICMPv6,32,32,3/' > $SCRIPTPATH/data/targets.csv
+
 # Probes generation
 docker run --rm --name cron-saimprowler-prowl \
     -v $SCRIPTPATH/data/targets.csv:/data/targets.csv \
