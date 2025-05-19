@@ -14,6 +14,13 @@
     header_down Permissions-Policy "microphone=()"
 }
 
+as215011.net {
+    reverse_proxy {
+        import security_headers
+        to [2a06:de00:50:cafe:10::100]:80
+    }
+}
+
 nxthdr.dev {
     reverse_proxy {
         import security_headers

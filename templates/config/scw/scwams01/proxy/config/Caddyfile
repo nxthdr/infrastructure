@@ -6,7 +6,13 @@
     }
 }
 
-
+as215011.net {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
 
 nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
