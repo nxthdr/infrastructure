@@ -128,6 +128,8 @@ prometheus.scrape "saimiris" {
     targets = [{
     __address__ = "172.18.0.1:8080",
     }]
+    scrape_interval = "5s"
+    scrape_timeout  = "5s"
 
     forward_to = [prometheus.relabel.job_relabel.receiver]
 }

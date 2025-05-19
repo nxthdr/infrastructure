@@ -111,7 +111,7 @@
           "refId": "A"
         }
       ],
-      "title": "Packets Sent Rate",
+      "title": "Packets Sending Rate",
       "type": "timeseries"
     },
     {
@@ -204,7 +204,7 @@
           "refId": "A"
         }
       ],
-      "title": "Packet Received Rate",
+      "title": "Packets Receiving Rate",
       "type": "timeseries"
     },
     {
@@ -376,5 +376,5 @@
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 4
+  "version": 8
 }

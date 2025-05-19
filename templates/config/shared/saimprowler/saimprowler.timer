@@ -3,7 +3,7 @@ Description="Saimprowler Cronjob"
 
 [Timer]
 OnBootSec=1min
-OnUnitActiveSec=30min
+OnUnitActiveSec=10min
 Unit=saimprowler.service
 
 [Install]
