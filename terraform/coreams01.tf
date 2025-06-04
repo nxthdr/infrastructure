@@ -561,7 +561,7 @@ resource "docker_container" "risotto" {
 
 # Goflow
 resource "docker_image" "goflow" {
-  name = "ghcr.io/netsampler/goflow2:v2.2.2"
+  name = "ghcr.io/netsampler/goflow2:v2.2.3"
   provider = docker.coreams01
 }
 
