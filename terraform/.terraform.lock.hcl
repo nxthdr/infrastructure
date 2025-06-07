@@ -5,19 +5,7 @@ provider "registry.terraform.io/kreuzwerker/docker" {
   version     = "3.6.1"
   constraints = "3.6.1"
   hashes = [
-    "h1:0PYNCut9FEjIibh9Yq+U9scWJ49uzMmEXvnATA+Yx9A=",
-    "h1:6wl1+HKre8CKCgEqDN098CSVjO3UEfzD2JN+SGAJkdg=",
-    "h1:8Sw2aaUkvExIs/5FdnJsp21TYxqBxGXxuZszcST7nIU=",
-    "h1:KgOa8UyNAzr/cmXP5zxe1MKvxKMRhHFBV5LyT99MjSM=",
-    "h1:Lg7pewlYc/pb+R5jVlIYa1c5A3sGGdH2rtKOlYKZy2Y=",
-    "h1:QUmfrBiBtFXYG/trBYOlWs4pCBICYX0hbkKdKVAzW9A=",
-    "h1:SLPIncDRqJ+Rfbj6OHTgSI8UB4c/daVKMAl6lAzLOZk=",
-    "h1:gR9XpI+jSNSJOX+ldh1eDAh5q0RNpJai4WB1XkHui3w=",
-    "h1:lX0nfQTWyeJPCog/lrjjWFx+9hgm9Ku8Vy2XCfd+aws=",
-    "h1:ozK1HS+/mhCeYR8Ph6Lo+8ykvGeJyfAf3fuEp5DvQ/Y=",
     "h1:t9FWy7AVUgqDFkrwEyL74XUn1trfW4Q9qhhdel1j96k=",
-    "h1:vqReAVzq0GEY06Ve1VsmMO5LO2QIFbRRBvI6Yuph7UA=",
-    "h1:x20Bsv3EYQa3tuFfIFdExLsA8kRM0uzErsvhpp325Io=",
     "zh:0856751d4c84f93832325bb8f4f1748f8b1239661aa389fb16e17c3de08d0544",
     "zh:2888637e41f77a790053369e9df0d60242185dc5f1671503d19d1de0e5e9ab0e",
     "zh:3082b0cd2faece730e6dc15750572f7893c1b07a63feaf971b2c9c8dae6fa998",

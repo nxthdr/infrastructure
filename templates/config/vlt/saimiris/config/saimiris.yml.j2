@@ -3,9 +3,12 @@ agent:
   metrics_address: "0.0.0.0:8080"
 
 caracat:
-  src_ipv6_addr: "2a0e:97c0:8a0::10"
-  integrity_check: false
-  probing_rate: 10000
+  - src_ipv6_addr: "2a0e:97c0:8a0::10"
+    integrity_check: false
+    probing_rate: 10000
+  - src_ipv6_addr: "{{ uniprobe0.split('/')[0] }}"
+    integrity_check: false
+    probing_rate: 10000
 
 kafka:
   brokers: "redpanda.nxthdr.dev:9092"
