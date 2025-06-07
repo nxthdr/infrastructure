@@ -169,7 +169,7 @@ resource "docker_container" "{{ inventory_hostname }}_saimiris" {
   image    = docker_image.{{ inventory_hostname }}_saimiris.image_id
   name     = "saimiris"
   provider = docker.{{ inventory_hostname }}
-  command = [ "-v", "agent", "--config=/config/saimiris.yml" ]
+  command = [ "-vv", "agent", "--config=/config/saimiris.yml" ]
   restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {

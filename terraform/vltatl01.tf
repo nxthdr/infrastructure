@@ -166,7 +166,7 @@ resource "docker_container" "vltatl01_saimiris" {
   image    = docker_image.vltatl01_saimiris.image_id
   name     = "saimiris"
   provider = docker.vltatl01
-  command = [ "-v", "agent", "--config=/config/saimiris.yml" ]
+  command = [ "-vv", "agent", "--config=/config/saimiris.yml" ]
   restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
