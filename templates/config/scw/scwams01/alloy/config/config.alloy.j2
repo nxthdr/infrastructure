@@ -1,3 +1,63 @@
+// Container logs configuration
+local.file_match "containers" {
+        path_targets = [{
+                __address__ = "localhost",
+                __path__    = "/var/lib/docker/containers/*/*log",
+                host        = "coreams01",
+                job         = "containerlogs",
+        }]
+}
+
+loki.process "containers" {
+        forward_to = [loki.write.default.receiver]
+
+        stage.json {
+                expressions = {
+                        attrs  = "",
+                        output = "log",
+                        stream = "stream",
+                }
+        }
+
+        stage.json {
+                expressions = {
+                        tag = "",
+                }
+                source = "attrs"
+        }
+
+        stage.regex {
+                expression = "(?P<image_name>(?:[^|]*[^|])).(?P<container_name>(?:[^|]*[^|])).(?P<image_id>(?:[^|]*[^|])).(?P<container_id>(?:[^|]*[^|]))"
+                source     = "tag"
+        }
+
+        stage.timestamp {
+                source = "time"
+                format = "RFC3339Nano"
+        }
+
+        stage.labels {
+                values = {
+                        container_id   = null,
+                        container_name = null,
+                        image_id       = null,
+                        image_name     = null,
+                        stream         = null,
+                        tag            = null,
+                }
+        }
+
+        stage.output {
+                source = "output"
+        }
+}
+
+loki.source.file "containers" {
+        targets               = local.file_match.containers.targets
+        forward_to            = [loki.process.containers.receiver]
+        legacy_positions_file = "/tmp/positions.yaml"
+}
+
 // Syslog configuration
 discovery.relabel "syslog" {
     targets = []
@@ -50,11 +110,11 @@ loki.source.syslog "syslog" {
         labels       = { job = "syslog", component = "loki.source.syslog", protocol = "udp" }
         max_message_length = 0
     }
-    forward_to    = [loki.write.syslog.receiver]
+    forward_to    = [loki.write.default.receiver]
     relabel_rules = discovery.relabel.syslog.rules
 }
 
-loki.write "syslog" {
+loki.write "default" {
     endpoint {
         url = "https://loki.nxthdr.dev/loki/api/v1/push"
 

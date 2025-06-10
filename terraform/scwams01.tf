@@ -87,6 +87,11 @@ resource "docker_container" "scwams01_alloy" {
     container_path = "/var/lib/alloy/data"
     host_path = "/home/nxthdr/alloy/data"
   }
+  volumes {
+    container_path = "/var/lib/docker/containers"
+    host_path = "/var/lib/docker/containers"
+    read_only = "true"
+  }
 }
 
 # Node Exporter

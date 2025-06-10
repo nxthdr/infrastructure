@@ -1,3 +1,4 @@
+// Container logs configuration
 local.file_match "containers" {
         path_targets = [{
                 __address__ = "localhost",
@@ -57,7 +58,7 @@ loki.source.file "containers" {
         legacy_positions_file = "/tmp/positions.yaml"
 }
 
-
+// Syslog configuration
 discovery.relabel "syslog" {
     targets = []
 
