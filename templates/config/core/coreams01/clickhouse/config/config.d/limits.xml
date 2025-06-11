@@ -1,0 +1,5 @@
+<clickhouse>
+    <max_concurrent_queries>16</max_concurrent_queries>
+    <max_server_memory_usage_to_ram_ratio>0.8</max_server_memory_usage_to_ram_ratio>
+    <max_table_size_to_drop>0</max_table_size_to_drop>
+</clickhouse>

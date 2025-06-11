@@ -3,6 +3,16 @@
         <readonly>
             <readonly>2</readonly>
         </readonly>
+        <!-- 8 GB per query -->
+        <max_memory_usage>8000000000</max_memory_usage>
+        <!-- 12 GB total -->
+        <max_memory_usage_for_all_queries>12000000000</max_memory_usage_for_all_queries>
+        <!-- 4 threads per query -->
+        <max_threads>4</max_threads>
+         <!-- 10 concurrent queries -->
+        <max_concurrent_queries>10</max_concurrent_queries>
+        <!-- 60 seconds per query -->
+        <max_execution_time>60</max_execution_time>
     </profiles>
 
     <users>

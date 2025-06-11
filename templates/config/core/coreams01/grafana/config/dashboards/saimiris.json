@@ -369,12 +369,12 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 2
+  "version": 4
 }
