@@ -592,6 +592,38 @@ resource "docker_container" "goflow" {
   }
 }
 
+# Saimiris Gateway
+data "docker_registry_image" "saimiris_gateway" {
+  name = "ghcr.io/nxthdr/saimiris-gateway:main"
+  provider = docker.coreams01
+}
+
+resource "docker_image" "saimiris_gateway" {
+  name = data.docker_registry_image.saimiris_gateway.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.saimiris_gateway.sha256_digest ]
+}
+
+resource "docker_container" "saimiris_gateway" {
+  image = docker_image.saimiris_gateway.image_id
+  name  = "saimiris_gateway"
+  provider = docker.coreams01
+  command = [
+    "--address", "[2a06:de00:50:cafe:10::114]:8080",
+    "--agent-key", var.saimiris_agent_key,
+  ]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::114"
+  }
+}
+
 # chbot
 data "docker_registry_image" "chbot" {
   name = "ghcr.io/nxthdr/chbot:main"

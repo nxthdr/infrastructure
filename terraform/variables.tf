@@ -21,3 +21,8 @@ variable "dyndns_auth_token" {
   description = "DynDNS Auth Token"
   type        = string
 }
+
+variable "saimiris_agent_key" {
+  description = "Saimiris Gateway agent key"
+  type        = string
+}

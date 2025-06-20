@@ -10,6 +10,11 @@ caracat:
     integrity_check: false
     probing_rate: 10000
 
+gateway:
+  url: "https://saimiris.nxthdr.dev"
+  agent_key: "{{ saimiris.agent_key }}"
+  agent_secret: "{{ saimiris.agent_secret }}"
+
 kafka:
   brokers: "redpanda.nxthdr.dev:9092"
 
