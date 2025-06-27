@@ -611,12 +611,21 @@ resource "docker_container" "saimiris_gateway" {
   command = [
     "--address", "[2a06:de00:50:cafe:10::114]:8080",
     "--agent-key", var.saimiris_agent_key,
+    "--kafka-brokers", "redpanda.nxthdr.dev:9092",
+    "--kafka-topic", "saimiris-targets",
+    "--kafka-auth-protocol", "SASL_PLAINTEXT",
+    "--kafka-sasl-username", var.saimiris_redpanda_username,
+    "--kafka-sasl-password", var.saimiris_redpanda_password,
+    "--kafka-sasl-mechanism", "SCRAM-SHA-512",
+    "--logto-jwks-uri", "https://csy8pa.logto.app/oidc/jwks",
+    "--logto-issuer", "https://csy8pa.logto.app/oidc",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name

@@ -26,3 +26,13 @@ variable "saimiris_agent_key" {
   description = "Saimiris Gateway agent key"
   type        = string
 }
+
+variable "saimiris_redpanda_username" {
+  description = "Saimiris Redpanda username"
+  type        = string
+}
+
+variable "saimiris_redpanda_password" {
+  description = "Saimiris Redpanda password"
+  type        = string
+}
