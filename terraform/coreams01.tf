@@ -619,6 +619,7 @@ resource "docker_container" "saimiris_gateway" {
     "--kafka-sasl-mechanism", "SCRAM-SHA-512",
     "--logto-jwks-uri", "https://csy8pa.logto.app/oidc/jwks",
     "--logto-issuer", "https://csy8pa.logto.app/oidc",
+    "--database-url", "postgresql://[2a06:de00:50:cafe:10::116]:5432/saimiris?user=${var.postgresql_username}&password=${var.postgresql_password}&sslmode=disable",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
@@ -659,6 +660,57 @@ resource "docker_container" "blog" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::115"
+  }
+}
+
+# PostgreSQL
+resource "docker_image" "postgresql" {
+  name = "postgres:16"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "postgresql" {
+  image = docker_image.postgresql.image_id
+  name  = "postgresql"
+  provider = docker.coreams01
+  command = [
+    "postgres",
+    "-c", "config_file=/etc/postgresql/postgresql.conf",
+    "-c", "hba_file=/etc/postgresql/pg_hba.conf",
+    "-c", "ident_file=/etc/postgresql/pg_ident.conf"
+  ]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  user = "1001:1001"
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::116"
+  }
+  env = [
+    "POSTGRES_DB=saimiris",
+    "POSTGRES_USER=${var.postgresql_username}",
+    "POSTGRES_PASSWORD=${var.postgresql_password}",
+    "PGDATA=/var/lib/postgresql/data/pgdata"
+  ]
+  volumes {
+    container_path = "/var/lib/postgresql/data"
+    host_path = "/home/nxthdr/postgresql/data"
+  }
+  volumes {
+    container_path = "/etc/postgresql/postgresql.conf"
+    host_path = "/home/nxthdr/postgresql/config/postgresql.conf"
+  }
+  volumes {
+    container_path = "/etc/postgresql/pg_hba.conf"
+    host_path = "/home/nxthdr/postgresql/config/pg_hba.conf"
+  }
+  volumes {
+    container_path = "/etc/postgresql/pg_ident.conf"
+    host_path = "/home/nxthdr/postgresql/config/pg_ident.conf"
   }
 }
 

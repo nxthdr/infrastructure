@@ -36,3 +36,13 @@ variable "saimiris_redpanda_password" {
   description = "Saimiris Redpanda password"
   type        = string
 }
+
+variable "postgresql_username" {
+  description = "PostgreSQL username"
+  type        = string
+}
+
+variable "postgresql_password" {
+  description = "PostgreSQL password"
+  type        = string
+}
