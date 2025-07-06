@@ -23,8 +23,8 @@ kafka:
   auth_sasl_password: "{{ redpanda.saimiris.password }}"
   auth_sasl_mechanism: SCRAM-SHA-512
 
-  in_topics: saimiris-targets
+  in_topics: saimiris-probes
   in_group_id: saimiris-agent-{{ inventory_hostname }}
 
   out_enable: true
-  out_topic: saimiris-results
+  out_topic: saimiris-replies

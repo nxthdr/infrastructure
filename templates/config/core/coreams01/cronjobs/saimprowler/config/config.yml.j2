@@ -6,11 +6,11 @@ kafka:
   auth_sasl_password: "{{ redpanda.saimiris.password }}"
   auth_sasl_mechanism: SCRAM-SHA-512
 
-  in_topics: saimiris-targets
+  in_topics: saimiris-probes
   in_group_id: saimiris-agent-syfm95b7zp
 
   out_enable: true
-  out_topic: saimiris-results
+  out_topic: saimiris-replies
 
 agent:
   id: "syfm95b7zp"

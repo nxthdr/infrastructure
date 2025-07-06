@@ -18,12 +18,20 @@ xz -d $SCRIPTPATH/data/aliased-prefixes.txt.xz
 # Shuffle the prefixes, take a fraction of them, and create a prowl compatible targets.csv file
 shuf $SCRIPTPATH/data/aliased-prefixes.txt | head -n 10000 | sed 's/$/,ICMPv6,3,32,3/' > $SCRIPTPATH/data/targets.csv
 
+# Log the number of targets generated
+TARGETS_COUNT=$(wc -l < $SCRIPTPATH/data/targets.csv)
+echo "$(date): Generated $TARGETS_COUNT targets for measurement"
+
 # Probes generation
 docker run --rm --name cron-saimprowler-prowl \
     -v $SCRIPTPATH/data/targets.csv:/data/targets.csv \
     $DOCKER_IMAGE_PROWL \
     --tool traceroute --mapper sequential \
     /data/targets.csv > $SCRIPTPATH/data/probes.csv
+
+# Log the number of probes generated
+PROBES_COUNT=$(wc -l < $SCRIPTPATH/data/probes.csv)
+echo "$(date): Generated $PROBES_COUNT probes from $TARGETS_COUNT targets"
 
 # Probes execution
 docker run --rm --name cron-saimprowler-saimiris --network=host \

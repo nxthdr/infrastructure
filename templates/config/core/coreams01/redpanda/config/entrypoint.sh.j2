@@ -16,11 +16,11 @@ $rpkcmd security user create {{ redpanda.superuser.username }}  -p '{{ redpanda.
 # Enable SASL
 $rpkcmd cluster config set enable_sasl true
 
-# Create Saimiris user and grant it access to the cluster and the `saimiris-results` topic
+# Create Saimiris user and grant it access to the cluster and the `saimiris-replies` topic
 rpkcmd="/usr/bin/rpk -X brokers=2a06:de00:50:cafe:100::b"
 $rpkcmd security user create {{ redpanda.saimiris.username }} -p '{{ redpanda.saimiris.password }}' --mechanism SCRAM-SHA-512
 $rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --cluster -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-targets -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
-$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-results -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-probes -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
+$rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --topic saimiris-replies -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
 $rpkcmd security acl create --allow-principal User:{{ redpanda.saimiris.username }} --operation all --group saimiris-agent --resource-pattern-type prefixed -X user={{ redpanda.superuser.username }} -X pass='{{ redpanda.superuser.password }}' -X sasl.mechanism=SCRAM-SHA-512
 fg %1

@@ -612,7 +612,7 @@ resource "docker_container" "saimiris_gateway" {
     "--address", "[2a06:de00:50:cafe:10::114]:8080",
     "--agent-key", var.saimiris_agent_key,
     "--kafka-brokers", "redpanda.nxthdr.dev:9092",
-    "--kafka-topic", "saimiris-targets",
+    "--kafka-topic", "saimiris-probes",
     "--kafka-auth-protocol", "SASL_PLAINTEXT",
     "--kafka-sasl-username", var.saimiris_redpanda_username,
     "--kafka-sasl-password", var.saimiris_redpanda_password,
