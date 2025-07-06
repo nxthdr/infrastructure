@@ -3,16 +3,21 @@
         <readonly>
             <readonly>2</readonly>
         </readonly>
-        <!-- 8 GB per query -->
-        <max_memory_usage>8000000000</max_memory_usage>
-        <!-- 12 GB total -->
-        <max_memory_usage_for_all_queries>12000000000</max_memory_usage_for_all_queries>
-        <!-- 4 threads per query -->
-        <max_threads>4</max_threads>
-         <!-- 10 concurrent queries -->
-        <max_concurrent_queries>10</max_concurrent_queries>
-        <!-- 60 seconds per query -->
-        <max_execution_time>60</max_execution_time>
+        <!-- Reduced from 8GB to 4GB per query to prevent OOM -->
+        <max_memory_usage>4000000000</max_memory_usage>
+        <!-- Reduced from 12GB to 8GB total to fit within new server limits -->
+        <max_memory_usage_for_all_queries>8000000000</max_memory_usage_for_all_queries>
+        <!-- Reduced from 4 to 2 threads per query to reduce memory pressure -->
+        <max_threads>2</max_threads>
+         <!-- Reduced from 10 to 6 concurrent queries -->
+        <max_concurrent_queries>6</max_concurrent_queries>
+        <!-- Increased timeout to account for slower queries with less memory -->
+        <max_execution_time>120</max_execution_time>
+
+        <!-- Additional settings to help with large datasets -->
+        <max_rows_to_read>100000000</max_rows_to_read> <!-- 100M rows max -->
+        <max_bytes_to_read>10000000000</max_bytes_to_read> <!-- 10GB max data read -->
+        <prefer_localhost_replica>1</prefer_localhost_replica>
     </profiles>
 
     <users>

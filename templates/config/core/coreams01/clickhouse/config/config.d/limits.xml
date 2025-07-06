@@ -1,5 +1,11 @@
 <clickhouse>
-    <max_concurrent_queries>16</max_concurrent_queries>
-    <max_server_memory_usage_to_ram_ratio>0.8</max_server_memory_usage_to_ram_ratio>
+    <!-- Reduced from 16 to 8 for better memory management -->
+    <max_concurrent_queries>8</max_concurrent_queries>
+    <!-- Reduced from 0.8 to 0.6 to leave more RAM for OS and other services (9.6GB vs 12.8GB) -->
+    <max_server_memory_usage_to_ram_ratio>0.6</max_server_memory_usage_to_ram_ratio>
     <max_table_size_to_drop>0</max_table_size_to_drop>
+
+    <!-- Additional memory management settings -->
+    <uncompressed_cache_size>1073741824</uncompressed_cache_size> <!-- 1GB -->
+    <mark_cache_size>536870912</mark_cache_size> <!-- 512MB -->
 </clickhouse>

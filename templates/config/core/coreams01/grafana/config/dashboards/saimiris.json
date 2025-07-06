@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 6,
   "links": [],
   "panels": [
     {
@@ -101,7 +101,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -194,7 +194,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "editorMode": "code",
@@ -311,7 +311,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.1",
+      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
@@ -330,9 +330,9 @@
               "table": ""
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.10.0",
           "queryType": "table",
-          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time, Count() AS \"${agent}\"\nFROM saimiris.results\nWHERE $__timeFilter(time) AND agent_id == '${agent}'\nGROUP BY time\nORDER BY time",
+          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time, Count() AS \"${agent}\"\nFROM saimiris.replies\nWHERE $__timeFilter(time) AND agent_id == '${agent}'\nGROUP BY time\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -357,11 +357,11 @@
           "type": "grafana-clickhouse-datasource",
           "uid": "PDEE91DDB90597936"
         },
-        "definition": "SELECT DISTINCT agent_id FROM saimiris.results ORDER BY agent_id",
+        "definition": "SELECT DISTINCT agent_id FROM saimiris.replies ORDER BY agent_id",
         "label": "Agent",
         "name": "agent",
         "options": [],
-        "query": "SELECT DISTINCT agent_id FROM saimiris.results ORDER BY agent_id",
+        "query": "SELECT DISTINCT agent_id FROM saimiris.replies ORDER BY agent_id",
         "refresh": 1,
         "regex": "",
         "type": "query"
@@ -376,5 +376,5 @@
   "timezone": "browser",
   "title": "Saimiris",
   "uid": "begfbu6d72800a",
-  "version": 4
+  "version": 3
 }
