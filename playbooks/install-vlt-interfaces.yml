@@ -2,26 +2,53 @@
 ---
 - hosts: vlt
   become: yes
+  vars:
+    interface: enp1s0
+    prefixes:
+      - 2a0e:97c0:8a0::/48                              # NXTHDR-RESEARCH Anycast
+      - "{{ hostvars[inventory_hostname].uniprobe0 }}"  # NXTHDR-RESEARCH Unicast
+    netplan_config_path: "/etc/netplan/99-dummy0-vlt.yaml"
+
   tasks:
-  # We need to adapt the MTU of the probing servers because else it breaks the BMP collection.
-  # The reason is that the Route Monitoring BMP packets can fill up the entire MTU,
-  # except the IXP servers use Wireguard with a MTU of 1420 (to account for the Wireguard overhead). So the packets are dropped,
-  # and we don't received the ICMPv6 Packet Too Big notification because the IXP servers uses their non routable IPv6 address from the IX lan.
-  - name: Update enp1s0 MTU
-    ignore_errors: true
-    ansible.builtin.shell: |
-      ip link set dev enp1s0 mtu 1420
+    # We need to adapt the MTU of the probing servers because else it breaks the BMP collection.
+    # The reason is that the Route Monitoring BMP packets can fill up the entire MTU,
+    # except the IXP servers use Wireguard with a MTU of 1420 (to account for the Wireguard overhead). So the packets are dropped,
+    # and we don't received the ICMPv6 Packet Too Big notification because the IXP servers uses their non routable IPv6 address from the IX lan.
+    - name: Update enp1s0 MTU
+      ignore_errors: true
+      ansible.builtin.shell: |
+        ip link set dev enp1s0 mtu 1420
 
-  - name: Install anycast interface
-    ignore_errors: true
-    ansible.builtin.shell: |
-      ip link add dev anyprobe0 type dummy
-      ip link set anyprobe0 up
-      ip addr add dev anyprobe0 2a0e:97c0:8a0::10/48
+    - name: Create dummy0.netdev
+      copy:
+        dest: /etc/systemd/network/dummy0.netdev
+        content: |
+          [NetDev]
+          Name=dummy0
+          Kind=dummy
+        owner: root
+        group: root
+        mode: '0644'
 
-  - name: Install unicast interface
-    ignore_errors: true
-    ansible.builtin.shell: |
-      ip link add dev uniprobe0 type dummy
-      ip link set uniprobe0 up
-      ip addr add dev uniprobe0 {{ hostvars[inventory_hostname].uniprobe0 }}
+    - name: Create dummy0.network
+      copy:
+        dest: /etc/systemd/network/dummy0.network
+        content: |
+          [Match]
+          Name=dummy0
+
+          [Network]
+          {% for prefix in prefixes %}
+          Address={{ prefix.split('::')[0] }}::1/128
+          {% endfor %}
+
+          {% for prefix in prefixes %}
+          [Route]
+          Destination={{ prefix }}
+          {% endfor %}
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd-networkd
+      command: systemctl restart systemd-networkd

@@ -20,7 +20,7 @@ shuf $SCRIPTPATH/data/aliased-prefixes.txt | head -n 10000 | sed 's/$/,ICMPv6,3,
 
 # Log the number of targets generated
 TARGETS_COUNT=$(wc -l < $SCRIPTPATH/data/targets.csv)
-echo "$(date): Generated $TARGETS_COUNT targets for measurement"
+echo "Generated $TARGETS_COUNT targets for measurement"
 
 # Probes generation
 docker run --rm --name cron-saimprowler-prowl \
@@ -31,11 +31,11 @@ docker run --rm --name cron-saimprowler-prowl \
 
 # Log the number of probes generated
 PROBES_COUNT=$(wc -l < $SCRIPTPATH/data/probes.csv)
-echo "$(date): Generated $PROBES_COUNT probes from $TARGETS_COUNT targets"
+echo "Generated $PROBES_COUNT probes from $TARGETS_COUNT targets"
 
 # Probes execution
 docker run --rm --name cron-saimprowler-saimiris --network=host \
     -v $SCRIPTPATH/config/config.yml:/config/config.yml \
     -v $SCRIPTPATH/data/probes.csv:/data/probes.csv \
     $DOCKER_IMAGE_SAIMIRIS \
-    client --config /config/config.yml --probes-file=/data/probes.csv vltatl01,vltcdg01
+    client --config /config/config.yml --probes-file=/data/probes.csv vltatl01:[2a0e:97c0:8a0::10],vltcdg01:[2a0e:97c0:8a0::10]

@@ -3,10 +3,12 @@ agent:
   metrics_address: "0.0.0.0:8080"
 
 caracat:
-  - src_ipv6_addr: "2a0e:97c0:8a0::10"
+  - instance_id: 0
+    src_ipv6_prefix: "2a0e:97c0:8a0::/48"
     integrity_check: false
     probing_rate: 10000
-  - src_ipv6_addr: "{{ uniprobe0.split('/')[0] }}"
+  - instance_id: 1
+    src_ipv6_prefix: "{{ uniprobe0 }}"
     integrity_check: false
     probing_rate: 10000
 

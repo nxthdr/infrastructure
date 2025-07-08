@@ -28,9 +28,9 @@ vlt:
   hosts:
     vltatl01:
       ansible_host: atl01.vlt.infra.nxthdr.dev
-      uniprobe0: 2a0e:97c0:8a3::10/48
+      uniprobe0: 2a0e:97c0:8a3::/48
     vltcdg01:
       ansible_host: cdg01.vlt.infra.nxthdr.dev
-      uniprobe0: 2a0e:97c0:8a4::10/48
+      uniprobe0: 2a0e:97c0:8a4::/48
   vars:
     ansible_user: nxthdr
