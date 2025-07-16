@@ -15,10 +15,7 @@
 }
 
 as215011.net {
-    reverse_proxy {
-        import security_headers
-        to [2a06:de00:50:cafe:10::100]:80
-    }
+    redir https://nxthdr.dev{uri} permanent
 }
 
 nxthdr.dev {
