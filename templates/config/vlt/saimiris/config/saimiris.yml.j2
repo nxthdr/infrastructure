@@ -3,11 +3,13 @@ agent:
   metrics_address: "0.0.0.0:8080"
 
 caracat:
-  - instance_id: 0
+  - name: anycast
+    instance_id: 0
     src_ipv6_prefix: "2a0e:97c0:8a0::/48"
     integrity_check: false
     probing_rate: 10000
-  - instance_id: 1
+  - name: unicast
+    instance_id: 1
     src_ipv6_prefix: "{{ uniprobe0 }}"
     integrity_check: false
     probing_rate: 10000
