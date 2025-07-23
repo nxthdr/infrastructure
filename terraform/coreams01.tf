@@ -261,7 +261,7 @@ resource "docker_container" "prometheus" {
 
 # Grafana
 resource "docker_image" "grafana" {
-  name = "grafana/grafana:12.0.2"
+  name = "grafana/grafana:12.1.0"
   provider = docker.coreams01
 }
 
