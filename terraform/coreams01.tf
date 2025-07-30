@@ -714,6 +714,35 @@ resource "docker_container" "postgresql" {
   }
 }
 
+# nxthdr docs
+data "docker_registry_image" "docs" {
+  name = "ghcr.io/nxthdr/docs:main"
+  provider = docker.coreams01
+}
+
+resource "docker_image" "docs" {
+  name = data.docker_registry_image.docs.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.docs.sha256_digest ]
+}
+
+resource "docker_container" "docs" {
+  image = docker_image.docs.image_id
+  name  = "docs"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  env = [ "CADDY_ADMIN=[::]:2019" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::117"
+  }
+}
+
 # chbot
 data "docker_registry_image" "chbot" {
   name = "ghcr.io/nxthdr/chbot:main"
