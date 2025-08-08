@@ -17,13 +17,6 @@ ixp:
   vars:
     ansible_user: nxthdr
 
-scw:
-  hosts:
-    scwams01:
-      ansible_host: ams01.scw.infra.nxthdr.dev
-  vars:
-    ansible_user: nxthdr
-
 vlt:
   hosts:
     vltatl01:

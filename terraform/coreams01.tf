@@ -34,7 +34,14 @@ resource "docker_network" "backend" {
   }
 }
 
-# Reverse Proxy
+resource "docker_network" "dmz_ipv4" {
+  name = "dmz-ipv4"
+  provider = docker.coreams01
+  driver = "bridge"
+  ipv6 = true
+}
+
+# IPv6 Reverse Proxy
 resource "docker_image" "caddy" {
   name = "caddy:2.10"
   provider = docker.coreams01
@@ -71,7 +78,43 @@ resource "docker_container" "proxy" {
   }
 }
 
-# nxthdr Website
+# IPv4 Reverse Proxy
+resource "docker_container" "proxy_ipv4" {
+  image = docker_image.caddy.image_id
+  name  = "proxy-ipv4"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  env = [ "CADDY_ADMIN=[::]:2019" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.dmz_ipv4.name
+  }
+  ports {
+    internal = 80
+    external = 80
+    protocol = "tcp"
+  }
+  ports {
+    internal = 443
+    external = 443
+    protocol = "tcp"
+  }
+  volumes {
+    container_path = "/etc/caddy/Caddyfile"
+    host_path = "/home/nxthdr/proxy-ipv4/config/Caddyfile"
+  }
+  volumes {
+    container_path = "/data/caddy/certificates"
+    host_path = "/home/nxthdr/proxy/data/caddy/certificates"
+  }
+}
+
+# Main Website
 data "docker_registry_image" "nxthdr_dev" {
   name = "ghcr.io/nxthdr/nxthdr.dev:main"
   provider = docker.coreams01

@@ -86,14 +86,6 @@ grafana.nxthdr.dev {
     }
 }
 
-api.risotto.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
-        transport http {
-           tls_server_name {host}
-        }
-    }
-}
-
 dyndns.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
         transport http {

@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --vault-password-file .password playbooks/sync-bird.yml
 ---
-- hosts: core, vlt  # TODO: add ixp back after research experiments
+- hosts: core, ixpfra01, vlt  # TODO: add ixp back after research experiments
   become: yes
   tasks:
   - name: Ensure /etc/bird directory exists

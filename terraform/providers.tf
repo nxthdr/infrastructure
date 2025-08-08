@@ -38,13 +38,6 @@ provider "docker" {
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
-## scw Servers
-provider "docker" {
-  host     = "ssh://nxthdr@ams01.scw.infra.nxthdr.dev:22"
-  alias    = "scwams01"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
-}
-
 ## vlt Servers
 provider "docker" {
   host     = "ssh://nxthdr@atl01.vlt.infra.nxthdr.dev:22"
