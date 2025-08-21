@@ -822,42 +822,6 @@ resource "docker_container" "chbot" {
   }
 }
 
-# DynDNS
-data "docker_registry_image" "dyndns" {
-  name = "ghcr.io/nxthdr/dyndns:main"
-  provider = docker.coreams01
-}
-
-resource "docker_image" "dyndns" {
-  name = data.docker_registry_image.dyndns.name
-  provider = docker.coreams01
-  pull_triggers = [ data.docker_registry_image.dyndns.sha256_digest ]
-}
-
-resource "docker_container" "dyndns" {
-  image = docker_image.dyndns.image_id
-  name  = "dyndns"
-  provider = docker.coreams01
-  command = [
-    "--host", "[::]:3000",
-    "--porkbun-api-key", var.porkbun_api_key,
-    "--porkbun-secret-key", var.porkbun_secret_api_key,
-    "--domain", "dyndns.nxthdr.dev",
-    "--token", var.dyndns_auth_token
-  ]
-  restart = "unless-stopped"
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::1002"
-  }
-}
-
 # Geofeed
 resource "docker_container" "geofeed" {
   image = docker_image.caddy.image_id
