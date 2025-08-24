@@ -188,7 +188,7 @@ resource "docker_container" "clickhouse" {
 
 # Chproxy
 resource "docker_image" "chproxy" {
-  name = "contentsquareplatform/chproxy:v1.28.0"
+  name = "contentsquareplatform/chproxy:v1.29.0"
   provider = docker.coreams01
 }
 
