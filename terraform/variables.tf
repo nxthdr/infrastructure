@@ -46,3 +46,9 @@ variable "postgresql_password" {
   description = "PostgreSQL password"
   type        = string
 }
+
+variable "tailscale_authkey" {
+  description = "Tailscale authentication key"
+  type        = string
+  sensitive   = true
+}

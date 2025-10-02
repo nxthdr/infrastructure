@@ -90,6 +90,7 @@ resource "docker_container" "proxy_ipv4" {
   }
   dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
   env = [ "CADDY_ADMIN=[::]:2019" ]
+  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.dmz_ipv4.name

@@ -154,3 +154,36 @@ resource "docker_container" "ixpams01_cadvisor" {
     read_only      = true
   }
 }
+
+# Tailscale
+resource "docker_image" "ixpams01_tailscale" {
+  name     = "tailscale/tailscale:latest"
+  provider = docker.ixpams01
+}
+
+resource "docker_container" "ixpams01_tailscale" {
+  image    = docker_image.ixpams01_tailscale.image_id
+  name     = "tailscale"
+  provider = docker.ixpams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
+  privileged   = true
+  network_mode = "host"
+  env = [
+    "TS_AUTHKEY=${var.tailscale_authkey}",
+    "TS_STATE_DIR=/var/lib/tailscale",
+    "TS_HOSTNAME=ixpams01",
+    "TS_EXTRA_ARGS=--advertise-tags=tag:ixp",
+    "TS_USERSPACE=false"
+  ]
+  volumes {
+    container_path = "/var/lib/tailscale"
+    host_path      = "/home/nxthdr/tailscale/state"
+  }
+  volumes {
+    container_path = "/dev/net/tun"
+    host_path      = "/dev/net/tun"
+  }
+}
