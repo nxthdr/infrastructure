@@ -95,6 +95,9 @@ resource "docker_container" "proxy_ipv4" {
   networks_advanced {
     name = docker_network.dmz_ipv4.name
   }
+  networks_advanced {
+    name = docker_network.backend.name
+  }
   ports {
     internal = 80
     external = 80
@@ -709,7 +712,7 @@ resource "docker_container" "blog" {
 
 # PostgreSQL
 resource "docker_image" "postgresql" {
-  name = "postgres:18"
+  name = "postgres:17"
   provider = docker.coreams01
 }
 
@@ -728,7 +731,6 @@ resource "docker_container" "postgresql" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  user = "1001:1001"
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -738,10 +740,10 @@ resource "docker_container" "postgresql" {
     "POSTGRES_DB=saimiris",
     "POSTGRES_USER=${var.postgresql_username}",
     "POSTGRES_PASSWORD=${var.postgresql_password}",
-    "PGDATA=/var/lib/postgresql/data/pgdata"
+    "PGDATA=/var/lib/postgresql/pgdata"
   ]
   volumes {
-    container_path = "/var/lib/postgresql/data"
+    container_path = "/var/lib/postgresql"
     host_path = "/home/nxthdr/postgresql/data"
   }
   volumes {
@@ -875,5 +877,73 @@ resource "docker_container" "peers" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::1004"
+  }
+}
+
+# Headscale
+resource "docker_image" "headscale" {
+  name = "ghcr.io/juanfont/headscale:0.26"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "headscale" {
+  image = docker_image.headscale.image_id
+  name  = "headscale"
+  provider = docker.coreams01
+  command = [
+    "serve"
+  ]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1005"
+  }
+  volumes {
+    container_path = "/etc/headscale"
+    host_path = "/home/nxthdr/headscale/config"
+  }
+  volumes {
+    container_path = "/var/lib/headscale"
+    host_path = "/home/nxthdr/headscale/data"
+  }
+}
+
+# Headplane
+resource "docker_image" "headplane" {
+  name = "ghcr.io/tale/headplane:0.6.0"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "headplane" {
+  image = docker_image.headplane.image_id
+  name  = "headplane"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1006"
+  }
+  volumes {
+    container_path = "/etc/headplane/config.yaml"
+    host_path = "/home/nxthdr/headplane/config/config.yaml"
+  }
+  volumes {
+    container_path = "/var/lib/headplane"
+    host_path = "/home/nxthdr/headplane/data"
+  }
+  volumes {
+    container_path = "/etc/headscale"
+    host_path = "/home/nxthdr/headscale/config"
+    read_only = "true"
   }
 }

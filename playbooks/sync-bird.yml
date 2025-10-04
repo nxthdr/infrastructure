@@ -13,6 +13,12 @@
       src: "{{ base_dir }}/networks/{{ inventory_hostname }}/bird/bird.conf"
       dest: /etc/bird/bird.conf
 
+  - name: Copy peerlab configuration file (if exists)
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/networks/{{ inventory_hostname }}/bird/peerlab.conf"
+      dest: /etc/bird/peerlab.conf
+    ignore_errors: yes
+
   - name: Copy systemd file
     ansible.builtin.copy:
       src: "{{ base_dir }}/templates/config/shared/bird/bird.service"

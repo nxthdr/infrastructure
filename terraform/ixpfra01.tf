@@ -172,10 +172,10 @@ resource "docker_container" "ixpfra01_tailscale" {
   privileged   = true
   network_mode = "host"
   env = [
-    "TS_AUTHKEY=${var.tailscale_authkey}",
+    "TS_AUTHKEY=${var.headscale_authkey}",
     "TS_STATE_DIR=/var/lib/tailscale",
     "TS_HOSTNAME=ixpfra01",
-    "TS_EXTRA_ARGS=--advertise-tags=tag:ixp",
+    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp",
     "TS_USERSPACE=false"
   ]
   volumes {

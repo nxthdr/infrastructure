@@ -1,4 +1,13 @@
 groups:
+- name: recording-rules
+  interval: 30s
+  rules:
+  # Record all instances that have reported metrics in the last 5 minutes
+  # This creates a baseline of "known" instances
+  - record: instance:up:last_seen
+    expr: |
+      max_over_time(up[5m]) or on() vector(0)
+
 - name: core-service-down
   rules:
   - alert: Core_Service_Proxy_Down
@@ -85,29 +94,19 @@ groups:
 
 - name: monitoring-down
   rules:
-  - alert: Monitoring_Service_Alloy_Down
-    expr: up{job="alloy"} == 0
-    for: 1m
+  # Generic alert for any monitoring service that stops reporting
+  # This works for both scraped and remote_write targets
+  - alert: Monitoring_Service_Down
+    expr: |
+      (instance:up:last_seen{job=~"alloy|node-exporter|cadvisor"} == 1)
+      unless
+      (up{job=~"alloy|node-exporter|cadvisor"} == 1)
+    for: 3m
     labels:
       severity: warning
     annotations:
       title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
-
-  - alert: Monitoring_Service_Node_Exporter_Down
-    expr: up{job="node-exporter"} == 0
-    for: 1m
-    labels:
-      severity: warning
-    annotations:
-      title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
-
-  - alert: Monitoring_Service_Cadvisor_Down
-    expr: up{job="cadvisor"} == 0
-    for: 1m
-    labels:
-      severity: warning
-    annotations:
-      title: 'monitoring service {{ $labels.job }} is down in {{ $labels.instance }}'
+      description: 'The {{ $labels.job }} service on {{ $labels.instance }} has stopped reporting metrics for more than 3 minutes.'
 
 - name: risotto
   rules:
@@ -122,9 +121,13 @@ groups:
 - name: saimiris
   rules:
   - alert: Probing_Service_Saimiris_Down
-    expr: up{job="saimiris"} == 0
-    for: 1m
+    expr: |
+      (instance:up:last_seen{job="saimiris"} == 1)
+      unless
+      (up{job="saimiris"} == 1)
+    for: 3m
     labels:
       severity: warning
     annotations:
       title: 'probing service {{ $labels.job }} is down in {{ $labels.instance }}'
+      description: 'The Saimiris probing service on {{ $labels.instance }} has stopped reporting metrics for more than 3 minutes.'

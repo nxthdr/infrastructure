@@ -77,3 +77,11 @@ peers.nxthdr.dev {
         to [2a06:de00:50:cafe:10::1004]:80
     }
 }
+
+headscale.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::1005]:8080
+}
+
+headplane.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::1006]:3000
+}

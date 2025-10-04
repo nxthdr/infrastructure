@@ -93,3 +93,15 @@ saimiris.nxthdr.dev {
         }
     }
 }
+
+headscale.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::1005]:8080
+}
+
+headplane.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
