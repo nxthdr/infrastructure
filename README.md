@@ -4,7 +4,7 @@ Infrastructure as Code for the [nxthdr](https://nxthdr.dev) platform.
 
 ## Documentation
 
-📚 **[Read the full documentation](https://nxthdr.github.io/infrastructure/)** (or browse [docs/](docs/))
+📚 **[Read the full documentation](https://nxthdr.github.io/infrastructure/)**
 
 Quick links:
 - [Getting Started](docs/pages/getting-started/overview.md)
