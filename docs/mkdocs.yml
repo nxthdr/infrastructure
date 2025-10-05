@@ -1,0 +1,77 @@
+site_name: Infrastructure
+site_url: https://nxthdr.github.io/infrastructure/
+site_description: Documentation for nxthdr infrastructure repository
+site_author: nxthdr
+repo_url: https://github.com/nxthdr/infrastructure
+repo_name: nxthdr/infrastructure
+edit_uri: edit/main/docs/pages/
+docs_dir: pages
+
+theme:
+  name: material
+  palette:
+    # Light mode
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Overview: getting-started/overview.md
+    - Setup: getting-started/setup.md
+    - Quick Start: getting-started/quick-start.md
+  - Guides:
+    - Common Tasks: guides/common-tasks.md
+    - Network Configuration: guides/network-configuration.md
+    - Adding Services: guides/adding-services.md
+  - Reference:
+    - Architecture: reference/architecture.md
