@@ -24,7 +24,7 @@
     
     
       
-        <title>Architecture - nxthdr Infrastructure</title>
+        <title>Architecture - Infrastructure</title>
       
     
     
@@ -90,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="nxthdr Infrastructure" class="md-header__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -104,7 +104,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            nxthdr Infrastructure
+            Infrastructure
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -320,13 +320,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="nxthdr Infrastructure" class="md-nav__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    nxthdr Infrastructure
+    Infrastructure
   </label>
   
     <div class="md-nav__source">
@@ -1453,7 +1453,7 @@
 
 
   
-    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/docs/reference/architecture.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/pages/reference/architecture.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1468,154 +1468,29 @@
 <p><strong>Provider</strong>: Scaleway Dedibox<br />
 <strong>Location</strong>: Amsterdam, Netherlands<br />
 <strong>Role</strong>: Central hub for all nxthdr services</p>
-<p><strong>Services Running</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-<th>Port</th>
-<th>Network</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ClickHouse</td>
-<td>Time-series database</td>
-<td>9000, 8123</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>PostgreSQL</td>
-<td>Relational database</td>
-<td>5432</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>Redpanda</td>
-<td>Kafka-compatible streaming</td>
-<td>9092, 8082</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>Prometheus</td>
-<td>Metrics collection</td>
-<td>9090</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>Loki</td>
-<td>Log aggregation</td>
-<td>3100</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>Grafana</td>
-<td>Observability dashboards</td>
-<td>3000</td>
-<td>dmz</td>
-</tr>
-<tr>
-<td>Headscale</td>
-<td>Tailscale coordination</td>
-<td>8080</td>
-<td>dmz</td>
-</tr>
-<tr>
-<td>Caddy (proxy)</td>
-<td>HTTPS reverse proxy</td>
-<td>443</td>
-<td>dmz</td>
-</tr>
-<tr>
-<td>Caddy (proxy-ipv4)</td>
-<td>IPv4 proxy</td>
-<td>443</td>
-<td>dmz-ipv4</td>
-</tr>
-<tr>
-<td>Alertmanager</td>
-<td>Alert routing</td>
-<td>9093</td>
-<td>backend</td>
-</tr>
-<tr>
-<td>CHProxy</td>
-<td>ClickHouse proxy</td>
-<td>9000</td>
-<td>backend</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Service Categories</strong>:
+- <strong>Databases</strong>: ClickHouse (time-series), PostgreSQL (relational)
+- <strong>Messaging</strong>: Redpanda (Kafka-compatible streaming)
+- <strong>Observability</strong>: Prometheus (metrics), Loki (logs), Grafana (dashboards), Alertmanager
+- <strong>Networking</strong>: Headscale (Tailscale), Caddy (HTTPS proxy)
+- <strong>Application Services</strong>: Various nxthdr-specific services</p>
 <h3 id="ixp-servers">IXP Servers<a class="headerlink" href="#ixp-servers" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: BGP peering at Internet Exchange Points</p>
-<table>
-<thead>
-<tr>
-<th>Server</th>
-<th>Provider</th>
-<th>Location</th>
-<th>IXPs</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ixpams01</td>
-<td>iFog</td>
-<td>Amsterdam</td>
-<td>NL-IX</td>
-</tr>
-<tr>
-<td>ixpams02</td>
-<td>iFog</td>
-<td>Amsterdam</td>
-<td>-</td>
-</tr>
-<tr>
-<td>ixpfra01</td>
-<td>iFog</td>
-<td>Frankfurt</td>
-<td>LocIX, FogIXP</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Services Running</strong>:
-- BIRD (BGP routing daemon)
-- WireGuard (VPN to core)
-- Alloy (metrics collection)
-- cAdvisor (container metrics)
-- hsflowd (sFlow export)</p>
+<p><strong>Locations</strong>: Amsterdam (2 servers), Frankfurt (1 server)<br />
+<strong>Provider</strong>: iFog<br />
+<strong>IXPs</strong>: NL-IX, LocIX, FogIXP</p>
+<p><strong>Service Categories</strong>:
+- <strong>Routing</strong>: BIRD (BGP daemon)
+- <strong>Connectivity</strong>: WireGuard (VPN to core)
+- <strong>Monitoring</strong>: Metrics and flow collection</p>
 <h3 id="probing-servers-vlt">Probing Servers (VLT)<a class="headerlink" href="#probing-servers-vlt" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: Active measurement infrastructure</p>
-<table>
-<thead>
-<tr>
-<th>Server</th>
-<th>Provider</th>
-<th>Location</th>
-<th>Prefix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vltatl01</td>
-<td>Vultr</td>
-<td>Atlanta, USA</td>
-<td>2a0e:97c0:8a3::/48</td>
-</tr>
-<tr>
-<td>vltcdg01</td>
-<td>Vultr</td>
-<td>Paris, France</td>
-<td>2a0e:97c0:8a4::/48</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Services Running</strong>:
-- Saimiris (probing agent)
-- Alloy (metrics collection)
-- cAdvisor (container metrics)
-- hsflowd (sFlow export)</p>
+<p><strong>Locations</strong>: Multiple global locations<br />
+<strong>Provider</strong>: Vultr<br />
+<strong>Prefix</strong>: <code>2a0e:97c0:8a0::/44</code> (sub-prefixes per location)</p>
+<p><strong>Service Categories</strong>:
+- <strong>Probing</strong>: Saimiris (active measurement agent)
+- <strong>Monitoring</strong>: Metrics and flow collection</p>
 <h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
 <h3 id="ip-addressing">IP Addressing<a class="headerlink" href="#ip-addressing" title="Permanent link">&para;</a></h3>
 <p><strong>Core Server Networks</strong>:</p>
@@ -1635,20 +1510,14 @@
 - Not accessible from Internet
 - IPv4 and IPv6 enabled
 - Services communicate by container name (Docker DNS)</p>
-<p><strong>Example Services</strong>:
-- ClickHouse: <code>2a06:de00:50:cafe:10::10</code>
-- PostgreSQL: <code>2a06:de00:50:cafe:10::11</code>
-- Redpanda: <code>2a06:de00:50:cafe:10::12</code></p>
+<p><strong>IP Range</strong>: <code>2a06:de00:50:cafe:10::/80</code></p>
 <h4 id="dmz-network">DMZ Network<a class="headerlink" href="#dmz-network" title="Permanent link">&para;</a></h4>
 <p>Internet-facing network for public services.</p>
 <p><strong>Characteristics</strong>:
 - Accessible from Internet via proxy
 - IPv6 only
 - Requires firewall rule: <code>ip6tables -I DOCKER-USER -d 2a06:de00:50:cafe:100::/80 -j ACCEPT</code></p>
-<p><strong>Example Services</strong>:
-- Grafana: <code>2a06:de00:50:cafe:100::20</code>
-- Headscale: <code>2a06:de00:50:cafe:100::21</code>
-- Proxy: <code>2a06:de00:50:cafe:100::a</code></p>
+<p><strong>IP Range</strong>: <code>2a06:de00:50:cafe:100::/80</code></p>
 <h4 id="dmz-ipv4-network">DMZ-IPv4 Network<a class="headerlink" href="#dmz-ipv4-network" title="Permanent link">&para;</a></h4>
 <p>IPv4-only network for IPv4 proxy.</p>
 <p><strong>Purpose</strong>: Provide IPv4 access to IPv6-only services</p>

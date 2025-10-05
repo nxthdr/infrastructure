@@ -26,7 +26,7 @@
     
     
       
-        <title>Network Configuration - nxthdr Infrastructure</title>
+        <title>Network Configuration - Infrastructure</title>
       
     
     
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="nxthdr Infrastructure" class="md-header__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -106,7 +106,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            nxthdr Infrastructure
+            Infrastructure
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -322,13 +322,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="nxthdr Infrastructure" class="md-nav__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    nxthdr Infrastructure
+    Infrastructure
   </label>
   
     <div class="md-nav__source">
@@ -661,15 +661,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#example-bird-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example BIRD Configuration
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -716,15 +707,6 @@
   <a href="#common-wireguard-operations" class="md-nav__link">
     <span class="md-ellipsis">
       Common WireGuard Operations
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-wireguard-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example WireGuard Configuration
     </span>
   </a>
   
@@ -1065,15 +1047,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#example-bird-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example BIRD Configuration
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1120,15 +1093,6 @@
   <a href="#common-wireguard-operations" class="md-nav__link">
     <span class="md-ellipsis">
       Common WireGuard Operations
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-wireguard-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example WireGuard Configuration
     </span>
   </a>
   
@@ -1299,7 +1263,7 @@
 
 
   
-    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/docs/guides/network-configuration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/pages/guides/network-configuration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1376,61 +1340,20 @@
 <p><strong>Restart BIRD service</strong>:
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>bird
 </span></code></pre></div></p>
-<h3 id="example-bird-configuration">Example BIRD Configuration<a class="headerlink" href="#example-bird-configuration" title="Permanent link">&para;</a></h3>
-<p>Basic structure of a BIRD config:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># Router ID
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>router id 10.0.0.1;
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># Logging
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>log syslog all;
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a># Device protocol
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>protocol device {
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    scan time 10;
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a># Kernel protocol
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>protocol kernel {
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    ipv6 {
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        import none;
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>        export all;
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    };
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>}
-</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
-</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a># Static routes
-</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>protocol static {
-</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    ipv6;
-</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    route 2a06:de00:50::/44 via &quot;wg0&quot;;
-</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>}
-</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
-</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a># BGP template
-</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>template bgp peer_template {
-</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    local as 215011;
-</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>    ipv6 {
-</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>        import all;
-</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>        export where source = RTS_STATIC;
-</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>    };
-</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>}
-</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
-</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a># BGP peer
-</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>protocol bgp peer_example from peer_template {
-</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>    neighbor 2001:db8::1 as 64512;
-</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>}
-</span></code></pre></div>
 <h2 id="wireguard-configuration">WireGuard Configuration<a class="headerlink" href="#wireguard-configuration" title="Permanent link">&para;</a></h2>
 <p>WireGuard VPN tunnels connect IXP servers to the core server.</p>
 <h3 id="configuration-files_1">Configuration Files<a class="headerlink" href="#configuration-files_1" title="Permanent link">&para;</a></h3>
 <p>WireGuard configurations are in <code>networks/{hostname}/wireguard/</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>networks/
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>├── coreams01/
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│   └── wireguard/
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│       ├── wg0.conf
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│       └── wg1.conf
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>├── ixpams01/
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│   └── wireguard/
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│       ├── wg0.conf
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│       └── wg1.conf
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>└── ...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>networks/
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── coreams01/
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   └── wireguard/
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│       ├── wg0.conf
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│       └── wg1.conf
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>├── ixpams01/
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│   └── wireguard/
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│       ├── wg0.conf
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│       └── wg1.conf
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>└── ...
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Templated</p>
@@ -1440,20 +1363,20 @@
 <ol>
 <li>
 <p><strong>Edit the configuration</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vim<span class="w"> </span>networks/coreams01/wireguard/wg0.conf
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vim<span class="w"> </span>networks/coreams01/wireguard/wg0.conf
 </span></code></pre></div></p>
 </li>
 <li>
 <p><strong>Sync to server</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>sync-wireguard
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>sync-wireguard
 </span></code></pre></div></p>
 </li>
 </ol>
 <p>This will prompt for your BECOME password.</p>
 <ol>
 <li><strong>Verify the tunnel</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
 </span></code></pre></div></li>
 </ol>
 <h3 id="wireguard-playbook-details">WireGuard Playbook Details<a class="headerlink" href="#wireguard-playbook-details" title="Permanent link">&para;</a></h3>
@@ -1467,61 +1390,47 @@
 <p><strong>Target hosts</strong>: <code>core</code>, <code>ixp</code></p>
 <h3 id="common-wireguard-operations">Common WireGuard Operations<a class="headerlink" href="#common-wireguard-operations" title="Permanent link">&para;</a></h3>
 <p><strong>Check tunnel status</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
 </span></code></pre></div></p>
 <p><strong>Restart WireGuard interface</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>wg-quick@wg0
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>wg-quick@wg0
 </span></code></pre></div></p>
 <p><strong>View WireGuard logs</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>wg-quick@wg0<span class="w"> </span>-f
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>wg-quick@wg0<span class="w"> </span>-f
 </span></code></pre></div></p>
 <p><strong>Test connectivity through tunnel</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ping6<span class="w"> </span>&lt;remote_tunnel_ip&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ping6<span class="w"> </span>&lt;remote_tunnel_ip&gt;
 </span></code></pre></div></p>
-<h3 id="example-wireguard-configuration">Example WireGuard Configuration<a class="headerlink" href="#example-wireguard-configuration" title="Permanent link">&para;</a></h3>
-<p>Basic WireGuard interface config:</p>
-<div class="language-ini highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">[Interface]</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="na">Address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0.1.1/24, fd00::1/64</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="na">ListenPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">51820</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="na">PrivateKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{{ secrets.wireguard_private_key }}</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1"># Peer configuration</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">[Peer]</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="na">PublicKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;peer_public_key&gt;</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="na">Endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">peer.example.com:51820</span>
-</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="na">AllowedIPs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10.0.1.2/32, fd00::2/128</span>
-</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="na">PersistentKeepalive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">25</span>
-</span></code></pre></div>
 <h3 id="generate-wireguard-keys">Generate WireGuard Keys<a class="headerlink" href="#generate-wireguard-keys" title="Permanent link">&para;</a></h3>
 <p>To create new WireGuard keys:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Generate private key</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>wg<span class="w"> </span>genkey
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Generate public key from private key</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;private_key&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wg<span class="w"> </span>pubkey
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Generate private key</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>wg<span class="w"> </span>genkey
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Generate public key from private key</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;private_key&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wg<span class="w"> </span>pubkey
 </span></code></pre></div>
 <p>Store the private key in <code>secrets/secrets.yml</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>make<span class="w"> </span>edit-secrets
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>make<span class="w"> </span>edit-secrets
 </span></code></pre></div>
 <p>Add:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">wireguard_private_key_wg0</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;private_key&gt;&quot;</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">wireguard_private_key_wg0</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;private_key&gt;&quot;</span>
 </span></code></pre></div></p>
 <p>Use in config:
-<div class="language-ini highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="na">PrivateKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{{ secrets.wireguard_private_key_wg0 }}</span>
+<div class="language-ini highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="na">PrivateKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{{ secrets.wireguard_private_key_wg0 }}</span>
 </span></code></pre></div></p>
 <h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
 <h3 id="core-to-ixp-tunnels">Core to IXP Tunnels<a class="headerlink" href="#core-to-ixp-tunnels" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>┌─────────────┐                    ┌─────────────┐
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>│  coreams01  │◄──── WireGuard ────►│  ixpams01   │
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>│  (Core)     │      Tunnel         │  (IXP)      │
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>└─────────────┘                    └─────────────┘
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>      │                                    │
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>      │ Announces                          │ Peers with
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>      │ 2a06:de00:50::/44                 │ other ASes
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>      │                                    │
-</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>      └────────────────────────────────────┘
-</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>           Traffic flows through AS215011
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>┌─────────────┐                    ┌─────────────┐
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>│  coreams01  │◄──── WireGuard ────►│  ixpams01   │
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>│  (Core)     │      Tunnel         │  (IXP)      │
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>└─────────────┘                    └─────────────┘
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>      │                                    │
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>      │ Announces                          │ Peers with
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>      │ 2a06:de00:50::/44                 │ other ASes
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>      │                                    │
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>      └────────────────────────────────────┘
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>           Traffic flows through AS215011
 </span></code></pre></div>
 <h3 id="prefix-announcements">Prefix Announcements<a class="headerlink" href="#prefix-announcements" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1539,8 +1448,8 @@
 <h2 id="firewall-configuration">Firewall Configuration<a class="headerlink" href="#firewall-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="docker-firewall-rules">Docker Firewall Rules<a class="headerlink" href="#docker-firewall-rules" title="Permanent link">&para;</a></h3>
 <p>By default, Docker networks are isolated. To allow external access:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo<span class="w"> </span>ip6tables<span class="w"> </span>-I<span class="w"> </span>DOCKER-USER<span class="w"> </span>-d<span class="w"> </span>2a06:de00:50:cafe:100::/80<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>sudo<span class="w"> </span>ip6tables<span class="w"> </span>-I<span class="w"> </span>DOCKER-USER<span class="w"> </span>-d<span class="w"> </span>2a06:de00:50:cafe:100::/80<span class="w"> </span>-j<span class="w"> </span>ACCEPT
 </span></code></pre></div>
 <p>This allows traffic to the DMZ network.</p>
 <div class="admonition warning">
@@ -1548,13 +1457,13 @@
 <p>This firewall rule is not managed by the infrastructure code and must be applied manually.</p>
 </div>
 <h3 id="view-current-rules">View Current Rules<a class="headerlink" href="#view-current-rules" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo<span class="w"> </span>ip6tables<span class="w"> </span>-L<span class="w"> </span>DOCKER-USER<span class="w"> </span>-n<span class="w"> </span>-v
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>ip6tables<span class="w"> </span>-L<span class="w"> </span>DOCKER-USER<span class="w"> </span>-n<span class="w"> </span>-v
 </span></code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="bird-not-starting">BIRD Not Starting<a class="headerlink" href="#bird-not-starting" title="Permanent link">&para;</a></h3>
 <p><strong>Check logs</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>bird<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>bird<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span>
 </span></code></pre></div></p>
 <p><strong>Common issues</strong>:
 - Syntax error in config: <code>sudo bird -p -c /etc/bird/bird.conf</code>
@@ -1562,19 +1471,19 @@
 - Missing dependencies: <code>sudo apt install bird2</code></p>
 <h3 id="wireguard-tunnel-down">WireGuard Tunnel Down<a class="headerlink" href="#wireguard-tunnel-down" title="Permanent link">&para;</a></h3>
 <p><strong>Check interface status</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>wg0
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>sudo<span class="w"> </span>wg<span class="w"> </span>show
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>wg0
 </span></code></pre></div></p>
 <p><strong>Common issues</strong>:
 - Firewall blocking UDP port: <code>sudo ufw allow 51820/udp</code>
 - Incorrect endpoint: Check <code>Endpoint</code> in config
 - Key mismatch: Verify public/private key pairs</p>
 <p><strong>Restart tunnel</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>wg-quick@wg0
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>wg-quick@wg0
 </span></code></pre></div></p>
 <h3 id="bgp-session-not-establishing">BGP Session Not Establishing<a class="headerlink" href="#bgp-session-not-establishing" title="Permanent link">&para;</a></h3>
 <p><strong>Check BIRD logs</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>protocols<span class="w"> </span>all<span class="w"> </span>peer_name
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>protocols<span class="w"> </span>all<span class="w"> </span>peer_name
 </span></code></pre></div></p>
 <p><strong>Common issues</strong>:
 - Incorrect neighbor IP
@@ -1582,29 +1491,29 @@
 - Firewall blocking TCP port 179
 - Peer not configured on remote side</p>
 <p><strong>Test connectivity</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ping6<span class="w"> </span>&lt;peer_ipv6&gt;
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>telnet<span class="w"> </span>&lt;peer_ipv6&gt;<span class="w"> </span><span class="m">179</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>ping6<span class="w"> </span>&lt;peer_ipv6&gt;
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>telnet<span class="w"> </span>&lt;peer_ipv6&gt;<span class="w"> </span><span class="m">179</span>
 </span></code></pre></div></p>
 <h3 id="routes-not-propagating">Routes Not Propagating<a class="headerlink" href="#routes-not-propagating" title="Permanent link">&para;</a></h3>
 <p><strong>Check export filters</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>route<span class="w"> </span><span class="nb">export</span><span class="w"> </span>peer_name
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>route<span class="w"> </span><span class="nb">export</span><span class="w"> </span>peer_name
 </span></code></pre></div></p>
 <p><strong>Verify static routes</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>route<span class="w"> </span>protocol<span class="w"> </span>static_routes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>route<span class="w"> </span>protocol<span class="w"> </span>static_routes
 </span></code></pre></div></p>
 <p><strong>Check kernel routing table</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>ip<span class="w"> </span>-6<span class="w"> </span>route<span class="w"> </span>show
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>ip<span class="w"> </span>-6<span class="w"> </span>route<span class="w"> </span>show
 </span></code></pre></div></p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
 <p><strong>Test BIRD config syntax</strong> before deploying:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>sudo<span class="w"> </span>bird<span class="w"> </span>-p<span class="w"> </span>-c<span class="w"> </span>/etc/bird/bird.conf
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>sudo<span class="w"> </span>bird<span class="w"> </span>-p<span class="w"> </span>-c<span class="w"> </span>/etc/bird/bird.conf
 </span></code></pre></div></p>
 </li>
 <li>
 <p><strong>Monitor BGP sessions</strong> after changes:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>protocols
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>protocols
 </span></code></pre></div></p>
 </li>
 <li>

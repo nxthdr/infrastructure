@@ -26,7 +26,7 @@
     
     
       
-        <title>Adding Services - nxthdr Infrastructure</title>
+        <title>Adding Services - Infrastructure</title>
       
     
     
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="nxthdr Infrastructure" class="md-header__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -106,7 +106,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            nxthdr Infrastructure
+            Infrastructure
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -322,13 +322,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="nxthdr Infrastructure" class="md-nav__button md-logo" aria-label="nxthdr Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    nxthdr Infrastructure
+    Infrastructure
   </label>
   
     <div class="md-nav__source">
@@ -639,155 +639,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#add-to-core-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Add to Core Server
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-adding-a-new-service" class="md-nav__link">
+  <a href="#add-to-ixpvlt-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      Example: Adding a New Service
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Example: Adding a New Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-create-configuration-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Create Configuration Directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-add-configuration-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Add Configuration Files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-add-terraform-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Add Terraform Resources
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-deploy-the-service" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: Deploy the Service
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-verify-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 5: Verify Deployment
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-to-ixp-or-vlt-servers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding to IXP or VLT Servers
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding to IXP or VLT Servers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-create-shared-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Create Shared Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-update-terraform-template" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Update Terraform Template
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-deploy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Deploy
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exposing-service-via-proxy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exposing Service via Proxy
+      Add to IXP/VLT Servers
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-secrets" class="md-nav__link">
+  <a href="#expose-via-https" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding Secrets
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding Secrets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-add-to-vault" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Add to Vault
+      Expose via HTTPS
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-use-in-templates" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#add-secrets" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 2: Use in Templates
+      Add Secrets
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -798,30 +681,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Service Dependencies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-docker-networks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Docker Networks
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-depends_on-terraform" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using depends_on (Terraform)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -830,30 +689,6 @@
       Persistent Data
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Persistent Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-data-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create Data Directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mount-volume" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mount Volume
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -867,39 +702,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monitoring-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Monitoring Integration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Monitoring Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#add-to-prometheus" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add to Prometheus
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#add-grafana-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add Grafana Dashboard
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#resource-limits" class="md-nav__link">
     <span class="md-ellipsis">
       Resource Limits
@@ -909,18 +711,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#complete-example" class="md-nav__link">
+  <a href="#add-to-prometheus" class="md-nav__link">
     <span class="md-ellipsis">
-      Complete Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      Checklist
+      Add to Prometheus
     </span>
   </a>
   
@@ -1053,155 +846,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#add-to-core-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Add to Core Server
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-adding-a-new-service" class="md-nav__link">
+  <a href="#add-to-ixpvlt-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      Example: Adding a New Service
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Example: Adding a New Service">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-create-configuration-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Create Configuration Directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-add-configuration-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Add Configuration Files
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-add-terraform-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Add Terraform Resources
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-deploy-the-service" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 4: Deploy the Service
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-verify-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 5: Verify Deployment
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-to-ixp-or-vlt-servers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding to IXP or VLT Servers
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding to IXP or VLT Servers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-create-shared-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Create Shared Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-update-terraform-template" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Update Terraform Template
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-deploy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Deploy
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exposing-service-via-proxy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exposing Service via Proxy
+      Add to IXP/VLT Servers
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-secrets" class="md-nav__link">
+  <a href="#expose-via-https" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding Secrets
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Adding Secrets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-add-to-vault" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Add to Vault
+      Expose via HTTPS
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-use-in-templates" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#add-secrets" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 2: Use in Templates
+      Add Secrets
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1212,30 +888,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Service Dependencies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-docker-networks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Docker Networks
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-depends_on-terraform" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using depends_on (Terraform)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1244,30 +896,6 @@
       Persistent Data
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Persistent Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#create-data-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      Create Data Directory
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mount-volume" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mount Volume
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1281,39 +909,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monitoring-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Monitoring Integration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Monitoring Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#add-to-prometheus" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add to Prometheus
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#add-grafana-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      Add Grafana Dashboard
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#resource-limits" class="md-nav__link">
     <span class="md-ellipsis">
       Resource Limits
@@ -1323,18 +918,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#complete-example" class="md-nav__link">
+  <a href="#add-to-prometheus" class="md-nav__link">
     <span class="md-ellipsis">
-      Complete Example
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      Checklist
+      Add to Prometheus
     </span>
   </a>
   
@@ -1365,7 +951,7 @@
 
 
   
-    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/docs/guides/adding-services.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/pages/guides/adding-services.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1374,314 +960,144 @@
 
 
 <h1 id="adding-new-services">Adding New Services<a class="headerlink" href="#adding-new-services" title="Permanent link">&para;</a></h1>
-<p>This guide walks through adding a new service to the nxthdr infrastructure.</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Adding a new service involves:</p>
-<ol>
-<li>Creating configuration templates</li>
-<li>Adding Terraform resources</li>
-<li>Deploying the service</li>
-<li>(Optional) Configuring proxy/certificates</li>
-</ol>
-<h2 id="example-adding-a-new-service">Example: Adding a New Service<a class="headerlink" href="#example-adding-a-new-service" title="Permanent link">&para;</a></h2>
-<p>Let's add a hypothetical "metrics-exporter" service to the core server.</p>
-<h3 id="step-1-create-configuration-directory">Step 1: Create Configuration Directory<a class="headerlink" href="#step-1-create-configuration-directory" title="Permanent link">&para;</a></h3>
-<p>Create a directory for your service configuration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>templates/config/core/coreams01/metrics-exporter/config
-</span></code></pre></div>
-<h3 id="step-2-add-configuration-files">Step 2: Add Configuration Files<a class="headerlink" href="#step-2-add-configuration-files" title="Permanent link">&para;</a></h3>
-<p>Create configuration files (as Jinja2 templates if needed):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vim<span class="w"> </span>templates/config/core/coreams01/metrics-exporter/config/config.yml.j2
-</span></code></pre></div>
-<h3 id="step-3-add-terraform-resources">Step 3: Add Terraform Resources<a class="headerlink" href="#step-3-add-terraform-resources" title="Permanent link">&para;</a></h3>
-<p>Edit the Terraform file for your target host:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vim<span class="w"> </span>terraform/coreams01.tf
-</span></code></pre></div>
-<p>Add the Docker image resource:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;metrics-exporter:v1.0.0&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
-</span></code></pre></div>
-<p>Add the container resource:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_image.metrics_exporter.image_id</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;metrics-exporter&quot;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="na">restart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unless-stopped&quot;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">  # Logging</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="na">log_driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;json-file&quot;</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nb">log_opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="na">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}&quot;</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1">  # DNS servers</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="na">dns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;2a00:1098:2c::1&quot;, &quot;2a00:1098:2b::1&quot;</span><span class="p">]</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1">  # Network configuration</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="na">network_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nb">networks_advanced</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_network.backend.name</span>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="na">ipv6_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2a06:de00:50:cafe:10::50&quot;</span><span class="c1">  # Choose unused IP</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1">  # Volumes</span>
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/etc/metrics-exporter/config.yml&quot;</span>
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/metrics-exporter/config/config.yml&quot;</span>
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/var/lib/metrics-exporter&quot;</span>
-</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/metrics-exporter/data&quot;</span>
-</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>
-</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="c1">  # Environment variables</span>
-</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span><span class="na">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">    </span><span class="s2">&quot;LOG_LEVEL=info&quot;</span><span class="p">,</span>
-</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">    </span><span class="s2">&quot;TZ=UTC&quot;</span>
-</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>
-</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="c1">  # Expose ports (if needed for DMZ access)</span>
-</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="c1">  # ports {</span>
-</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="c1">  #   internal = 9100</span>
-</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="c1">  #   external = 9100</span>
-</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="c1">  #   protocol = &quot;tcp&quot;</span>
-</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="c1">  # }</span>
-</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="step-4-deploy-the-service">Step 4: Deploy the Service<a class="headerlink" href="#step-4-deploy-the-service" title="Permanent link">&para;</a></h3>
-<p>Deploy the new service:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span>apply
-</span></code></pre></div>
-<p>This will:
-1. Render the configuration template
-2. Sync files to the server
-3. Create the Docker container</p>
-<h3 id="step-5-verify-deployment">Step 5: Verify Deployment<a class="headerlink" href="#step-5-verify-deployment" title="Permanent link">&para;</a></h3>
-<p>Check that the container is running:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>metrics-exporter
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>docker<span class="w"> </span>logs<span class="w"> </span>metrics-exporter
-</span></code></pre></div>
-<h2 id="adding-to-ixp-or-vlt-servers">Adding to IXP or VLT Servers<a class="headerlink" href="#adding-to-ixp-or-vlt-servers" title="Permanent link">&para;</a></h2>
-<p>For IXP or VLT servers, the process is slightly different since they use shared templates.</p>
-<h3 id="step-1-create-shared-configuration">Step 1: Create Shared Configuration<a class="headerlink" href="#step-1-create-shared-configuration" title="Permanent link">&para;</a></h3>
-<p>Create configuration in the shared group directory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>templates/config/ixp/metrics-exporter/config
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vim<span class="w"> </span>templates/config/ixp/metrics-exporter/config/config.yml.j2
-</span></code></pre></div>
-<p>This configuration will be used by <strong>all</strong> IXP servers.</p>
-<h3 id="step-2-update-terraform-template">Step 2: Update Terraform Template<a class="headerlink" href="#step-2-update-terraform-template" title="Permanent link">&para;</a></h3>
-<p>Edit the Terraform template for the group:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vim<span class="w"> </span>templates/terraform/ixp.tf.j2
-</span></code></pre></div>
-<p>Add your service resources using Jinja2 variables:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;metrics-exporter:v1.0.0&quot;</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">docker</span><span class="p">.{{</span><span class="w"> </span><span class="err">inventory_hostname</span><span class="w"> </span><span class="p">}}</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_image.metrics_exporter.image_id</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;metrics-exporter&quot;</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">docker</span><span class="p">.{{</span><span class="w"> </span><span class="err">inventory_hostname</span><span class="w"> </span><span class="p">}}</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="na">restart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unless-stopped&quot;</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1">  # ... rest of configuration</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="step-3-deploy">Step 3: Deploy<a class="headerlink" href="#step-3-deploy" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>apply
-</span></code></pre></div>
-<p>This will deploy to <strong>all</strong> IXP servers.</p>
-<h2 id="exposing-service-via-proxy">Exposing Service via Proxy<a class="headerlink" href="#exposing-service-via-proxy" title="Permanent link">&para;</a></h2>
-<p>If your service needs HTTPS access:</p>
+<h2 id="add-to-core-server">Add to Core Server<a class="headerlink" href="#add-to-core-server" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Add to DMZ network</strong> in Terraform:
-   <div class="language-hcl highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">networks_advanced</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_network.dmz.name</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="na">ipv6_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2a06:de00:50:cafe:100::50&quot;</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">}</span>
+<p><strong>Create config directory</strong>:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>templates/config/core/coreams01/<span class="o">{</span>service<span class="o">}</span>/config
 </span></code></pre></div></p>
 </li>
 <li>
-<p><strong>Update Caddyfile</strong> (<code>templates/config/core/coreams01/proxy/config/Caddyfile.j2</code>):
-   <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>metrics.nxthdr.dev {
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    reverse_proxy [2a06:de00:50:cafe:100::50]:9100
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    tls {
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    }
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>}
+<p><strong>Add config files</strong> (use <code>.j2</code> for templates):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vim<span class="w"> </span>templates/config/core/coreams01/<span class="o">{</span>service<span class="o">}</span>/config/config.yml.j2
 </span></code></pre></div></p>
 </li>
 <li>
-<p><strong>Deploy</strong>: <code>make apply</code> (certificates generated automatically)</p>
+<p><strong>Add Terraform resources</strong> in <code>terraform/coreams01.tf</code>:
+   <div class="language-hcl highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;service_name&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;image:tag&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;service_name&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_image.service_name.image_id</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;service-name&quot;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="na">restart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unless-stopped&quot;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="na">log_driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;json-file&quot;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nb">log_opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}&quot;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="na">dns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;2a00:1098:2c::1&quot;, &quot;2a00:1098:2b::1&quot;</span><span class="p">]</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="na">network_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nb">networks_advanced</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_network.backend.name</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="na">ipv6_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2a06:de00:50:cafe:10::XX&quot;</span><span class="c1">  # Choose unused IP</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/etc/service/config&quot;</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/service/config&quot;</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="p">}</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy</strong>: <code>make apply</code></p>
 </li>
 </ol>
-<h2 id="adding-secrets">Adding Secrets<a class="headerlink" href="#adding-secrets" title="Permanent link">&para;</a></h2>
-<p>If your service needs secrets:</p>
-<h3 id="step-1-add-to-vault">Step 1: Add to Vault<a class="headerlink" href="#step-1-add-to-vault" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>make<span class="w"> </span>edit-secrets
-</span></code></pre></div>
-<p>Add your secrets:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">metrics_exporter</span><span class="p">:</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-secret-key&quot;</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">db_password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-db-password&quot;</span>
-</span></code></pre></div>
-<h3 id="step-2-use-in-templates">Step 2: Use in Templates<a class="headerlink" href="#step-2-use-in-templates" title="Permanent link">&para;</a></h3>
-<p>Reference in your Jinja2 templates:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">secrets.metrics_exporter.api_key</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nt">database</span><span class="p">:</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">secrets.metrics_exporter.db_password</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-</span></code></pre></div>
+<h2 id="add-to-ixpvlt-servers">Add to IXP/VLT Servers<a class="headerlink" href="#add-to-ixpvlt-servers" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Create shared config</strong>:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>templates/config/ixp/<span class="o">{</span>service<span class="o">}</span>/config
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vim<span class="w"> </span>templates/config/ixp/<span class="o">{</span>service<span class="o">}</span>/config/config.yml.j2
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Update Terraform template</strong> in <code>templates/terraform/ixp.tf.j2</code>:
+   <div class="language-hcl highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;service_name&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;image:tag&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">docker</span><span class="p">.{{</span><span class="w"> </span><span class="err">inventory_hostname</span><span class="w"> </span><span class="p">}}</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;service_name&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_image.service_name.image_id</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;service-name&quot;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">docker</span><span class="p">.{{</span><span class="w"> </span><span class="err">inventory_hostname</span><span class="w"> </span><span class="p">}}</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="na">restart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unless-stopped&quot;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1">  # ... rest of config</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy</strong>: <code>make apply</code> (deploys to all IXP servers)</p>
+</li>
+</ol>
+<h2 id="expose-via-https">Expose via HTTPS<a class="headerlink" href="#expose-via-https" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Add DMZ network in Terraform:
+   <div class="language-hcl highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">networks_advanced</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_network.dmz.name</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="na">ipv6_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2a06:de00:50:cafe:100::XX&quot;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Update <code>templates/config/core/coreams01/proxy/config/Caddyfile.j2</code>:
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service.nxthdr.dev {
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    reverse_proxy [2a06:de00:50:cafe:100::XX]:port
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    tls { dns cloudflare {env.CLOUDFLARE_API_TOKEN} }
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>}
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Deploy: <code>make apply</code></p>
+</li>
+</ol>
+<h2 id="add-secrets">Add Secrets<a class="headerlink" href="#add-secrets" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Run: <code>make edit-secrets</code></li>
+<li>Add secrets:
+   <div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">service</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;key&quot;</span>
+</span></code></pre></div></li>
+<li>Use in templates: <code>{{ secrets.service.api_key }}</code></li>
+</ol>
 <h2 id="service-dependencies">Service Dependencies<a class="headerlink" href="#service-dependencies" title="Permanent link">&para;</a></h2>
-<p>If your service depends on another service:</p>
-<h3 id="using-docker-networks">Using Docker Networks<a class="headerlink" href="#using-docker-networks" title="Permanent link">&para;</a></h3>
-<p>Services on the same Docker network can communicate by container name:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># In metrics-exporter config</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nt">database</span><span class="p">:</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clickhouse</span><span class="w">  </span><span class="c1"># Container name</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000</span>
-</span></code></pre></div>
-<h3 id="using-depends_on-terraform">Using depends_on (Terraform)<a class="headerlink" href="#using-depends_on-terraform" title="Permanent link">&para;</a></h3>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1">  # ... other config</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nv">docker_container.clickhouse</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">}</span>
-</span></code></pre></div>
+<p>Services on same network communicate by container name:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clickhouse</span><span class="w">  </span><span class="c1"># Container name</span>
+</span></code></pre></div></p>
+<p>Optional Terraform dependency:
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">docker_container.clickhouse</span><span class="p">]</span>
+</span></code></pre></div></p>
 <h2 id="persistent-data">Persistent Data<a class="headerlink" href="#persistent-data" title="Permanent link">&para;</a></h2>
-<p>For services that need persistent storage:</p>
-<h3 id="create-data-directory">Create Data Directory<a class="headerlink" href="#create-data-directory" title="Permanent link">&para;</a></h3>
-<p>The directory will be created automatically when you sync configs, but you can also create it manually:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/nxthdr/metrics-exporter/data
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>chown<span class="w"> </span><span class="m">1001</span>:1001<span class="w"> </span>/home/nxthdr/metrics-exporter/data<span class="w">  </span><span class="c1"># Adjust UID/GID as needed</span>
-</span></code></pre></div>
-<h3 id="mount-volume">Mount Volume<a class="headerlink" href="#mount-volume" title="Permanent link">&para;</a></h3>
-<p>In Terraform:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/var/lib/metrics-exporter&quot;</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/metrics-exporter/data&quot;</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">}</span>
-</span></code></pre></div>
+<p>Mount volume in Terraform:
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/var/lib/service&quot;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/service/data&quot;</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
+</span></code></pre></div></p>
 <h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
-<p>Add health checks to monitor service status:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1">  # ... other config</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nb">healthcheck</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">    </span><span class="na">test</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost:9100/health&quot;</span><span class="p">]</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span><span class="na">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;30s&quot;</span>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">    </span><span class="na">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3s&quot;</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span><span class="na">retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span><span class="na">start_period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10s&quot;</span>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="p">}</span>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">healthcheck</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="na">test</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost:port/health&quot;</span><span class="p">]</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="na">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;30s&quot;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="na">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3s&quot;</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="na">retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
-<h3 id="add-to-prometheus">Add to Prometheus<a class="headerlink" href="#add-to-prometheus" title="Permanent link">&para;</a></h3>
-<p>Edit Prometheus configuration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>vim<span class="w"> </span>templates/config/core/coreams01/prometheus/config/prometheus.yml.j2
-</span></code></pre></div>
-<p>Add scrape config:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nt">scrape_configs</span><span class="p">:</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;metrics-exporter&#39;</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;metrics-exporter:9100&#39;</span><span class="p p-Indicator">]</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">          </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;metrics-exporter&#39;</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">          </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;production&#39;</span>
-</span></code></pre></div>
-<h3 id="add-grafana-dashboard">Add Grafana Dashboard<a class="headerlink" href="#add-grafana-dashboard" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Create dashboard JSON</li>
-<li>Place in <code>templates/config/core/coreams01/grafana/dashboards/</code></li>
-<li>Deploy with <code>make apply</code></li>
-</ol>
 <h2 id="resource-limits">Resource Limits<a class="headerlink" href="#resource-limits" title="Permanent link">&para;</a></h2>
-<p>Set CPU and memory limits:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;metrics_exporter&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1">  # ... other config</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="na">memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">512</span><span class="c1">  # MB</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span><span class="na">memory_swap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1024</span><span class="c1">  # MB</span>
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1">  # CPU shares (relative weight)</span>
-</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">  </span><span class="na">cpu_shares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1024</span>
-</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="p">}</span>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="na">memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">512</span><span class="c1">  # MB</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="na">cpu_shares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1024</span>
 </span></code></pre></div>
-<h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h2>
-<p>Here's a complete example for adding a Redis cache:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Docker image</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;redis&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;redis:7-alpine&quot;</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="p">}</span>
-</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
-</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Docker container</span>
-</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_container&quot;</span><span class="w"> </span><span class="nv">&quot;redis&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_image.redis.image_id</span>
-</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span><span class="na">name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;redis&quot;</span>
-</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
-</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">  </span><span class="na">restart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unless-stopped&quot;</span>
-</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>
-</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">  </span><span class="na">log_driver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;json-file&quot;</span>
-</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">  </span><span class="nb">log_opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span><span class="na">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}&quot;</span>
-</span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-24-18"><a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>
-</span><span id="__span-24-19"><a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="w">  </span><span class="na">dns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;2a00:1098:2c::1&quot;, &quot;2a00:1098:2b::1&quot;</span><span class="p">]</span>
-</span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>
-</span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">  </span><span class="na">network_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span>
-</span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">  </span><span class="nb">networks_advanced</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker_network.backend.name</span>
-</span><span id="__span-24-24"><a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">    </span><span class="na">ipv6_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2a06:de00:50:cafe:10::60&quot;</span>
-</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-24-26"><a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>
-</span><span id="__span-24-27"><a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a><span class="w">  </span><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-28"><a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a><span class="w">    </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/data&quot;</span>
-</span><span id="__span-24-29"><a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a><span class="w">    </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/redis/data&quot;</span>
-</span><span id="__span-24-30"><a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-24-31"><a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a>
-</span><span id="__span-24-32"><a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a><span class="w">  </span><span class="nb">volumes</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-33"><a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="w">    </span><span class="na">container_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/usr/local/etc/redis/redis.conf&quot;</span>
-</span><span id="__span-24-34"><a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a><span class="w">    </span><span class="na">host_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/nxthdr/redis/config/redis.conf&quot;</span>
-</span><span id="__span-24-35"><a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-24-36"><a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a>
-</span><span id="__span-24-37"><a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a><span class="w">  </span><span class="na">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;redis-server&quot;, &quot;/usr/local/etc/redis/redis.conf&quot;</span><span class="p">]</span>
-</span><span id="__span-24-38"><a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a>
-</span><span id="__span-24-39"><a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a><span class="w">  </span><span class="na">memory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">256</span>
-</span><span id="__span-24-40"><a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a>
-</span><span id="__span-24-41"><a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a><span class="w">  </span><span class="nb">healthcheck</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-42"><a id="__codelineno-24-42" name="__codelineno-24-42" href="#__codelineno-24-42"></a><span class="w">    </span><span class="na">test</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CMD&quot;, &quot;redis-cli&quot;, &quot;ping&quot;</span><span class="p">]</span>
-</span><span id="__span-24-43"><a id="__codelineno-24-43" name="__codelineno-24-43" href="#__codelineno-24-43"></a><span class="w">    </span><span class="na">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10s&quot;</span>
-</span><span id="__span-24-44"><a id="__codelineno-24-44" name="__codelineno-24-44" href="#__codelineno-24-44"></a><span class="w">    </span><span class="na">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3s&quot;</span>
-</span><span id="__span-24-45"><a id="__codelineno-24-45" name="__codelineno-24-45" href="#__codelineno-24-45"></a><span class="w">    </span><span class="na">retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-</span><span id="__span-24-46"><a id="__codelineno-24-46" name="__codelineno-24-46" href="#__codelineno-24-46"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-24-47"><a id="__codelineno-24-47" name="__codelineno-24-47" href="#__codelineno-24-47"></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">&para;</a></h2>
-<p>When adding a new service, verify:</p>
-<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Configuration templates created</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Terraform resources added</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Secrets added to vault (if needed)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Docker network configured correctly</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Volumes configured for persistent data</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Health checks configured</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Monitoring/logging configured</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Proxy configuration added (if public-facing)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> DNS records created (if public-facing)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Certificates obtained (if HTTPS)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Service tested and verified</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Documentation updated</li>
-</ul>
+<h2 id="add-to-prometheus">Add to Prometheus<a class="headerlink" href="#add-to-prometheus" title="Permanent link">&para;</a></h2>
+<p>Edit <code>templates/config/core/coreams01/prometheus/config/prometheus.yml.j2</code>:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">scrape_configs</span><span class="p">:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;service&#39;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;service:port&#39;</span><span class="p p-Indicator">]</span>
+</span></code></pre></div></p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../common-tasks/">Common Tasks</a> - Day-to-day operations</li>
