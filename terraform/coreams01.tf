@@ -515,7 +515,7 @@ resource "docker_container" "loki" {
 
 # Alloy
 resource "docker_image" "alloy" {
-  name = "grafana/alloy:v1.11.1"
+  name = "grafana/alloy:v1.11.2"
   provider = docker.coreams01
 }
 
