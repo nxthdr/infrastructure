@@ -584,7 +584,8 @@ resource "docker_container" "risotto" {
     "--metrics-address", "[2a06:de00:50:cafe:10::112]:8080",
     "--kafka-brokers", "[2a06:de00:50:cafe:10::103]:9092",
     "--kafka-topic", "risotto-updates",
-    "--state-path", "/data/state.bin",
+    "--curation-state-path", "/data/state.bin",
+    "--curation-state-interval", "10",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
