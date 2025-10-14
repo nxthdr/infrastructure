@@ -168,14 +168,17 @@ resource "docker_container" "ixpfra01_tailscale" {
   restart = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"  }
+    tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    max-size = "10m"
+    max-file = "3"
+  }
   privileged   = true
   network_mode = "host"
   env = [
     "TS_AUTHKEY=${var.headscale_authkey}",
     "TS_STATE_DIR=/var/lib/tailscale",
     "TS_HOSTNAME=ixpfra01",
-    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp",
+    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp --no-logs-no-support",
     "TS_USERSPACE=false"
   ]
   volumes {
