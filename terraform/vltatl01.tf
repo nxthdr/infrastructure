@@ -67,7 +67,7 @@ resource "docker_container" "vltatl01_alloy" {
 
 # Node Exporter
 resource "docker_image" "vltatl01_node_exporter" {
-  name     = "prom/node-exporter:v1.9.1"
+  name     = "prom/node-exporter:v1.10.2"
   provider = docker.vltatl01
 }
 
