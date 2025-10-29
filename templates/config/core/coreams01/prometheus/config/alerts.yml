@@ -66,8 +66,8 @@ groups:
     annotations:
       title: 'core service {{ $labels.job }} is down'
 
-  - alert: Core_Service_Goflow_Down
-    expr: up{job="goflow"} == 0
+  - alert: Core_Service_Pesto_Down
+    expr: up{job="pesto"} == 0
     for: 1m
     labels:
       severity: critical

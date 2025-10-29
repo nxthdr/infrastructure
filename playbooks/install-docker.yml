@@ -1,7 +1,7 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-docker.yml
 # TODO: Make it idempotent, right now it seems to delete current containers
 ---
-- hosts: vlt
+- hosts: ixpcdg01, ixpcdg02
   become: yes
   tasks:
   - name: Update and upgrade packages
@@ -18,7 +18,6 @@
         - curl
         - gnupg
         - rsync
-        - software-properties-common
 
   - name: Create directory for Docker's GPG key
     ansible.builtin.file:
@@ -26,24 +25,24 @@
       state: directory
       mode: '0755'
 
-  - name: Add Docker official GPG key (Ubuntu)
-    ansible.builtin.apt_key:
+  - name: Download Docker GPG key (Ubuntu)
+    ansible.builtin.get_url:
       url: https://download.docker.com/linux/ubuntu/gpg
-      keyring: /etc/apt/keyrings/docker.gpg
-      state: present
+      dest: /etc/apt/keyrings/docker.asc
+      mode: '0644'
     when: ansible_distribution == 'Ubuntu'
 
-  - name: Add Docker official GPG key (Debian)
-    ansible.builtin.apt_key:
+  - name: Download Docker GPG key (Debian)
+    ansible.builtin.get_url:
       url: https://download.docker.com/linux/debian/gpg
-      keyring: /etc/apt/keyrings/docker.gpg
-      state: present
+      dest: /etc/apt/keyrings/docker.asc
+      mode: '0644'
     when: ansible_distribution == 'Debian'
 
   - name: Add Docker repository (Ubuntu)
     ansible.builtin.apt_repository:
       repo: >-
-        deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
+        deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
         https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
       filename: docker
       state: present
@@ -52,7 +51,7 @@
   - name: Add Docker repository (Debian)
     ansible.builtin.apt_repository:
       repo: >-
-        deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg]
+        deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
         https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable
       filename: docker
       state: present

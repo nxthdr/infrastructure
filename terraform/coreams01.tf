@@ -607,22 +607,27 @@ resource "docker_container" "risotto" {
   }
 }
 
-# Goflow
-resource "docker_image" "goflow" {
-  name = "ghcr.io/netsampler/goflow2:v2.2.3"
+# Pesto
+data "docker_registry_image" "pesto" {
+  name = "ghcr.io/nxthdr/pesto:main"
   provider = docker.coreams01
 }
 
-resource "docker_container" "goflow" {
-  image = docker_image.goflow.image_id
-  name  = "goflow"
+resource "docker_image" "pesto" {
+  name = data.docker_registry_image.pesto.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.pesto.sha256_digest ]
+}
+
+resource "docker_container" "pesto" {
+  image = docker_image.pesto.image_id
+  name  = "pesto"
   provider = docker.coreams01
   command = [
-    "-format=bin",
-    "-transport=kafka",
-    "-transport.kafka.brokers=[2a06:de00:50:cafe:10::103]:9092",
-    "-transport.kafka.topic=goflow-flows",
-    "-transport.kafka.flushbytes=1000"
+    "--sflow-address", "[2a06:de00:50:cafe:100::d]:6343",
+    "--kafka-brokers", "[2a06:de00:50:cafe:10::103]:9092",
+    "--kafka-topic", "pesto-sflow",
+    "--metrics-address", "[2a06:de00:50:cafe:10::113]:8080",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"

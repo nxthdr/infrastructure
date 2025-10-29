@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 6,
   "links": [],
   "panels": [
     {
@@ -55,6 +55,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -69,7 +70,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -104,7 +106,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.2.0",
       "targets": [
         {
           "builderOptions": {
@@ -203,9 +205,9 @@
               "table": "flows_raw_view"
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.11.0",
           "queryType": "timeseries",
-          "rawSql": "SELECT\n    toStartOfSecond(time_flow_start_ns) AS \"time\",\n    sum(bytes * max2(sampling_rate, 1)) AS bytes\nFROM flows.records\nWHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\nGROUP BY time\nORDER BY time",
+          "rawSql": "SELECT\n    toStartOfSecond(time_received_ns) AS \"time\",\n    sum(bytes * max2(sampling_rate, 1)) AS bytes\nFROM flows.records\nWHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\nGROUP BY time\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -246,6 +248,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -260,7 +263,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -297,7 +301,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.2.0",
       "targets": [
         {
           "builderOptions": {
@@ -398,9 +402,9 @@
               "table": "flows_raw_view"
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.11.0",
           "queryType": "timeseries",
-          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        src_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, src_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(src_addr),\n    bytes,\nFROM flows_agg\nWHERE src_addr IN (\n    SELECT src_addr\n    FROM flows_agg\n    GROUP BY src_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_received_ns) AS \"time\",\n        src_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, src_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(src_addr),\n    bytes,\nFROM flows_agg\nWHERE src_addr IN (\n    SELECT src_addr\n    FROM flows_agg\n    GROUP BY src_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -441,6 +445,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -455,7 +460,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -492,7 +498,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.2.0",
       "targets": [
         {
           "builderOptions": {
@@ -601,9 +607,9 @@
               "table": "flows_raw_view"
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        tuple(proto, src_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as src_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_received_ns) AS \"time\",\n        tuple(protocol, src_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as src_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -644,6 +650,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -658,7 +665,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -695,7 +703,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.2.0",
       "targets": [
         {
           "builderOptions": {
@@ -796,9 +804,9 @@
               "table": "flows_raw_view"
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.11.0",
           "queryType": "timeseries",
-          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        dst_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, dst_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(dst_addr),\n    bytes,\nFROM flows_agg\nWHERE dst_addr IN (\n    SELECT dst_addr\n    FROM flows_agg\n    GROUP BY dst_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_received_ns) AS \"time\",\n        dst_addr,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, dst_addr\n)\nSELECT\n    \"time\",\n    IPv6NumToString(dst_addr),\n    bytes,\nFROM flows_agg\nWHERE dst_addr IN (\n    SELECT dst_addr\n    FROM flows_agg\n    GROUP BY dst_addr\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -839,6 +847,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -853,7 +862,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -890,7 +900,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.1",
+      "pluginVersion": "12.2.0",
       "targets": [
         {
           "builderOptions": {
@@ -991,9 +1001,9 @@
               "table": "flows_raw_view"
             }
           },
-          "pluginVersion": "4.8.2",
+          "pluginVersion": "4.11.2",
           "queryType": "timeseries",
-          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_flow_start_ns) AS \"time\",\n        tuple(proto, dst_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as dst_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
+          "rawSql": "WITH flows_agg AS (\n    SELECT\n        toStartOfSecond(time_received_ns) AS \"time\",\n        tuple(protocol, dst_port) AS port,\n        sum(bytes * max2(sampling_rate, 1)) AS bytes\n    FROM flows.records\n    WHERE $__timeFilter(time) AND IPv6NumToString(sampler_address) == '$host'\n    GROUP BY time, port\n)\nSELECT\n    \"time\",\n    port.1 || '/' || toString(port.2) as dst_port_string,\n    bytes\nFROM flows_agg\nWHERE port IN (\n    SELECT port\n    FROM flows_agg\n    GROUP BY port\n    ORDER BY sum(bytes) DESC\n    LIMIT 10\n)\nORDER BY time",
           "refId": "A"
         }
       ],
@@ -1003,7 +1013,7 @@
   ],
   "preload": false,
   "refresh": "1m",
-  "schemaVersion": 41,
+  "schemaVersion": 42,
   "tags": [
     "core"
   ],
@@ -1037,5 +1047,5 @@
   "timezone": "browser",
   "title": "Traffic",
   "uid": "cebjemmrj6oe8a",
-  "version": 11
+  "version": 2
 }

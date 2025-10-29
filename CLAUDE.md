@@ -22,6 +22,8 @@ The infrastructure consists of four server groups defined in `inventory/inventor
 - `ixpams01` - iFog, Amsterdam (NL-IX)
 - `ixpams02` - iFog, Amsterdam
 - `ixpfra01` - iFog, Frankfurt (LocIX, FogIXP)
+- `ixpcdg01` - FranceIX, Paris
+- `ixpcdf02` - FranceIX, Paris
 - Run monitoring and BGP routing
 
 ### VLT (Probing) Servers

@@ -114,7 +114,7 @@ scrape_configs:
         target_label: instance
         replacement: coreams01
 
-  - job_name: goflow
+  - job_name: pesto
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::113]:8080']
     relabel_configs:

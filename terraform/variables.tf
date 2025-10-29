@@ -37,6 +37,16 @@ variable "saimiris_redpanda_password" {
   type        = string
 }
 
+variable "pesto_redpanda_username" {
+  description = "Pesto Redpanda username"
+  type        = string
+}
+
+variable "pesto_redpanda_password" {
+  description = "Pesto Redpanda password"
+  type        = string
+}
+
 variable "postgresql_username" {
   description = "PostgreSQL username"
   type        = string

@@ -38,6 +38,18 @@ provider "docker" {
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
+provider "docker" {
+  host     = "ssh://nxthdr@cdg01.ixp.infra.nxthdr.dev:22"
+  alias    = "ixpcdg01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@cdg02.ixp.infra.nxthdr.dev:22"
+  alias    = "ixpcdg02"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
 ## vlt Servers
 provider "docker" {
   host     = "ssh://nxthdr@atl01.vlt.infra.nxthdr.dev:22"
