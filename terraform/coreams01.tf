@@ -261,7 +261,7 @@ resource "docker_container" "redpanda" {
 
 # Prometheus
 resource "docker_image" "prometheus" {
-  name = "prom/prometheus:v3.7.2"
+  name = "prom/prometheus:v3.7.3"
   provider = docker.coreams01
 }
 
