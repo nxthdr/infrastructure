@@ -19,7 +19,7 @@ resource "docker_network" "{{ inventory_hostname }}_backend" {
 
 # Alloy
 resource "docker_image" "{{ inventory_hostname }}_alloy" {
-  name     = "grafana/alloy:v1.11.2"
+  name     = "grafana/alloy:v1.11.3"
   provider = docker.{{ inventory_hostname }}
 }
 
@@ -68,7 +68,7 @@ resource "docker_container" "{{ inventory_hostname }}_alloy" {
 
 # Node Exporter
 resource "docker_image" "{{ inventory_hostname }}_node_exporter" {
-  name     = "prom/node-exporter:v1.9.1"
+  name     = "prom/node-exporter:v1.10.2"
   provider = docker.{{ inventory_hostname }}
 }
 
