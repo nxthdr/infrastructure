@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-bird.yml
 ---
-- hosts: ixpcdg01, ixpcdg02
+- hosts: vlt
   become: yes
   vars:
     bird_version: '2.16.1'

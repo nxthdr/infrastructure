@@ -1,7 +1,7 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-docker.yml
 # TODO: Make it idempotent, right now it seems to delete current containers
 ---
-- hosts: ixpcdg01, ixpcdg02
+- hosts: vlt
   become: yes
   tasks:
   - name: Update and upgrade packages

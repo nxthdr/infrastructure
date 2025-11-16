@@ -1,4 +1,3 @@
-# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-vlt-interfaces.yml
 ---
 - hosts: vlt
   become: yes
@@ -7,48 +6,110 @@
     prefixes:
       - 2a0e:97c0:8a0::/48                              # NXTHDR-RESEARCH Anycast
       - "{{ hostvars[inventory_hostname].uniprobe0 }}"  # NXTHDR-RESEARCH Unicast
-    netplan_config_path: "/etc/netplan/99-dummy0-vlt.yaml"
+    dummy_interface: dummy0
 
   tasks:
-    # We need to adapt the MTU of the probing servers because else it breaks the BMP collection.
-    # The reason is that the Route Monitoring BMP packets can fill up the entire MTU,
-    # except the IXP servers use Wireguard with a MTU of 1420 (to account for the Wireguard overhead). So the packets are dropped,
-    # and we don't received the ICMPv6 Packet Too Big notification because the IXP servers uses their non routable IPv6 address from the IX lan.
-    - name: Update enp1s0 MTU
-      ignore_errors: true
-      ansible.builtin.shell: |
-        ip link set dev enp1s0 mtu 1420
 
-    - name: Create dummy0.netdev
-      copy:
-        dest: /etc/systemd/network/dummy0.netdev
-        content: |
-          [NetDev]
-          Name=dummy0
-          Kind=dummy
-        owner: root
-        group: root
-        mode: '0644'
+  - name: Ensure required packages
+    apt:
+      name:
+        - ndppd
+        - iproute2
+      state: present
+      update_cache: yes
 
-    - name: Create dummy0.network
-      copy:
-        dest: /etc/systemd/network/dummy0.network
-        content: |
-          [Match]
-          Name=dummy0
+  - name: Update enp1s0 MTU
+    ansible.builtin.shell: ip link set dev {{ interface }} mtu 1420
+    ignore_errors: true
 
-          [Network]
-          {% for prefix in prefixes %}
-          Address={{ prefix.split('::')[0] }}::1/128
-          {% endfor %}
+  - name: Create dummy0.netdev
+    copy:
+      dest: /etc/systemd/network/{{ dummy_interface }}.netdev
+      content: |
+        [NetDev]
+        Name={{ dummy_interface }}
+        Kind=dummy
+      owner: root
+      group: root
+      mode: '0644'
 
-          {% for prefix in prefixes %}
-          [Route]
-          Destination={{ prefix }}
-          {% endfor %}
-        owner: root
-        group: root
-        mode: '0644'
+  - name: Create dummy0.network with /128s
+    copy:
+      dest: /etc/systemd/network/{{ dummy_interface }}.network
+      content: |
+        [Match]
+        Name={{ dummy_interface }}
 
-    - name: Reload systemd-networkd
-      command: systemctl restart systemd-networkd
+        [Network]
+        {% for prefix in prefixes %}
+        Address={{ prefix.split('::')[0] }}::1/128
+        {% endfor %}
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Add /48 static routes on enp1s0
+    ansible.builtin.shell: |
+      {% for prefix in prefixes %}
+      ip -6 route add {{ prefix }} dev {{ interface }} proto static onlink || true
+      {% endfor %}
+
+  - name: Reload systemd-networkd
+    ansible.builtin.systemd:
+      name: systemd-networkd
+      state: restarted
+      daemon_reload: yes
+
+  - name: Enable proxy NDP sysctls individually
+    sysctl:
+      name: "{{ item.name }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: no
+    loop:
+      - { name: "net.ipv6.conf.all.forwarding", value: "1" }
+      - { name: "net.ipv6.conf.all.proxy_ndp", value: "1" }
+      - { name: "net.ipv6.conf.default.proxy_ndp", value: "1" }
+      - { name: "net.ipv6.conf.enp1s0.proxy_ndp", value: "1" }
+
+  - name: Reload network for proxy NDP
+    ansible.builtin.shell: |
+      sysctl -p /etc/sysctl.conf || true
+      ip -6 addr flush dev enp1s0
+      systemctl restart systemd-networkd
+
+  - name: Configure ndppd for /48 prefixes
+    copy:
+      dest: /etc/ndppd.conf
+      content: |
+        proxy {{ interface }} {
+            router no
+            timeout 500
+        {% for prefix in prefixes %}
+            rule {{ prefix }} {
+                auto
+            }
+        {% endfor %}
+        }
+
+  - name: Ensure ndppd systemd service
+    copy:
+      dest: /etc/systemd/system/ndppd.service
+      content: |
+        [Unit]
+        Description=NDP Proxy Daemon
+        After=network.target
+
+        [Service]
+        ExecStart=/usr/sbin/ndppd -c /etc/ndppd.conf
+        Restart=on-failure
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: Reload systemd and enable ndppd
+    systemd:
+      daemon_reload: yes
+      name: ndppd
+      state: restarted
+      enabled: yes
