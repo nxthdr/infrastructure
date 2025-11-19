@@ -85,6 +85,28 @@ vlt: render-terraform vlt-infrastructure vlt-setup vlt-config
 	@echo ""
 	@terraform -chdir=./terraform output vlt_servers
 
+.PHONY: vlt-destroy
+vlt-destroy:
+	@echo "==> Destroying VLT server resources..."
+	@echo "WARNING: This will destroy Docker containers and then the server."
+	@echo "Make sure the server is still in inventory.yml before running this!"
+	@echo ""
+	@read -p "Enter hostname to destroy (e.g., vltfra01): " hostname; \
+	if [ -z "$$hostname" ]; then \
+		echo "Error: No hostname provided"; \
+		exit 1; \
+	fi; \
+	echo "Rendering Terraform to ensure provider exists..."; \
+	$(MAKE) render-terraform; \
+	echo ""; \
+	echo "Destroying Docker resources for $$hostname..."; \
+	terraform -chdir=./terraform destroy -auto-approve -target=docker_container.$${hostname}_alloy -target=docker_container.$${hostname}_node_exporter -target=docker_container.$${hostname}_cadvisor -target=docker_container.$${hostname}_saimiris -target=docker_network.$${hostname}_backend -target=docker_image.$${hostname}_alloy -target=docker_image.$${hostname}_node_exporter -target=docker_image.$${hostname}_cadvisor -target=docker_image.$${hostname}_saimiris -target=data.docker_registry_image.$${hostname}_saimiris || true; \
+	echo ""; \
+	echo "Destroying Vultr server and DNS for $$hostname..."; \
+	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_server[\"$$hostname\"]; \
+	echo ""; \
+	echo "==> Server destroyed. You can now remove $$hostname from inventory.yml"
+
 # IXP Server Automation
 .PHONY: ixp-setup
 ixp-setup: render-config

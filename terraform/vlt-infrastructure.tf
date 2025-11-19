@@ -28,6 +28,11 @@ locals {
       uniprobe0    = "2a0e:97c0:8a4::/48"
       ansible_host = "cdg01.vlt.infra.nxthdr.dev"
     }
+    "vltfra01" = {
+      region       = "fra"  # Extract region from hostname (e.g., vltatl01 -> atl)
+      uniprobe0    = "2a0e:97c0:8a5::/48"
+      ansible_host = "fra01.vlt.infra.nxthdr.dev"
+    }
   }
 
   # Extract SSH key IDs

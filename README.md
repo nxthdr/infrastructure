@@ -62,12 +62,23 @@ infrastructure/
 
 ### VLT (Vultr) Servers - Fully Automated
 
-For new probing servers on Vultr:
+**Adding a new server:**
 
 1. Add server to `inventory/inventory.yml`
 2. Run `make vlt`
 
 This automates everything: server creation, DNS, software installation, and configuration deployment.
+
+**Removing a server:**
+
+1. Run `make vlt-destroy` (enter hostname when prompted)
+2. Remove server from `inventory/inventory.yml`
+3. Run `make render-terraform` to clean up generated files
+
+The destroy command will:
+- Destroy Docker containers and images
+- Destroy Vultr server
+- Remove DNS records
 
 ### IXP Servers - Semi-Automated
 
