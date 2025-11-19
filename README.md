@@ -58,9 +58,38 @@ infrastructure/
 └── docs/              # Documentation (MkDocs)
 ```
 
-## Probing Server Provisioning
+## Server Provisioning
 
-Just add the new server to the `inventory/inventory.yml` file and run `make vlt`.
+### VLT (Vultr) Servers - Fully Automated
+
+For new probing servers on Vultr:
+
+1. Add server to `inventory/inventory.yml`
+2. Run `make vlt`
+
+This automates everything: server creation, DNS, software installation, and configuration deployment.
+
+### IXP Servers - Semi-Automated
+
+For new IXP servers (manual provisioning):
+
+1. Manually provision server at hosting provider
+2. Manually create DNS records
+3. Add server to `inventory/inventory.yml`
+4. Run `make ixp`
+
+This automates: software installation, BIRD/WireGuard config generation and deployment, Docker containers.
+
+### Core Servers - Semi-Automated
+
+For new core servers (manual provisioning):
+
+1. Manually provision server
+2. Manually create DNS records
+3. Add server to `inventory/inventory.yml`
+4. Run `make core`
+
+This automates: software installation, BIRD/WireGuard config generation and deployment, Docker containers.
 
 ## Security
 

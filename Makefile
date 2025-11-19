@@ -84,3 +84,85 @@ vlt: render-terraform vlt-infrastructure vlt-setup vlt-config
 	@echo "==> VLT server provisioning complete!"
 	@echo ""
 	@terraform -chdir=./terraform output vlt_servers
+
+# IXP Server Automation
+.PHONY: ixp-setup
+ixp-setup: render-config
+	@echo "==> Running IXP server setup playbooks..."
+	@echo "Note: Server must already exist and be accessible via SSH."
+	@echo "Note: You will be prompted for the root password."
+	@echo ""
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -k -i inventory/ \
+		-e "base_dir=$$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' \
+		--vault-password-file .password \
+		playbooks/install-user.yml --limit ixp
+	@echo ""
+	@echo "==> User created. Running remaining setup as nxthdr user..."
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --ask-become-pass \
+		playbooks/install-docker.yml --limit ixp
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-hsflowd.yml --limit ixp
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-rsyslog.yml --limit ixp
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-bird.yml --limit ixp
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-wireguard.yml --limit ixp
+
+.PHONY: ixp-config
+ixp-config: render-config
+	@echo "==> Syncing IXP configurations (BIRD, WireGuard, Docker containers)..."
+	@$(MAKE) sync-bird
+	@$(MAKE) sync-wireguard
+	@$(MAKE) apply
+
+.PHONY: ixp
+ixp: ixp-setup ixp-config
+	@echo ""
+	@echo "==> IXP server setup complete!"
+
+# Core Server Automation
+.PHONY: core-setup
+core-setup: render-config
+	@echo "==> Running Core server setup playbooks..."
+	@echo "Note: Server must already exist and be accessible via SSH."
+	@echo "Note: You will be prompted for the root password."
+	@echo ""
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -k -i inventory/ \
+		-e "base_dir=$$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' \
+		--vault-password-file .password \
+		playbooks/install-user.yml --limit core
+	@echo ""
+	@echo "==> User created. Running remaining setup as nxthdr user..."
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --ask-become-pass \
+		playbooks/install-docker.yml --limit core
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-hsflowd.yml --limit core
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-rsyslog.yml --limit core
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-bird.yml --limit core
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-wireguard.yml --limit core
+
+.PHONY: core-config
+core-config: render-config
+	@echo "==> Syncing Core configurations (BIRD, WireGuard, Docker containers)..."
+	@$(MAKE) sync-bird
+	@$(MAKE) sync-wireguard
+	@$(MAKE) apply
+
+.PHONY: core
+core: core-setup core-config
+	@echo ""
+	@echo "==> Core server setup complete!"
