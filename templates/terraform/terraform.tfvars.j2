@@ -3,8 +3,11 @@
 #
 
 // DNS provider
-porkbun_api_key =  "{{ porkbun_api_key }}"
-porkbun_secret_api_key = "{{ porkbun_secret_api_key }}"
+porkbun_api_key =  "{{ porkbun.api_key }}"
+porkbun_secret_api_key = "{{ porkbun.secret_api_key }}"
+
+// Vultr provider
+vultr_api_key = "{{ vultr.api_key }}"
 
 // Alertmanager
 alertmanager_discord_webhook_url = "{{ alertmanager_discord_webhook_url }}"

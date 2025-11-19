@@ -62,3 +62,15 @@ variable "headscale_authkey" {
   type        = string
   sensitive   = true
 }
+
+variable "vultr_api_key" {
+  description = "Vultr API Key"
+  type        = string
+  sensitive   = true
+}
+
+variable "vultr_ssh_key_names" {
+  description = "List of SSH key names in Vultr account to add to servers"
+  type        = list(string)
+  default     = ["Matthieu Gouel"]
+}

@@ -132,6 +132,23 @@ def main():
             file=sys.stderr,
         )
 
+    # Render vlt-infrastructure.tf
+    print("Processing template: vlt-infrastructure.tf.j2")
+    vlt_infra_template_path = TEMPLATES_DIR / "vlt-infrastructure.tf.j2"
+    vlt_infra_output_path = OUTPUT_DIR / "vlt-infrastructure.tf"
+    if vlt_infra_template_path.is_file():
+        render_template(
+            vlt_infra_template_path,
+            vlt_infra_output_path,
+            {"inventory": inventory},
+            jinja_env,
+        )
+    else:
+        print(
+            f"  Warning: vlt-infrastructure template {vlt_infra_template_path} not found.",
+            file=sys.stderr,
+        )
+
     # Process Terraform Host Templates for SPECIAL_GROUPS
     print("Processing Terraform host files for ixp/vlt groups")
     for group_name, group_data in inventory.items():
