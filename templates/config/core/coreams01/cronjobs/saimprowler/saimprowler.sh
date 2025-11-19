@@ -38,4 +38,4 @@ docker run --rm --name cron-saimprowler-saimiris --network=host \
     -v $SCRIPTPATH/config/config.yml:/config/config.yml \
     -v $SCRIPTPATH/data/probes.csv:/data/probes.csv \
     $DOCKER_IMAGE_SAIMIRIS \
-    client --config /config/config.yml --probes-file=/data/probes.csv vltatl01:[2a0e:97c0:8a0::10],vltcdg01:[2a0e:97c0:8a0::10]
+    client --config /config/config.yml --probes-file=/data/probes.csv vltatl01:[2a0e:97c0:8a0::10],vltcdg01:[2a0e:97c0:8a0::10],vltfra01:[2a0e:97c0:8a0::10]

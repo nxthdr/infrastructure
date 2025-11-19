@@ -1,0 +1,171 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-vlt-network.yml
+---
+- hosts: vltfra01
+  become: yes
+  vars:
+    interface: enp1s0
+    mtu_size: 1420
+    routing_table: 100
+    routing_priority: 100
+    prefixes:
+      - 2a0e:97c0:8a0::/48                              # NXTHDR-RESEARCH Anycast
+      - "{{ hostvars[inventory_hostname].uniprobe0 }}"  # NXTHDR-RESEARCH Unicast
+    ndppd_conf_path: "/etc/ndppd.conf"
+    ndppd_service_path: "/etc/systemd/system/ndppd.service"
+    systemd_network_dir: "/etc/systemd/network"
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - ndppd
+          - iproute2
+          - networkd-dispatcher
+        state: present
+        update_cache: yes
+
+    - name: Set Vultr IPv6 fact
+      set_fact:
+        vultr_default_ipv6: "{{ ansible_facts['default_ipv6'].address }}"
+        vultr_default_macaddress: "{{ ansible_facts['default_ipv6'].macaddress }}"
+
+    - name: Ensure systemd-networkd directory exists
+      file:
+        path: "{{ systemd_network_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Configure systemd-networkd for {{ interface }}
+      copy:
+        dest: "{{ systemd_network_dir }}/{{ interface }}.network"
+        mode: '0644'
+        content: |
+          [Match]
+          Name={{ interface }}
+
+          [Link]
+          MTUBytes={{ mtu_size }}
+
+          [Network]
+          DHCP=yes
+          DHCPv6=yes
+          IPv6AcceptRA=yes
+          LinkLocalAddressing=yes
+          {% for prefix in prefixes %}
+          Address={{ prefix.split('::')[0] }}::1/64
+          {% endfor %}
+
+          {% for prefix in prefixes %}
+          [Route]
+          Destination={{ prefix }}
+          Scope=link
+          {% endfor %}
+
+    - name: Restart systemd-networkd to apply network configuration
+      systemd:
+        name: systemd-networkd
+        state: restarted
+        daemon_reload: yes
+
+    - name: Persist sysctl settings for IPv6 forwarding & proxy NDP
+      copy:
+        dest: /etc/sysctl.d/99-nxthdr-ipv6.conf
+        content: |
+          net.ipv6.conf.all.forwarding=1
+          net.ipv6.conf.all.proxy_ndp=1
+          net.ipv6.conf.default.proxy_ndp=1
+          net.ipv6.conf.{{ interface }}.proxy_ndp=1
+        mode: '0644'
+
+    - name: Apply sysctl settings
+      command: sysctl --system
+
+    - name: Ensure dispatcher script for IPv6 policy routing
+      copy:
+        dest: /etc/networkd-dispatcher/routable.d/99-ip6-policy-routing.sh
+        mode: '0755'
+        owner: root
+        group: root
+        content: |
+          #!/bin/bash
+          set -e
+
+          IFACE="{{ interface }}"
+          TABLE={{ routing_table }}
+          PRIORITY={{ routing_priority }}
+          VULTR_IPV6="{{ vultr_default_ipv6 }}"
+
+          # Wait up to 15 seconds for a reachable link-local gateway
+          for i in {1..15}; do
+              LINKLOCAL_GW=$(ip -6 route show default dev "$IFACE" | awk '/via/ {print $3}')
+              if [[ -n "$LINKLOCAL_GW" ]]; then
+                  break
+              fi
+              echo "Waiting for default gateway on $IFACE..."
+              sleep 1
+          done
+
+          if [[ -z "$LINKLOCAL_GW" ]]; then
+              echo "Could not detect link-local gateway on $IFACE, aborting."
+              exit 1
+          fi
+
+          # Add routing rule if missing
+          if ! ip -6 rule list | grep -q "to 2000::/3.*lookup $TABLE"; then
+              ip -6 rule add to 2000::/3 table $TABLE priority $PRIORITY
+          fi
+
+          # Add default route in table if missing
+          if ! ip -6 route show table $TABLE | grep -q '^default '; then
+              ip -6 route add default via "$LINKLOCAL_GW" dev "$IFACE" src "$VULTR_IPV6" table $TABLE
+          fi
+
+    - name: Restart networkd-dispatcher to apply routing rules
+      systemd:
+        name: networkd-dispatcher.service
+        state: restarted
+
+    - name: Create ndppd config
+      copy:
+        dest: "{{ ndppd_conf_path }}"
+        mode: '0644'
+        content: |
+          proxy {{ interface }} {
+              router no
+              timeout 500
+          {% for prefix in prefixes %}
+              rule {{ prefix }} {
+                  auto
+              }
+          {% endfor %}
+          }
+
+    - name: Create systemd service for ndppd
+      copy:
+        dest: "{{ ndppd_service_path }}"
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=NDP Proxy Daemon
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/sbin/ndppd -c {{ ndppd_conf_path }}
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd and start ndppd
+      systemd:
+        daemon_reload: yes
+        name: ndppd
+        enabled: yes
+        state: restarted
+
+    - name: Rule to allow alloy to reach saimiris prometheus endpoint
+      community.general.ufw:
+        rule: allow
+        port: 8080
+        src: 172.18.0.0/16
+        proto: tcp
