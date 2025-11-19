@@ -10,6 +10,12 @@
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automergeType": "branch",
       "automerge": true
+    },
+    {
+      "matchManagers": ["asdf"],
+      "matchPackageNames": ["python"],
+      "allowedVersions": "<3.14",
+      "description": "Constrain Python to <3.14 due to PyYAML compatibility issues"
     }
   ]
 }
