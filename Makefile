@@ -38,3 +38,49 @@ apply: sync-config
 .PHONY: destroy
 destroy:
 	@terraform -chdir=./terraform destroy -auto-approve
+
+# VLT Server Automation
+.PHONY: vlt-infrastructure
+vlt-infrastructure:
+	@echo "==> Provisioning VLT infrastructure (Vultr servers + DNS)..."
+	@terraform -chdir=./terraform apply -auto-approve -target=module.vlt_server
+
+.PHONY: vlt-setup
+vlt-setup: render-config
+	@echo "==> Running VLT server setup playbooks..."
+	@echo "Note: You will be prompted for the root password from Vultr console."
+	@echo ""
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -k -i inventory/ \
+		-e "base_dir=$$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' \
+		--vault-password-file .password \
+		playbooks/install-user.yml --limit vlt
+	@echo ""
+	@echo "==> User created. Running remaining setup as nxthdr user..."
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --ask-become-pass \
+		playbooks/install-docker.yml --limit vlt
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-hsflowd.yml --limit vlt
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-rsyslog.yml --limit vlt
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-bird.yml --limit vlt
+	@ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/ \
+		-e "base_dir=$$(pwd)" --become \
+		playbooks/install-vlt-network.yml --limit vlt
+
+.PHONY: vlt-config
+vlt-config: render-config
+	@echo "==> Syncing VLT configurations (BIRD, Docker containers)..."
+	@$(MAKE) sync-bird
+	@$(MAKE) apply
+
+.PHONY: vlt
+vlt: render-terraform vlt-infrastructure vlt-setup vlt-config
+	@echo ""
+	@echo "==> VLT server provisioning complete!"
+	@echo ""
+	@terraform -chdir=./terraform output vlt_servers

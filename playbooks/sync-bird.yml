@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --vault-password-file .password playbooks/sync-bird.yml
 ---
-- hosts: vlt
+- hosts: core, ixp, vlt
   become: yes
   tasks:
   - name: Ensure /etc/bird directory exists
@@ -8,14 +8,14 @@
       path: "/etc/bird"
       state: directory
 
-  - name: Copy configuration file
-    ansible.builtin.template:
-      src: "{{ base_dir }}/networks/{{ inventory_hostname }}/bird/bird.conf"
+  - name: Copy BIRD configuration file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/.rendered/{{ inventory_hostname }}/bird/bird.conf"
       dest: /etc/bird/bird.conf
 
   - name: Copy peerlab configuration file (if exists)
     ansible.builtin.copy:
-      src: "{{ base_dir }}/networks/{{ inventory_hostname }}/bird/peerlab.conf"
+      src: "{{ base_dir }}/.rendered/{{ inventory_hostname }}/bird/peerlab.conf"
       dest: /etc/bird/peerlab.conf
     ignore_errors: yes
 

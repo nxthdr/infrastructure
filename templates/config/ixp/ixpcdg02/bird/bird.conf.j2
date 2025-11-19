@@ -1,0 +1,82 @@
+router id 37.49.238.200;
+
+log syslog all;
+
+protocol device { scan time 5; }
+protocol direct { ipv4; }
+protocol direct { ipv6; }
+
+protocol kernel {
+  learn;
+  metric 0;
+  ipv6 {
+    import all;
+    export all;
+  };
+}
+
+# RPKI
+roa4 table r4;
+roa6 table r6;
+
+protocol rpki {
+  roa4 { table r4; };
+  roa6 { table r6; };
+
+  remote "rtr.rpki.cloudflare.com" port 8282;
+
+  retry keep 90;
+  refresh keep 900;
+  expire keep 172800;
+}
+
+# BMP
+protocol bmp {
+    station address ip 2a06:de00:50:cafe:100::c port 4000;
+    monitoring rib in pre_policy;
+    monitoring rib in post_policy;
+}
+
+# Import filters
+function is_rpki_invalid () -> bool {
+  return (roa_check(r4, net, bgp_path.last) = ROA_INVALID ||
+          roa_check(r6, net, bgp_path.last) = ROA_INVALID);
+}
+
+filter ImportFilter {
+    if is_rpki_invalid() then reject;
+    accept;
+}
+
+filter ExportFilter {
+    if (net ~ [ 2a06:de00:50::/48 ]) then accept;
+    else reject;
+}
+
+
+# BGP upstreams
+
+
+# Peers
+## FranceIX
+protocol bgp FranceIX1  {
+    local 2001:7f8:54::2:200 as 215011;
+    neighbor 2001:7f8:54::250 as 51706;
+    ipv6 {
+        import table on;
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}
+
+protocol bgp FranceIX2  {
+    local 2001:7f8:54::2:200 as 215011;
+    neighbor 2001:7f8:54::251 as 51706;
+    ipv6 {
+        import table on;
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}

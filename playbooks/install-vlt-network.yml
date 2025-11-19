@@ -1,6 +1,6 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-vlt-network.yml
 ---
-- hosts: vltfra01
+- hosts: vlt
   become: yes
   vars:
     interface: enp1s0

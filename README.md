@@ -51,13 +51,16 @@ infrastructure/
 ├── templates/          # Jinja2 templates
 │   ├── config/        # Docker container configs
 │   └── terraform/     # Terraform templates
-├── networks/          # BIRD & WireGuard configs
 ├── playbooks/         # Ansible automation
 ├── render/            # Python rendering scripts
 ├── secrets/           # Encrypted secrets
 ├── terraform/         # Terraform files
 └── docs/              # Documentation (MkDocs)
 ```
+
+## Probing Server Provisioning
+
+Just add the new server to the `inventory/inventory.yml` file and run `make vlt`.
 
 ## Security
 

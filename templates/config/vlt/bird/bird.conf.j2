@@ -1,4 +1,5 @@
-router id 108.61.171.33;
+{% set link_local = 'fe80::' + ':'.join(v6_main_ip.split(':')[-4:]) %}
+router id {{ main_ip }};
 
 log syslog all;
 
@@ -18,16 +19,16 @@ protocol kernel {
 # Static
 protocol static AnnResAnycast {
     ipv6;
-    route 2a0e:97c0:8a0::/48 via fe80::fc00:5ff:fec5:ae5f dev "enp1s0";
+    route 2a0e:97c0:8a0::/48 via {{ link_local }} dev "enp1s0";
 }
 protocol static AnnResUnicast {
     ipv6;
-    route 2a0e:97c0:8a4::/48 via fe80::fc00:5ff:fec5:ae5f dev "enp1s0";
+    route {{ uniprobe0 }} via {{ link_local }} dev "enp1s0";
 }
 
 protocol static VultrUplinkPeer {
     ipv6;
-    route 2001:19f0:ffff::1/128 via fe80::fc00:5ff:fec5:ae5f dev "enp1s0";
+    route 2001:19f0:ffff::1/128 via {{ link_local }} dev "enp1s0";
 }
 
 # RPKI
@@ -61,7 +62,7 @@ filter ImportFilter {
 
 # Export filters
 # 2a0e:97c0:8a0::/48 - NXTHDR-RESEARCH Anycast
-# 2a0e:97c0:8a5::/48 - NXTHDR-RESEARCH FRA
+# {{ uniprobe0 }} - NXTHDR-RESEARCH {{ inventory_hostname | upper }}
 filter ExportFilter {
     if (net ~ [ 2a0e:97c0:8a0::/44+ ]) then {
         bgp_path.delete([64512..65534, 4200000000..4294967294]);
@@ -72,7 +73,7 @@ filter ExportFilter {
 # BGP upstreams
 ## Vultr Uplink
 protocol bgp VultrUplink  {
-    local 2a05:f480:1800:2745:5400:05ff:fec5:ae5f as 215011;
+    local {{ v6_main_ip }} as 215011;
     neighbor 2001:19f0:ffff::1 as 64515;
     multihop 2;
     graceful restart on;

@@ -50,7 +50,7 @@ module "vlt_server" {
 
   # Optional: Override defaults if needed
   # plan         = "vc2-1c-1gb"  # Default
-  # os_id        = 2284  # Debian 13 x64 (default)
+  # os_id        = 2625  # Debian 13 x64 trixie (default)
 }
 
 # Outputs for all VLT servers

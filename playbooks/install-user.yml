@@ -1,6 +1,6 @@
 # ansible-playbook -k -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml -e 'ansible_user=root' --vault-password-file .password playbooks/install-user.yml
 ---
-- hosts: vltfra01
+- hosts: core, ixp, vlt
   tasks:
   - name: Create a user `nxthdr` with a home directory
     ansible.builtin.user:
@@ -9,6 +9,7 @@
       create_home: yes
       uid: 1001
       groups: sudo
+      append: yes
       shell: /bin/bash
 
   - name: Configure passwordless sudo for `nxthdr` user

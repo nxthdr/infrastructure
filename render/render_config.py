@@ -1,6 +1,8 @@
+import json  # Import json for Terraform outputs
 import os  # Import the os module
 import shutil
 import stat  # Import stat for more readable permission setting
+import subprocess  # Import subprocess for running terraform
 import sys
 from pathlib import Path
 
@@ -13,7 +15,8 @@ INVENTORY_FILE = BASE_DIR / "inventory" / "inventory.yml"
 SECRETS_FILE = BASE_DIR / "secrets" / "secrets.yml"
 TEMPLATES_DIR = BASE_DIR / "templates/config"
 OUTPUT_DIR = BASE_DIR / ".rendered"
-SPECIAL_GROUPS = ["ixp", "vlt"]
+TERRAFORM_DIR = BASE_DIR / "terraform"
+SPECIAL_GROUPS = ["vlt"]
 
 
 def set_executable(file_path):
@@ -131,6 +134,40 @@ def load_vault_secrets(password):
         sys.exit(1)
 
 
+def load_terraform_outputs():
+    """Loads Terraform outputs for VLT servers (IPs, etc.)."""
+    try:
+        result = subprocess.run(
+            ["terraform", "output", "-json", "vlt_servers"],
+            cwd=TERRAFORM_DIR,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        outputs = json.loads(result.stdout)
+        print(f"Loaded Terraform outputs for {len(outputs)} VLT servers")
+        return outputs
+    except subprocess.CalledProcessError as e:
+        print(
+            f"Warning: Could not load Terraform outputs: {e.stderr}",
+            file=sys.stderr,
+        )
+        print("  VLT BIRD configs may be missing IP addresses.", file=sys.stderr)
+        return {}
+    except FileNotFoundError:
+        print(
+            "Warning: Terraform not found. VLT BIRD configs may be missing IP addresses.",
+            file=sys.stderr,
+        )
+        return {}
+    except json.JSONDecodeError as e:
+        print(
+            f"Warning: Could not parse Terraform outputs: {e}",
+            file=sys.stderr,
+        )
+        return {}
+
+
 def main():
     # Read password from standard input
     vault_password = sys.stdin.readline().strip()
@@ -156,6 +193,9 @@ def main():
         sys.exit(1)
 
     secrets = load_vault_secrets(vault_password)
+
+    # Load Terraform outputs for VLT servers
+    terraform_outputs = load_terraform_outputs()
 
     # Prepare output directory for config files
     if OUTPUT_DIR.exists():
@@ -192,10 +232,15 @@ def main():
             else:
                 input_template_dir = TEMPLATES_DIR / group_name / host_name
 
+            # Merge Terraform outputs for VLT hosts
+            enhanced_host_data = host_data.copy() if isinstance(host_data, dict) else {}
+            if group_name == "vlt" and host_name in terraform_outputs:
+                enhanced_host_data.update(terraform_outputs[host_name])
+
             process_host_files(
                 host_name,
                 input_template_dir,
-                host_data,
+                enhanced_host_data,
                 group_vars,
                 secrets,
                 jinja_env,
