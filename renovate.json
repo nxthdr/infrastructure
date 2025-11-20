@@ -10,12 +10,6 @@
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automergeType": "branch",
       "automerge": true
-    },
-    {
-      "matchManagers": ["asdf"],
-      "matchPackageNames": ["python"],
-      "enabled": false,
-      "description": "Disable Python updates"
     }
   ]
 }
