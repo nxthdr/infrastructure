@@ -105,6 +105,9 @@ vlt-destroy:
 	echo "Destroying Vultr server and DNS for $$hostname..."; \
 	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_server[\"$$hostname\"]; \
 	echo ""; \
+	echo "Removing Terraform file for $$hostname..."; \
+	rm -f terraform/$${hostname}.tf; \
+	echo ""; \
 	echo "==> Server destroyed. You can now remove $$hostname from inventory.yml"
 
 # IXP Server Automation

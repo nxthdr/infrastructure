@@ -82,9 +82,3 @@ provider "docker" {
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
-provider "docker" {
-  host     = "ssh://nxthdr@fra01.vlt.infra.nxthdr.dev:22"
-  alias    = "vltfra01"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
-}
-
