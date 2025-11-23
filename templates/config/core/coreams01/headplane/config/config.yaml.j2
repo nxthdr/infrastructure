@@ -34,6 +34,9 @@ integration:
   agent:
     # The Headplane agent allows retrieving information about nodes
     enabled: false
+    # Pre-auth key required even when disabled (validation requirement)
+    # Using placeholder since agent is disabled
+    pre_authkey: "{{ headplane.agent_pre_authkey | default('disabled-placeholder-key') }}"
 
   docker:
     enabled: false

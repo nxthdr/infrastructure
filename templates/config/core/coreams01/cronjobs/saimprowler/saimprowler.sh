@@ -13,10 +13,27 @@ docker pull $DOCKER_IMAGE_SAIMIRIS
 # Targets are generated from the ipv6-hitlist aliased prefixes list (see https://ipv6hitlist.github.io/)
 rm -rf $SCRIPTPATH/data/aliased-prefixes.txt*
 rm -rf $SCRIPTPATH/data/targets.csv
-curl -s https://alcatraz.net.in.tum.de/ipv6-hitlist-service/open/aliased-prefixes.txt.xz -o $SCRIPTPATH/data/aliased-prefixes.txt.xz
-xz -d $SCRIPTPATH/data/aliased-prefixes.txt.xz
+
+# Download the aliased prefixes file with retry logic and error handling
+if ! curl -f -s --retry 3 --retry-delay 5 https://alcatraz.net.in.tum.de/ipv6-hitlist-service/open/aliased-prefixes.txt.xz -o $SCRIPTPATH/data/aliased-prefixes.txt.xz; then
+    echo "ERROR: Failed to download aliased-prefixes.txt.xz after retries"
+    exit 1
+fi
+
+# Verify the file was downloaded and is not empty
+if [ ! -s $SCRIPTPATH/data/aliased-prefixes.txt.xz ]; then
+    echo "ERROR: Downloaded file is empty or does not exist"
+    exit 1
+fi
+
+# Decompress the file
+if ! xz -d $SCRIPTPATH/data/aliased-prefixes.txt.xz; then
+    echo "ERROR: Failed to decompress aliased-prefixes.txt.xz"
+    exit 1
+fi
 # Shuffle the prefixes, take a fraction of them, and create a prowl compatible targets.csv file
-shuf $SCRIPTPATH/data/aliased-prefixes.txt | head -n 10000 | sed 's/$/,ICMPv6,3,32,3/' > $SCRIPTPATH/data/targets.csv
+# Note: shuf may output "Broken pipe" to stderr when head closes early - this is expected behavior
+shuf $SCRIPTPATH/data/aliased-prefixes.txt 2>/dev/null | head -n 10000 | sed 's/$/,ICMPv6,3,32,3/' > $SCRIPTPATH/data/targets.csv
 
 # Log the number of targets generated
 TARGETS_COUNT=$(wc -l < $SCRIPTPATH/data/targets.csv)

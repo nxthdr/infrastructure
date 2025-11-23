@@ -169,8 +169,8 @@ resource "docker_container" "ixpams01_tailscale" {
   log_driver = "json-file"
   log_opts = {
     tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-    max-size = "10m"
-    max-file = "3"
+    max-size = "5m"
+    max-file = "2"
   }
   privileged   = true
   network_mode = "host"
@@ -178,8 +178,9 @@ resource "docker_container" "ixpams01_tailscale" {
     "TS_AUTHKEY=${var.headscale_authkey}",
     "TS_STATE_DIR=/var/lib/tailscale",
     "TS_HOSTNAME=ixpams01",
-    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp --no-logs-no-support",
-    "TS_USERSPACE=false"
+    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp",
+    "TS_USERSPACE=false",
+    "TS_DEBUG=false"
   ]
   volumes {
     container_path = "/var/lib/tailscale"

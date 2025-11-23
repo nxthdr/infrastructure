@@ -173,8 +173,8 @@ resource "docker_container" "{{ inventory_hostname }}_tailscale" {
   log_opts = {
     tag      = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
 
-    max-size = "10m"
-    max-file = "3"
+    max-size = "5m"
+    max-file = "2"
   }
   privileged   = true
   network_mode = "host"
@@ -182,8 +182,9 @@ resource "docker_container" "{{ inventory_hostname }}_tailscale" {
     "TS_AUTHKEY=${var.headscale_authkey}",
     "TS_STATE_DIR=/var/lib/tailscale",
     "TS_HOSTNAME={{ inventory_hostname }}",
-    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp --no-logs-no-support",
-    "TS_USERSPACE=false"
+    "TS_EXTRA_ARGS=--login-server=https://headscale.nxthdr.dev --advertise-tags=tag:ixp",
+    "TS_USERSPACE=false",
+    "TS_DEBUG=false"
   ]
   volumes {
     container_path = "/var/lib/tailscale"
