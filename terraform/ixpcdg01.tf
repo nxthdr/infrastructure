@@ -19,7 +19,7 @@ resource "docker_network" "ixpcdg01_backend" {
 
 # Alloy
 resource "docker_image" "ixpcdg01_alloy" {
-  name     = "grafana/alloy:v1.11.3"
+  name     = "grafana/alloy:v1.12.0"
   provider = docker.ixpcdg01
 }
 
