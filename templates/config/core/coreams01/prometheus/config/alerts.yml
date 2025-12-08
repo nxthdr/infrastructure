@@ -131,3 +131,17 @@ groups:
     annotations:
       title: 'probing service {{ $labels.job }} is down in {{ $labels.instance }}'
       description: 'The Saimiris probing service on {{ $labels.instance }} has stopped reporting metrics for more than 3 minutes.'
+
+- name: peerlab
+  rules:
+  - alert: Peerlab_Gateway_Down
+    expr: |
+      (instance:up:last_seen{job="peerlab-gateway"} == 1)
+      unless
+      (up{job="peerlab-gateway"} == 1)
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      title: 'peerlab gateway {{ $labels.job }} is down in {{ $labels.instance }}'
+      description: 'The Peerlab Gateway service on {{ $labels.instance }} has stopped reporting metrics for more than 3 minutes.'

@@ -1,0 +1,4 @@
+# Peerlab Gateway IPv6 /48 Prefix Pool
+
+2a0e:97c0:08ac::/48
+2a0e:97c0:08ad::/48

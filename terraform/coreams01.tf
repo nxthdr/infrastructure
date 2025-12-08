@@ -687,6 +687,48 @@ resource "docker_container" "saimiris_gateway" {
   }
 }
 
+# Peerlab Gateway
+data "docker_registry_image" "peerlab_gateway" {
+  name = "ghcr.io/nxthdr/peerlab-gateway:main"
+  provider = docker.coreams01
+}
+
+resource "docker_image" "peerlab_gateway" {
+  name = data.docker_registry_image.peerlab_gateway.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.peerlab_gateway.sha256_digest ]
+}
+
+resource "docker_container" "peerlab_gateway" {
+  image = docker_image.peerlab_gateway.image_id
+  name  = "peerlab_gateway"
+  provider = docker.coreams01
+  command = [
+    "--address", "[2a06:de00:50:cafe:10::118]:8080",
+    "--database-url", "postgresql://[2a06:de00:50:cafe:10::116]:5432/peerlab_gateway?user=${var.postgresql_username}&password=${var.postgresql_password}&sslmode=disable",
+    "--prefix-pool-file", "/config/prefixes.txt",
+    "--asn-pool-start", "65000",
+    "--asn-pool-end", "65999",
+    "--logto-jwks-uri", "https://csy8pa.logto.app/oidc/jwks",
+    "--logto-issuer", "https://csy8pa.logto.app/oidc",
+  ]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::118"
+  }
+  volumes {
+    container_path = "/config/prefixes.txt"
+    host_path = "/home/nxthdr/peerlab-gateway/config/prefixes.txt"
+  }
+}
+
 # nxthdr blog
 data "docker_registry_image" "blog" {
   name = "ghcr.io/nxthdr/blog:main"
