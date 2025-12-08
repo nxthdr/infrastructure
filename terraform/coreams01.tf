@@ -43,7 +43,7 @@ resource "docker_network" "dmz_ipv4" {
 
 # IPv6 Reverse Proxy
 resource "docker_image" "caddy" {
-  name = "caddy:2.10"
+  name = "caddy:2.11"
   provider = docker.coreams01
 }
 
