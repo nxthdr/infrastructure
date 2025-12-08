@@ -169,8 +169,8 @@ resource "docker_container" "ixpfra01_tailscale" {
   log_driver = "json-file"
   log_opts = {
     tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-    max-size = "5m"
-    max-file = "2"
+    max-size = "2m"
+    max-file = "1"
   }
   privileged   = true
   network_mode = "host"

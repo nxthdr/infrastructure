@@ -173,8 +173,8 @@ resource "docker_container" "{{ inventory_hostname }}_tailscale" {
   log_opts = {
     tag      = {% raw %}"{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"{% endraw %}
 
-    max-size = "5m"
-    max-file = "2"
+    max-size = "2m"
+    max-file = "1"
   }
   privileged   = true
   network_mode = "host"
