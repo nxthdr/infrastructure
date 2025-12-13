@@ -670,8 +670,8 @@ resource "docker_container" "saimiris_gateway" {
     "--kafka-sasl-username", var.saimiris_redpanda_username,
     "--kafka-sasl-password", var.saimiris_redpanda_password,
     "--kafka-sasl-mechanism", "SCRAM-SHA-512",
-    "--logto-jwks-uri", "https://csy8pa.logto.app/oidc/jwks",
-    "--logto-issuer", "https://csy8pa.logto.app/oidc",
+    "--auth0-jwks-uri", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/.well-known/jwks.json",
+    "--auth0-issuer", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/",
     "--database-url", "postgresql://[2a06:de00:50:cafe:10::116]:5432/saimiris?user=${var.postgresql_username}&password=${var.postgresql_password}&sslmode=disable",
   ]
   restart = "unless-stopped"
@@ -709,8 +709,12 @@ resource "docker_container" "peerlab_gateway" {
     "--prefix-pool-file", "/config/prefixes.txt",
     "--asn-pool-start", "65000",
     "--asn-pool-end", "65999",
-    "--logto-jwks-uri", "https://csy8pa.logto.app/oidc/jwks",
-    "--logto-issuer", "https://csy8pa.logto.app/oidc",
+    "--auth0-jwks-uri", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/.well-known/jwks.json",
+    "--auth0-issuer", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/",
+    "--agent-key", var.peerlab_agent_key,
+    "--auth0-management-api", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com",
+    "--auth0-m2m-app-id", "8l8ttvrymddh96a2mri9b",
+    "--auth0-m2m-app-secret", "dM64rirbbauaaqFWxbEb4TPiLGJUhHI4",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"

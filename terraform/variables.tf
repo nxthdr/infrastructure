@@ -27,6 +27,11 @@ variable "saimiris_agent_key" {
   type        = string
 }
 
+variable "peerlab_agent_key" {
+  description = "Peerlab Gateway agent key"
+  type        = string
+}
+
 variable "saimiris_redpanda_username" {
   description = "Saimiris Redpanda username"
   type        = string
