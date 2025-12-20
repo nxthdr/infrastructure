@@ -32,6 +32,17 @@ variable "peerlab_agent_key" {
   type        = string
 }
 
+variable "peerlab_m2m_app_id" {
+  description = "Peerlab Gateway Auth0 M2M App ID"
+  type        = string
+}
+
+variable "peerlab_m2m_app_secret" {
+  description = "Peerlab Gateway Auth0 M2M App Secret"
+  type        = string
+  sensitive   = true
+}
+
 variable "saimiris_redpanda_username" {
   description = "Saimiris Redpanda username"
   type        = string

@@ -713,8 +713,8 @@ resource "docker_container" "peerlab_gateway" {
     "--auth0-issuer", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/",
     "--agent-key", var.peerlab_agent_key,
     "--auth0-management-api", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com",
-    "--auth0-m2m-app-id", "8l8ttvrymddh96a2mri9b",
-    "--auth0-m2m-app-secret", "dM64rirbbauaaqFWxbEb4TPiLGJUhHI4",
+    "--auth0-m2m-app-id", var.peerlab_m2m_app_id,
+    "--auth0-m2m-app-secret", var.peerlab_m2m_app_secret,
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
