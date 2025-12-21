@@ -1,0 +1,24 @@
+[Unit]
+Description=Peerlab BIRD Config Generator
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+Restart=on-failure
+RestartSec=30s
+
+User=nxthdr
+Group=nxthdr
+
+ExecStartPre=/usr/bin/docker pull ghcr.io/nxthdr/peerlab-bird-config:main
+ExecStart=/usr/bin/docker run --rm \
+  -v /etc/bird:/etc/bird \
+  -v /etc/ssl/certs:/etc/ssl/certs:ro \
+  -e HEADSCALE_API_KEY={{ headscale.api_key }} \
+  -e PEERLAB_AGENT_KEY={{ peerlab.agent_key }} \
+  ghcr.io/nxthdr/peerlab-bird-config:main \
+  --output-file /etc/bird/peerlab-map.conf
+
+[Install]
+WantedBy=multi-user.target

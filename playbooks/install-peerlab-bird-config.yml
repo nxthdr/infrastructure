@@ -1,0 +1,23 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml --ask-become-pass --vault-password-file .password playbooks/install-peerlab-bird-config.yml
+---
+- hosts: ixp
+  become: yes
+  tasks:
+  - name: Copy systemd service file from template
+    ansible.builtin.template:
+      src: "{{ base_dir }}/templates/config/shared/peerlab-bird-config/peerlab-bird-config.service.j2"
+      dest: /lib/systemd/system/peerlab-bird-config.service
+
+  - name: Copy systemd timer file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/config/shared/peerlab-bird-config/peerlab-bird-config.timer"
+      dest: /lib/systemd/system/peerlab-bird-config.timer
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and restart peerlab-bird-config timer
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      name: peerlab-bird-config.timer

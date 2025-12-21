@@ -79,6 +79,12 @@ variable "headscale_authkey" {
   sensitive   = true
 }
 
+variable "headscale_api_key" {
+  description = "Headscale API key for peerlab-bird-config"
+  type        = string
+  sensitive   = true
+}
+
 variable "vultr_api_key" {
   description = "Vultr API Key"
   type        = string

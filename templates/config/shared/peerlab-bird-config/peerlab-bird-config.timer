@@ -1,0 +1,10 @@
+[Unit]
+Description=Peerlab BIRD Config Generator Timer
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Unit=peerlab-bird-config.service
+
+[Install]
+WantedBy=multi-user.target

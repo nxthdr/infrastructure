@@ -1,5 +1,8 @@
 router id 193.148.249.125;
 
+# Peering Course - Dynamic BGP for peerlab participants
+include "/etc/bird/peerlab.conf";
+
 log syslog all;
 
 protocol device { scan time 5; }
@@ -164,6 +167,3 @@ protocol bgp Cloudflare  {
         export filter ExportFilter;
     };
 }
-
-# Peering Course - Dynamic BGP for peerlab participants
-include "/etc/bird/peerlab.conf";
