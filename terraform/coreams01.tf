@@ -1022,6 +1022,10 @@ resource "docker_container" "routinator" {
   }
   network_mode = "bridge"
   networks_advanced {
+    name = docker_network.dmz.name
+    ipv6_address = "2a06:de00:50:cafe:100::e"
+  }
+  networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::1007"
   }
