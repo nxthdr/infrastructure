@@ -999,3 +999,38 @@ resource "docker_container" "headplane" {
     read_only = "true"
   }
 }
+
+# Routinator
+resource "docker_image" "routinator" {
+  name = "nlnetlabs/routinator:v0.15.1"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "routinator" {
+  image = docker_image.routinator.image_id
+  name  = "routinator"
+  provider = docker.coreams01
+  command = [
+    "server",
+    "--http", "[::]:8323",
+    "--rtr", "[::]:3323"
+  ]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1007"
+  }
+  volumes {
+    container_path = "/home/routinator/.routinator.conf"
+    host_path = "/home/nxthdr/routinator/config/routinator.conf"
+  }
+  volumes {
+    container_path = "/var/lib/routinator"
+    host_path = "/home/nxthdr/routinator/data"
+  }
+}

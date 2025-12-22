@@ -113,3 +113,11 @@ headplane.nxthdr.dev {
         }
     }
 }
+
+routinator.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
