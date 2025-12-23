@@ -1006,10 +1006,10 @@ resource "docker_image" "routinator" {
   provider = docker.coreams01
 }
 
-# Routinator Global (downloads RIR TALs)
-resource "docker_container" "routinator_global" {
+# Routinator
+resource "docker_container" "routinator" {
   image = docker_image.routinator.image_id
-  name  = "routinator_global"
+  name  = "routinator"
   provider = docker.coreams01
   command = [
     "server",
@@ -1032,45 +1032,11 @@ resource "docker_container" "routinator_global" {
   }
   volumes {
     container_path = "/home/routinator/.routinator.conf"
-    host_path = "/home/nxthdr/routinator_global/config/routinator.conf"
+    host_path = "/home/nxthdr/routinator/config/routinator.conf"
   }
   volumes {
     container_path = "/var/lib/routinator"
-    host_path = "/home/nxthdr/routinator_global/data"
+    host_path = "/home/nxthdr/routinator/data"
   }
 }
 
-# Routinator Peerlab (no TAL downloads, different RTR port)
-resource "docker_container" "routinator_peerlab" {
-  image = docker_image.routinator.image_id
-  name  = "routinator_peerlab"
-  provider = docker.coreams01
-  command = [
-    "--no-rir-tals",
-    "server",
-    "--http", "[::]:8323",
-    "--rtr", "[::]:3323"
-  ]
-  restart = "unless-stopped"
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.dmz.name
-    ipv6_address = "2a06:de00:50:cafe:100::f"
-  }
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::1008"
-  }
-  volumes {
-    container_path = "/home/routinator/.routinator.conf"
-    host_path = "/home/nxthdr/routinator_peerlab/config/routinator.conf"
-  }
-  volumes {
-    container_path = "/var/lib/routinator"
-    host_path = "/home/nxthdr/routinator_peerlab/data"
-  }
-}
