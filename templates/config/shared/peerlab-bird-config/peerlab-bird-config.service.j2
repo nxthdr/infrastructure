@@ -19,6 +19,7 @@ ExecStart=/usr/bin/docker run --rm \
   -e PEERLAB_AGENT_KEY={{ peerlab.agent_key }} \
   ghcr.io/nxthdr/peerlab-bird-config:main \
   --output-file /etc/bird/peerlab-map.conf
+ExecStartPost=/usr/bin/sudo /usr/local/sbin/birdc configure
 
 [Install]
 WantedBy=multi-user.target

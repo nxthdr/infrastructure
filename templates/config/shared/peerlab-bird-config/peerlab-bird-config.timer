@@ -3,7 +3,7 @@ Description=Peerlab BIRD Config Generator Timer
 
 [Timer]
 OnBootSec=1min
-OnUnitActiveSec=2min
+OnUnitActiveSec=1min
 Unit=peerlab-bird-config.service
 
 [Install]
