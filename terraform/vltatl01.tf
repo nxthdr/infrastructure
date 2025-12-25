@@ -111,7 +111,7 @@ resource "docker_container" "vltatl01_node_exporter" {
 
 # Cadvisor
 resource "docker_image" "vltatl01_cadvisor" {
-  name     = "gcr.io/cadvisor/cadvisor:v0.52.1"
+  name     = "gcr.io/cadvisor/cadvisor:v0.55.1"
   provider = docker.vltatl01
 }
 
