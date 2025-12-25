@@ -18,6 +18,13 @@ protocol kernel {
   };
 }
 
+# Static routes for Tailscale network
+# IPv4 CGNAT range - makes BIRD aware that 100.64.0.0/10 is reachable via tailscale0
+protocol static tailscale_ipv4 {
+  ipv4;
+  route 100.64.0.0/10 via "tailscale0";
+}
+
 # RPKI
 roa4 table r4;
 roa6 table r6;
@@ -53,8 +60,10 @@ filter ImportFilter {
 
 # Export filters
 # 2a06:de00:50::/48  - Core Infrastructure
+# 2a06:de00:5b::/48  - PeerLab prefixes
+# 2a06:de00:5c::/48  - PeerLab prefixes
 filter ExportFilter {
-    if (net ~ [ 2a06:de00:50::/48 ]) then {
+    if (net ~ [ 2a06:de00:50::/48, 2a06:de00:5b::/48, 2a06:de00:5c::/48 ]) then {
         bgp_path.delete([64512..65534, 4200000000..4294967294]);
         accept;
     } else reject;

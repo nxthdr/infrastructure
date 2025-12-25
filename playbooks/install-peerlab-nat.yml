@@ -1,0 +1,41 @@
+# ansible-playbook -i inventory/ --ask-become-pass playbooks/install-peerlab-nat.yml
+---
+- hosts: ixp
+  become: yes
+  tasks:
+  - name: Install iptables-persistent package
+    ansible.builtin.apt:
+      name: iptables-persistent
+      state: present
+      update_cache: yes
+
+  - name: Add IPv6 MASQUERADE rule for PeerLab prefixes
+    ansible.builtin.iptables:
+      table: nat
+      chain: POSTROUTING
+      destination: 2a06:de00:5b::/48
+      out_interface: tailscale0
+      jump: MASQUERADE
+      ip_version: ipv6
+      comment: "MASQUERADE for PeerLab prefix 2a06:de00:5b::/48"
+
+  - name: Add IPv6 MASQUERADE rule for PeerLab prefixes (2a06:de00:5c::/48)
+    ansible.builtin.iptables:
+      table: nat
+      chain: POSTROUTING
+      destination: 2a06:de00:5c::/48
+      out_interface: tailscale0
+      jump: MASQUERADE
+      ip_version: ipv6
+      comment: "MASQUERADE for PeerLab prefix 2a06:de00:5c::/48"
+
+  - name: Save ip6tables rules
+    ansible.builtin.shell: ip6tables-save > /etc/iptables/rules.v6
+    args:
+      creates: /etc/iptables/rules.v6
+
+  - name: Ensure ip6tables rules are loaded on boot
+    ansible.builtin.systemd:
+      name: netfilter-persistent
+      enabled: yes
+      state: started
