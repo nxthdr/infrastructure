@@ -6,8 +6,8 @@ This page provides detailed technical information about the infrastructure archi
 
 ### Core Server (coreams01)
 
-**Provider**: Scaleway Dedibox  
-**Location**: Amsterdam, Netherlands  
+**Provider**: Scaleway Dedibox
+**Location**: Amsterdam, Netherlands
 **Role**: Central hub for all nxthdr services
 
 **Service Categories**:
@@ -21,9 +21,9 @@ This page provides detailed technical information about the infrastructure archi
 
 **Purpose**: BGP peering at Internet Exchange Points
 
-**Locations**: Amsterdam (2 servers), Frankfurt (1 server)  
-**Provider**: iFog  
-**IXPs**: NL-IX, LocIX, FogIXP
+**Locations**: Amsterdam (2 servers), Frankfurt (1 server)
+**Provider**: iFog
+**IXPs**: FogIXP, FranceIX, NL-IX
 
 **Service Categories**:
 - **Routing**: BIRD (BGP daemon)
@@ -34,8 +34,8 @@ This page provides detailed technical information about the infrastructure archi
 
 **Purpose**: Active measurement infrastructure
 
-**Locations**: Multiple global locations  
-**Provider**: Vultr  
+**Locations**: Multiple global locations
+**Provider**: Vultr
 **Prefix**: `2a0e:97c0:8a0::/44` (sub-prefixes per location)
 
 **Service Categories**:

@@ -23,13 +23,15 @@ The infrastructure consists of four server groups defined in `inventory/inventor
 - `ixpams02` - iFog, Amsterdam
 - `ixpfra01` - iFog, Frankfurt (LocIX, FogIXP)
 - `ixpcdg01` - FranceIX, Paris
-- `ixpcdf02` - FranceIX, Paris
-- Run monitoring and BGP routing
+- `ixpcdg02` - FranceIX, Paris
+
+Run monitoring and BGP routing
 
 ### VLT (Probing) Servers
 - `vltatl01` - Vultr, Atlanta
 - `vltcdg01` - Vultr, Paris
-- Run Saimiris probing infrastructure
+
+Run Saimiris probing infrastructure
 
 ### Special Groups
 - `ixp` and `vlt` groups use shared templates (same config for all hosts in group)

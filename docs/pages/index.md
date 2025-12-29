@@ -39,6 +39,8 @@ This repository contains all the configuration, automation, and documentation ne
 - **ixpams01** - iFog, Amsterdam (NL-IX)
 - **ixpams02** - iFog, Amsterdam
 - **ixpfra01** - iFog, Frankfurt (LocIX, FogIXP)
+- **ixpcdg01** - FranceIX
+- **ixpcdg02** - FranceIX
 
 ### Probing Servers
 - **vltatl01** - Vultr, Atlanta
