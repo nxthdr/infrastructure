@@ -937,10 +937,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#measurement-data-pipeline" class="md-nav__link">
+  <a href="#bgp-monitoring-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Measurement Data Pipeline
+        BGP Monitoring Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-monitoring-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow Monitoring Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-measurement-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Measurement Pipeline
       
     </span>
   </a>
@@ -952,6 +974,56 @@
     <span class="md-ellipsis">
       
         Observability Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clickhouse-database-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClickHouse Database Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ClickHouse Database Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-architecture-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table Architecture Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema Definitions
       
     </span>
   </a>
@@ -1385,10 +1457,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#measurement-data-pipeline" class="md-nav__link">
+  <a href="#bgp-monitoring-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Measurement Data Pipeline
+        BGP Monitoring Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-monitoring-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow Monitoring Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-measurement-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Measurement Pipeline
       
     </span>
   </a>
@@ -1400,6 +1494,56 @@
     <span class="md-ellipsis">
       
         Observability Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clickhouse-database-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClickHouse Database Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ClickHouse Database Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-architecture-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table Architecture Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema Definitions
       
     </span>
   </a>
@@ -1676,7 +1820,8 @@
 - <strong>Messaging</strong>: Redpanda (Kafka-compatible streaming)
 - <strong>Observability</strong>: Prometheus (metrics), Loki (logs), Grafana (dashboards), Alertmanager
 - <strong>Networking</strong>: Headscale (Tailscale), Caddy (HTTPS proxy)
-- <strong>Application Services</strong>: Various nxthdr-specific services</p>
+- <strong>Data Collection</strong>: Risotto (BMP collector), Pesto (sFlow collector), Saimiris Gateway
+- <strong>Application Services</strong>: Geofeed, CHProxy, and other nxthdr services</p>
 <h3 id="ixp-servers">IXP Servers<a class="headerlink" href="#ixp-servers" title="Permanent link">&para;</a></h3>
 <p><strong>Purpose</strong>: BGP peering at Internet Exchange Points</p>
 <p><strong>Locations</strong>: Amsterdam (2 servers), Frankfurt (1 server)
@@ -1748,66 +1893,153 @@
 3. Traffic destined for nxthdr services routes through IXP servers
 4. IXP servers forward to core via WireGuard tunnel</p>
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<h3 id="measurement-data-pipeline">Measurement Data Pipeline<a class="headerlink" href="#measurement-data-pipeline" title="Permanent link">&para;</a></h3>
+<h3 id="bgp-monitoring-pipeline">BGP Monitoring Pipeline<a class="headerlink" href="#bgp-monitoring-pipeline" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─────────────┐
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│ VLT Servers │
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ (Saimiris)  │
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│ BIRD Routers│
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│ (BMP)       │
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>└──────┬──────┘
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       │ Sends probes
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       │ via Redpanda
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>       ▼
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>┌─────────────┐      ┌─────────────┐
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│  Redpanda   │─────►│ ClickHouse  │
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│  (Kafka)    │      │ (Storage)   │
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>└─────────────┘      └──────┬──────┘
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                            │
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                            │ Query
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                            ▼
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                     ┌─────────────┐
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                     │   Grafana   │
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>                     │ (Visualize) │
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>                     └─────────────┘
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       │ BMP messages
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>       ▼
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│  Risotto    │─────►│  Redpanda   │─────►│ ClickHouse  │
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│ (Collector) │      │  (Kafka)    │      │ (bmp db)    │
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>└─────────────┘      └─────────────┘      └──────┬──────┘
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                                                  │
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                                                  │ Query
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                                                  ▼
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                                           ┌─────────────┐
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                                           │   Grafana   │
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>                                           └─────────────┘
+</span></code></pre></div>
+<h3 id="flow-monitoring-pipeline">Flow Monitoring Pipeline<a class="headerlink" href="#flow-monitoring-pipeline" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────┐
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│  Network    │
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  Devices    │
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│  (sFlow)    │
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>└──────┬──────┘
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>       │ sFlow datagrams
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>       ▼
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   Pesto     │─────►│  Redpanda   │─────►│ ClickHouse  │
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│ (Collector) │      │  (Kafka)    │      │ (flows db)  │
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>└─────────────┘      └─────────────┘      └──────┬──────┘
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>                                                  │
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>                                                  │ Query
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>                                                  ▼
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>                                           ┌─────────────┐
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>                                           │   Grafana   │
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>                                           └─────────────┘
+</span></code></pre></div>
+<p><strong>Note</strong>: Only IPv6 flow samples are processed. Counter samples are filtered at the producer level.</p>
+<h3 id="active-measurement-pipeline">Active Measurement Pipeline<a class="headerlink" href="#active-measurement-pipeline" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────┐
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│ VLT Servers │
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│ (Saimiris)  │
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>└──────┬──────┘
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>       │ Probe replies
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>       ▼
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│  Saimiris   │─────►│  Redpanda   │─────►│ ClickHouse  │
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│  Gateway    │      │  (Kafka)    │      │(saimiris db)│
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>└─────────────┘      └─────────────┘      └──────┬──────┘
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                                                  │
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                                                  │ Query
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                                                  ▼
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                                           ┌─────────────┐
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                                           │   Grafana   │
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                                           └─────────────┘
 </span></code></pre></div>
 <h3 id="observability-pipeline">Observability Pipeline<a class="headerlink" href="#observability-pipeline" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│  Services   │─────►│ Prometheus  │─────►│   Grafana   │
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  (Metrics)  │      │ (Scrape)    │      │  (Display)  │
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└─────────────┘      └─────────────┘      └─────────────┘
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│  Services   │─────►│    Loki     │─────►│   Grafana   │
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│  (Logs)     │      │ (Aggregate) │      │  (Display)  │
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>└─────────────┘      └─────────────┘      └─────────────┘
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│  Services   │─────►│ Prometheus  │─────►│   Grafana   │
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  (Metrics)  │      │ (Scrape)    │      │  (Display)  │
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>└─────────────┘      └─────────────┘      └─────────────┘
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│  Services   │─────►│    Loki     │─────►│   Grafana   │
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│  (Logs)     │      │ (Aggregate) │      │  (Display)  │
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>└─────────────┘      └─────────────┘      └─────────────┘
 </span></code></pre></div>
+<h2 id="clickhouse-database-architecture">ClickHouse Database Architecture<a class="headerlink" href="#clickhouse-database-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="database-overview">Database Overview<a class="headerlink" href="#database-overview" title="Permanent link">&para;</a></h3>
+<p>ClickHouse stores all time-series data in three separate databases:</p>
+<p><strong>BMP Database</strong> (<code>bmp</code>):
+- Stores BGP routing updates from BMP protocol
+- Kafka topic: <code>risotto-updates</code>
+- Schema: Cap'n Proto (<code>update.capnp:Update</code>)
+- TTL: 7 days
+- Key tables: <code>from_kafka</code>, <code>updates</code>, <code>from_kafka_mv</code></p>
+<p><strong>Flows Database</strong> (<code>flows</code>):
+- Stores network flow data from sFlow collectors
+- Kafka topic: <code>pesto-sflow</code>
+- Schema: Cap'n Proto (<code>sflow:SFlowFlowRecord</code>)
+- TTL: 7 days
+- Key tables: <code>from_kafka</code>, <code>records</code>, <code>from_kafka_mv</code>
+- Note: IPv6 only, flow samples only (no counter samples)</p>
+<p><strong>Saimiris Database</strong> (<code>saimiris</code>):
+- Stores active measurement probe replies
+- Kafka topic: <code>saimiris-replies</code>
+- Schema: Cap'n Proto (<code>reply.capnp:Reply</code>)
+- TTL: 7 days
+- Key tables: <code>from_kafka</code>, <code>replies</code>, <code>from_kafka_mv</code></p>
+<h3 id="table-architecture-pattern">Table Architecture Pattern<a class="headerlink" href="#table-architecture-pattern" title="Permanent link">&para;</a></h3>
+<p>All databases follow the same pattern:</p>
+<ol>
+<li><strong>Kafka Engine Table</strong> (<code>from_kafka</code>):</li>
+<li>Consumes messages from Redpanda/Kafka</li>
+<li>Uses Cap'n Proto format for efficient serialization</li>
+<li>
+<p>No data persistence (streaming only)</p>
+</li>
+<li>
+<p><strong>MergeTree Table</strong> (<code>updates</code>/<code>records</code>/<code>replies</code>):</p>
+</li>
+<li>Persistent storage with optimized ordering</li>
+<li>Partitioned by date for efficient queries</li>
+<li>
+<p>Automatic TTL-based deletion</p>
+</li>
+<li>
+<p><strong>Materialized View</strong> (<code>from_kafka_mv</code>):</p>
+</li>
+<li>Transforms and loads data from Kafka to MergeTree</li>
+<li>Handles field name conversion (camelCase → snake_case)</li>
+<li>Adds timestamps and metadata</li>
+</ol>
+<h3 id="schema-definitions">Schema Definitions<a class="headerlink" href="#schema-definitions" title="Permanent link">&para;</a></h3>
+<p>Database schemas are maintained in <code>clickhouse-tables/</code> directory:
+- <code>clickhouse-tables/bmp/bmp.sql</code>
+- <code>clickhouse-tables/flows/flows.sql</code>
+- <code>clickhouse-tables/saimiris/saimiris.sql</code></p>
 <h2 id="infrastructure-as-code-architecture">Infrastructure as Code Architecture<a class="headerlink" href="#infrastructure-as-code-architecture" title="Permanent link">&para;</a></h2>
 <h3 id="template-rendering-pipeline">Template Rendering Pipeline<a class="headerlink" href="#template-rendering-pipeline" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────────┐
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│ inventory.yml   │
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│ secrets.yml     │
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│ templates/      │
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>└────────┬────────┘
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>         │
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>         │ render_config.py
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>         │ render_terraform.py
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>         ▼
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>┌─────────────────┐
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│  .rendered/     │  (gitignored)
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│  terraform/     │
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>└────────┬────────┘
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>         │
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>         │ Ansible sync
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>         ▼
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>┌─────────────────┐
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│ Remote Servers  │
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│ /home/nxthdr/   │
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>└────────┬────────┘
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>         │
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>         │ Terraform apply
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>         ▼
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>┌─────────────────┐
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│ Docker          │
-</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│ Containers      │
-</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>└─────────────────┘
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌─────────────────┐
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│ inventory.yml   │
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│ secrets.yml     │
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│ templates/      │
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>└────────┬────────┘
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>         │
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>         │ render_config.py
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>         │ render_terraform.py
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>         ▼
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>┌─────────────────┐
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│  .rendered/     │  (gitignored)
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│  terraform/     │
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>└────────┬────────┘
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>         │
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>         │ Ansible sync
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>         ▼
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>┌─────────────────┐
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│ Remote Servers  │
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│ /home/nxthdr/   │
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>└────────┬────────┘
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>         │
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>         │ Terraform apply
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>         ▼
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>┌─────────────────┐
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│ Docker          │
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│ Containers      │
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>└─────────────────┘
 </span></code></pre></div>
 <h3 id="rendering-process">Rendering Process<a class="headerlink" href="#rendering-process" title="Permanent link">&para;</a></h3>
 <p><strong>render_config.py</strong>:
@@ -1863,14 +2095,14 @@
 - Connects to Docker daemon via SSH</p>
 <h3 id="ansible-inventory">Ansible Inventory<a class="headerlink" href="#ansible-inventory" title="Permanent link">&para;</a></h3>
 <p><strong>Structure</strong>:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p p-Indicator">{</span><span class="nv">group</span><span class="p p-Indicator">}:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="p p-Indicator">{</span><span class="nv">hostname</span><span class="p p-Indicator">}:</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">fqdn</span><span class="p p-Indicator">}</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="p p-Indicator">{</span><span class="nv">host_vars</span><span class="p p-Indicator">}</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nxthdr</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p p-Indicator">{</span><span class="nv">group_vars</span><span class="p p-Indicator">}</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p p-Indicator">{</span><span class="nv">group</span><span class="p p-Indicator">}:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="p p-Indicator">{</span><span class="nv">hostname</span><span class="p p-Indicator">}:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">fqdn</span><span class="p p-Indicator">}</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="p p-Indicator">{</span><span class="nv">host_vars</span><span class="p p-Indicator">}</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nxthdr</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p p-Indicator">{</span><span class="nv">group_vars</span><span class="p p-Indicator">}</span>
 </span></code></pre></div></p>
 <p><strong>Groups</strong>:
 - <code>core</code>: Core servers
@@ -1940,7 +2172,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 29, 2025 21:04:14 UTC">December 29, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 30, 2025 20:19:41 UTC">December 30, 2025</span>
   </span>
 
     
