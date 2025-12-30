@@ -15,7 +15,8 @@ This page provides detailed technical information about the infrastructure archi
 - **Messaging**: Redpanda (Kafka-compatible streaming)
 - **Observability**: Prometheus (metrics), Loki (logs), Grafana (dashboards), Alertmanager
 - **Networking**: Headscale (Tailscale), Caddy (HTTPS proxy)
-- **Application Services**: Various nxthdr-specific services
+- **Data Collection**: Risotto (BMP collector), Pesto (sFlow collector), Saimiris Gateway
+- **Application Services**: Geofeed, CHProxy, and other nxthdr services
 
 ### IXP Servers
 
@@ -121,27 +122,70 @@ IPv4-only network for IPv4 proxy.
 
 ## Data Flow
 
-### Measurement Data Pipeline
+### BGP Monitoring Pipeline
+
+```
+┌─────────────┐
+│ BIRD Routers│
+│ (BMP)       │
+└──────┬──────┘
+       │ BMP messages
+       ▼
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│  Risotto    │─────►│  Redpanda   │─────►│ ClickHouse  │
+│ (Collector) │      │  (Kafka)    │      │ (bmp db)    │
+└─────────────┘      └─────────────┘      └──────┬──────┘
+                                                  │
+                                                  │ Query
+                                                  ▼
+                                           ┌─────────────┐
+                                           │   Grafana   │
+                                           └─────────────┘
+```
+
+### Flow Monitoring Pipeline
+
+```
+┌─────────────┐
+│  Network    │
+│  Devices    │
+│  (sFlow)    │
+└──────┬──────┘
+       │ sFlow datagrams
+       ▼
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│   Pesto     │─────►│  Redpanda   │─────►│ ClickHouse  │
+│ (Collector) │      │  (Kafka)    │      │ (flows db)  │
+└─────────────┘      └─────────────┘      └──────┬──────┘
+                                                  │
+                                                  │ Query
+                                                  ▼
+                                           ┌─────────────┐
+                                           │   Grafana   │
+                                           └─────────────┘
+```
+
+**Note**: Only IPv6 flow samples are processed. Counter samples are filtered at the producer level.
+
+### Active Measurement Pipeline
 
 ```
 ┌─────────────┐
 │ VLT Servers │
 │ (Saimiris)  │
 └──────┬──────┘
-       │ Sends probes
-       │ via Redpanda
+       │ Probe replies
        ▼
-┌─────────────┐      ┌─────────────┐
-│  Redpanda   │─────►│ ClickHouse  │
-│  (Kafka)    │      │ (Storage)   │
-└─────────────┘      └──────┬──────┘
-                            │
-                            │ Query
-                            ▼
-                     ┌─────────────┐
-                     │   Grafana   │
-                     │ (Visualize) │
-                     └─────────────┘
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│  Saimiris   │─────►│  Redpanda   │─────►│ ClickHouse  │
+│  Gateway    │      │  (Kafka)    │      │(saimiris db)│
+└─────────────┘      └─────────────┘      └──────┬──────┘
+                                                  │
+                                                  │ Query
+                                                  ▼
+                                           ┌─────────────┐
+                                           │   Grafana   │
+                                           └─────────────┘
 ```
 
 ### Observability Pipeline
@@ -157,6 +201,60 @@ IPv4-only network for IPv4 proxy.
 │  (Logs)     │      │ (Aggregate) │      │  (Display)  │
 └─────────────┘      └─────────────┘      └─────────────┘
 ```
+
+## ClickHouse Database Architecture
+
+### Database Overview
+
+ClickHouse stores all time-series data in three separate databases:
+
+**BMP Database** (`bmp`):
+- Stores BGP routing updates from BMP protocol
+- Kafka topic: `risotto-updates`
+- Schema: Cap'n Proto (`update.capnp:Update`)
+- TTL: 7 days
+- Key tables: `from_kafka`, `updates`, `from_kafka_mv`
+
+**Flows Database** (`flows`):
+- Stores network flow data from sFlow collectors
+- Kafka topic: `pesto-sflow`
+- Schema: Cap'n Proto (`sflow:SFlowFlowRecord`)
+- TTL: 7 days
+- Key tables: `from_kafka`, `records`, `from_kafka_mv`
+- Note: IPv6 only, flow samples only (no counter samples)
+
+**Saimiris Database** (`saimiris`):
+- Stores active measurement probe replies
+- Kafka topic: `saimiris-replies`
+- Schema: Cap'n Proto (`reply.capnp:Reply`)
+- TTL: 7 days
+- Key tables: `from_kafka`, `replies`, `from_kafka_mv`
+
+### Table Architecture Pattern
+
+All databases follow the same pattern:
+
+1. **Kafka Engine Table** (`from_kafka`):
+   - Consumes messages from Redpanda/Kafka
+   - Uses Cap'n Proto format for efficient serialization
+   - No data persistence (streaming only)
+
+2. **MergeTree Table** (`updates`/`records`/`replies`):
+   - Persistent storage with optimized ordering
+   - Partitioned by date for efficient queries
+   - Automatic TTL-based deletion
+
+3. **Materialized View** (`from_kafka_mv`):
+   - Transforms and loads data from Kafka to MergeTree
+   - Handles field name conversion (camelCase → snake_case)
+   - Adds timestamps and metadata
+
+### Schema Definitions
+
+Database schemas are maintained in `clickhouse-tables/` directory:
+- `clickhouse-tables/bmp/bmp.sql`
+- `clickhouse-tables/flows/flows.sql`
+- `clickhouse-tables/saimiris/saimiris.sql`
 
 ## Infrastructure as Code Architecture
 

@@ -10,14 +10,20 @@ The infrastructure consists of three main components:
 
 A bare-metal Scaleway Dedibox server in Amsterdam running all essential services:
 
-- **Databases**: ClickHouse, PostgreSQL
-- **Messaging**: Redpanda (Kafka-compatible)
-- **Observability**: Prometheus, Loki, Grafana
+- **Databases**: ClickHouse (time-series data), PostgreSQL (relational data)
+- **Messaging**: Redpanda (Kafka-compatible streaming)
+- **Observability**: Prometheus (metrics), Loki (logs), Grafana (dashboards), Alertmanager
 - **Networking**: Headscale (Tailscale coordination server)
 - **Proxying**: Caddy (HTTPS reverse proxy)
-- **Other services**: Geofeed, CHProxy, Alertmanager
+- **Data Collection**: Risotto (BMP), Pesto (sFlow), Saimiris Gateway
+- **Other services**: Geofeed, CHProxy
 
 All services run in Docker containers managed by Terraform.
+
+**Data Pipelines**:
+- **BGP Monitoring**: BIRD routers → Risotto → Redpanda → ClickHouse (`bmp` database)
+- **Flow Monitoring**: Network devices → Pesto → Redpanda → ClickHouse (`flows` database)
+- **Active Measurements**: Saimiris agents → Redpanda → ClickHouse (`saimiris` database)
 
 ### 2. IXP Servers
 
@@ -47,7 +53,7 @@ infrastructure/
 ├── templates/          # Jinja2 templates
 │   ├── config/        # Docker container configs
 │   └── terraform/     # Terraform templates
-├── networks/          # BIRD & WireGuard configs
+├── clickhouse-tables/ # ClickHouse database schemas
 ├── playbooks/         # Ansible automation
 ├── render/            # Python rendering scripts
 ├── secrets/           # Encrypted secrets (Ansible Vault)

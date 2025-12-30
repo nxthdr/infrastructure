@@ -10,6 +10,32 @@ This repository manages infrastructure for [nxthdr](https://nxthdr.dev) using:
 - **Jinja2** templates for dynamic configuration rendering
 - **Ansible Vault** for secrets management
 
+## Data Pipeline Architecture
+
+The infrastructure supports three main data pipelines:
+
+### 1. BGP Monitoring (BMP)
+- **Service**: Risotto (BMP collector)
+- **Database**: `bmp` in ClickHouse
+- **Data Flow**: BIRD routers → Risotto → Redpanda (Kafka) → ClickHouse
+- **Schema**: Cap'n Proto format (`update.capnp:Update`)
+- **Purpose**: Collect and store BGP routing updates from peering sessions
+
+### 2. Flow Monitoring (sFlow)
+- **Service**: Pesto (sFlow collector)
+- **Database**: `flows` in ClickHouse
+- **Data Flow**: Network devices → Pesto → Redpanda (Kafka) → ClickHouse
+- **Schema**: Cap'n Proto format (`sflow:SFlowFlowRecord`)
+- **Purpose**: Collect and analyze network flow data (IPv6 only)
+- **Note**: Only flow samples are processed (counter samples filtered out)
+
+### 3. Active Measurements
+- **Service**: Saimiris (probing agent)
+- **Database**: `saimiris` in ClickHouse
+- **Data Flow**: Saimiris agents → Redpanda (Kafka) → ClickHouse
+- **Schema**: Cap'n Proto format (`reply.capnp:Reply`)
+- **Purpose**: Active network measurements (traceroute, ping, etc.)
+
 ## Server Inventory
 
 The infrastructure consists of four server groups defined in `inventory/inventory.yml`:
@@ -154,6 +180,48 @@ echo "<VAULT_PASSWORD>" > .password
 4. Add network configs in `networks/{hostname}/`
 5. Run `make apply`
 
+## ClickHouse Databases
+
+The infrastructure uses ClickHouse for storing time-series data. Database schemas are defined in `clickhouse-tables/`:
+
+### BMP Database (`bmp`)
+**Purpose**: Store BGP routing updates from BMP (BGP Monitoring Protocol)
+
+**Tables**:
+- `from_kafka` - Kafka engine table consuming from `risotto-updates` topic
+- `updates` - MergeTree table storing processed BGP updates
+- `from_kafka_mv` - Materialized view transforming Kafka data
+
+**Key Fields**: router address, peer address, prefix, AS path, BGP attributes, timestamps
+
+**TTL**: 7 days
+
+### Flows Database (`flows`)
+**Purpose**: Store network flow data from sFlow collectors
+
+**Tables**:
+- `from_kafka` - Kafka engine table consuming from `pesto-sflow` topic
+- `records` - MergeTree table storing flow records
+- `from_kafka_mv` - Materialized view transforming Kafka data
+
+**Key Fields**: source/destination IPs, ports, protocol, packet length, sampling rate
+
+**TTL**: 7 days
+
+**Note**: Only IPv6 flow samples are processed (counter samples filtered at producer)
+
+### Saimiris Database (`saimiris`)
+**Purpose**: Store active measurement results from probing agents
+
+**Tables**:
+- `from_kafka` - Kafka engine table consuming from `saimiris-replies` topic
+- `replies` - MergeTree table storing probe replies
+- `from_kafka_mv` - Materialized view transforming Kafka data
+
+**Key Fields**: agent ID, probe/reply addresses, TTL, ICMP type/code, MPLS labels, RTT
+
+**TTL**: 7 days
+
 ## Directory Structure
 
 ```
@@ -168,6 +236,10 @@ infrastructure/
 ├── render/                # Python rendering scripts
 │   ├── render_config.py   # Renders Docker configs
 │   └── render_terraform.py # Renders Terraform files
+├── clickhouse-tables/     # ClickHouse database schemas
+│   ├── bmp/               # BGP monitoring database
+│   ├── flows/             # Flow monitoring database
+│   └── saimiris/          # Active measurements database
 ├── templates/
 │   ├── config/            # Jinja2 templates for configs
 │   │   ├── core/          # Core server configs
