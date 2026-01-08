@@ -19,7 +19,7 @@ resource "docker_network" "vltatl01_backend" {
 
 # Alloy
 resource "docker_image" "vltatl01_alloy" {
-  name     = "grafana/alloy:v1.12.1"
+  name     = "grafana/alloy:v1.12.2"
   provider = docker.vltatl01
 }
 
