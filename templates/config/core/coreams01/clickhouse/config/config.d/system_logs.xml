@@ -1,0 +1,73 @@
+<clickhouse>
+    <query_log>
+        <database>system</database>
+        <table>query_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </query_log>
+
+    <query_thread_log>
+        <database>system</database>
+        <table>query_thread_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </query_thread_log>
+
+    <query_views_log>
+        <database>system</database>
+        <table>query_views_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </query_views_log>
+
+    <part_log>
+        <database>system</database>
+        <table>part_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </part_log>
+
+    <trace_log>
+        <database>system</database>
+        <table>trace_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </trace_log>
+
+    <text_log>
+        <database>system</database>
+        <table>text_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </text_log>
+
+    <metric_log>
+        <database>system</database>
+        <table>metric_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </metric_log>
+
+    <asynchronous_metric_log>
+        <database>system</database>
+        <table>asynchronous_metric_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </asynchronous_metric_log>
+
+    <session_log>
+        <database>system</database>
+        <table>session_log</table>
+        <partition_by>toYYYYMM(event_date)</partition_by>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+        <flush_interval_milliseconds>7500</flush_interval_milliseconds>
+    </session_log>
+</clickhouse>
