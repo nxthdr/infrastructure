@@ -10,14 +10,19 @@ ixp:
   hosts:
     ixpams01:
       ansible_host: ams01.ixp.infra.nxthdr.dev
+      tailscale_ip: 100.64.0.3
     ixpams02:
       ansible_host: ams02.ixp.infra.nxthdr.dev
+      tailscale_ip: 100.64.0.4
     ixpfra01:
       ansible_host: fra01.ixp.infra.nxthdr.dev
+      tailscale_ip: 100.64.0.2
     ixpcdg01:
       ansible_host: cdg01.ixp.infra.nxthdr.dev
+      tailscale_ip: 100.64.0.9
     ixpcdg02:
       ansible_host: cdg02.ixp.infra.nxthdr.dev
+      tailscale_ip: 100.64.0.6
   vars:
     ansible_user: nxthdr
 

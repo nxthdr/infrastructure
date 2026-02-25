@@ -1,5 +1,8 @@
 router id 37.49.238.198;
 
+# Peering Course - Dynamic BGP for peerlab participants
+include "/etc/bird/peerlab.conf";
+
 log syslog all;
 
 protocol device { scan time 5; }
@@ -13,6 +16,13 @@ protocol kernel {
     import all;
     export all;
   };
+}
+
+# Static routes for Tailscale network
+# IPv4 CGNAT range - makes BIRD aware that 100.64.0.0/10 is reachable via tailscale0
+protocol static tailscale_ipv4 {
+  ipv4;
+  route 100.64.0.0/10 via "tailscale0";
 }
 
 # RPKI
@@ -48,9 +58,15 @@ filter ImportFilter {
     accept;
 }
 
+# Export filters
+# 2a06:de00:50::/48  - Core Infrastructure
+# 2a06:de00:5b::/48  - PeerLab prefixes
+# 2a06:de00:5c::/48  - PeerLab prefixes
 filter ExportFilter {
-    if (net ~ [ 2a06:de00:50::/48 ]) then accept;
-    else reject;
+    if (net ~ [ 2a06:de00:50::/48, 2a06:de00:5b::/48, 2a06:de00:5c::/48 ]) then {
+        bgp_path.delete([64512..65534, 4200000000..4294967294]);
+        accept;
+    } else reject;
 }
 
 
