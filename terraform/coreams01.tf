@@ -764,7 +764,7 @@ resource "docker_container" "blog" {
 
 # PostgreSQL
 resource "docker_image" "postgresql" {
-  name = "postgres:17"
+  name = "postgres:18"
   provider = docker.coreams01
 }
 
