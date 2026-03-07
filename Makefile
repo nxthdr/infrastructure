@@ -21,7 +21,7 @@ render-config:
 
 .PHONY: render-terraform
 render-terraform:
-	@echo "Rendering Terraform files..."
+	@echo "Rendering Terraform files from inventory and secrets..."
 	@cat .password | uv run --project=render/ --active render/render_terraform.py
 
 .PHONY: render
@@ -100,13 +100,13 @@ vlt-destroy:
 	$(MAKE) render-terraform; \
 	echo ""; \
 	echo "Destroying Docker resources for $$hostname..."; \
-	terraform -chdir=./terraform destroy -auto-approve -target=docker_container.$${hostname}_alloy -target=docker_container.$${hostname}_node_exporter -target=docker_container.$${hostname}_cadvisor -target=docker_container.$${hostname}_saimiris -target=docker_network.$${hostname}_backend -target=docker_image.$${hostname}_alloy -target=docker_image.$${hostname}_node_exporter -target=docker_image.$${hostname}_cadvisor -target=docker_image.$${hostname}_saimiris -target=data.docker_registry_image.$${hostname}_saimiris || true; \
+	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_$${hostname} || true; \
 	echo ""; \
 	echo "Destroying Vultr server and DNS for $$hostname..."; \
 	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_server[\"$$hostname\"]; \
 	echo ""; \
-	echo "Removing Terraform file for $$hostname..."; \
-	rm -f terraform/$${hostname}.tf; \
+	echo "Removing module call for $$hostname from terraform/vlt.tf..."; \
+	echo "NOTE: Manually remove the module block for $$hostname from terraform/vlt.tf and terraform/moved.tf"; \
 	echo ""; \
 	echo "==> Server destroyed. You can now remove $$hostname from inventory.yml"
 

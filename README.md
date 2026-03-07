@@ -37,7 +37,7 @@ make apply
 
 - **Ansible** - Configuration management
 - **Terraform** - Docker container orchestration
-- **Jinja2** - Template rendering
+- **Jinja2** - Configuration template rendering
 - **Ansible Vault** - Secrets management
 - **Docker** - Container runtime
 - **BIRD** - BGP routing
@@ -50,11 +50,12 @@ infrastructure/
 ├── inventory/          # Server definitions
 ├── templates/          # Jinja2 templates
 │   ├── config/        # Docker container configs
-│   └── terraform/     # Terraform templates
+│   └── terraform/     # terraform.tfvars template (secrets)
 ├── playbooks/         # Ansible automation
 ├── render/            # Python rendering scripts
 ├── secrets/           # Encrypted secrets
-├── terraform/         # Terraform files
+├── terraform/         # Terraform configuration
+│   └── modules/      # Reusable modules (ixp, vlt-containers, vlt-server)
 └── docs/              # Documentation (MkDocs)
 ```
 
@@ -73,7 +74,7 @@ This automates everything: server creation, DNS, software installation, and conf
 
 1. Run `make vlt-destroy` (enter hostname when prompted)
 2. Remove server from `inventory/inventory.yml`
-3. Run `make render-terraform` to clean up generated files
+3. Run `make render-terraform` to regenerate wiring files
 
 The destroy command will:
 - Destroy Docker containers and images

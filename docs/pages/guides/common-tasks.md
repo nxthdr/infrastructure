@@ -10,8 +10,10 @@
 
 ### Update Container Image
 
-1. Edit `terraform/{hostname}.tf` - change image tag in `docker_image` resource
-2. Run: `make apply`
+1. For core: edit `terraform/coreams01.tf`
+2. For IXP: edit `terraform/modules/ixp/main.tf` (applies to all IXP servers)
+3. For VLT: edit `terraform/modules/vlt-containers/main.tf` (applies to all VLT servers)
+4. Run: `make apply`
 
 ## Network Configuration
 

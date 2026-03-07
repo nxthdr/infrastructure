@@ -304,10 +304,11 @@ Database schemas are maintained in `clickhouse-tables/` directory:
 
 **render_terraform.py**:
 1. Loads inventory and secrets
-2. Renders `templates/terraform/providers.tf.j2` → `terraform/providers.tf`
+2. Generates Terraform wiring files from inventory:
+   - `terraform/docker-providers.tf` (docker provider blocks per host)
+   - `terraform/ixp.tf` (IXP module calls)
+   - `terraform/vlt.tf` (VLT module calls + vlt_servers locals)
 3. Renders `templates/terraform/terraform.tfvars.j2` → `terraform/terraform.tfvars`
-4. For IXP/VLT hosts:
-   - Renders `templates/terraform/{group}.tf.j2` → `terraform/{hostname}.tf`
 
 ## Security Architecture
 

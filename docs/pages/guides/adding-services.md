@@ -52,23 +52,21 @@
    vim templates/config/ixp/{service}/config/config.yml.j2
    ```
 
-2. **Update Terraform template** in `templates/terraform/ixp.tf.j2`:
+2. **Update Terraform module** in `terraform/modules/ixp/main.tf` (or `terraform/modules/vlt-containers/main.tf` for VLT):
    ```hcl
    resource "docker_image" "service_name" {
      name = "image:tag"
-     provider = docker.{{ inventory_hostname }}
    }
 
    resource "docker_container" "service_name" {
      image = docker_image.service_name.image_id
      name  = "service-name"
-     provider = docker.{{ inventory_hostname }}
      restart = "unless-stopped"
      # ... rest of config
    }
    ```
 
-3. **Deploy**: `make apply` (deploys to all IXP servers)
+3. **Deploy**: `make apply` (deploys to all servers in the group)
 
 ## Expose via HTTPS
 

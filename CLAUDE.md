@@ -63,21 +63,44 @@ Run Saimiris probing infrastructure
 - `ixp` and `vlt` groups use shared templates (same config for all hosts in group)
 - `core` group uses host-specific templates
 
+### SSH Access
+
+All servers are accessible via SSH as the `nxthdr` user. The FQDNs follow the pattern `{location}.{group}.infra.nxthdr.dev`.
+
+| Host | SSH Command |
+|------|-------------|
+| coreams01 | `ssh nxthdr@ams01.core.infra.nxthdr.dev` |
+| ixpams01 | `ssh nxthdr@ams01.ixp.infra.nxthdr.dev` |
+| ixpams02 | `ssh nxthdr@ams02.ixp.infra.nxthdr.dev` |
+| ixpfra01 | `ssh nxthdr@fra01.ixp.infra.nxthdr.dev` |
+| ixpcdg01 | `ssh nxthdr@cdg01.ixp.infra.nxthdr.dev` |
+| ixpcdg02 | `ssh nxthdr@cdg02.ixp.infra.nxthdr.dev` |
+| vltatl01 | `ssh nxthdr@atl01.vlt.infra.nxthdr.dev` |
+| vltcdg01 | `ssh nxthdr@cdg01.vlt.infra.nxthdr.dev` |
+
+The exact `ansible_host` values are defined in `inventory/inventory.yml`.
+
 ## Main Workflow: `make apply`
 
 The primary deployment command is `make apply`, which executes three sequential steps:
 
 ### 1. Render Configuration (`make render`)
 Runs two Python scripts using `uv`:
-- `render/render_config.py` - Renders Docker container configurations
-- `render/render_terraform.py` - Renders Terraform files
+- `render/render_config.py` - Renders Docker container configurations from Jinja2 templates
+- `render/render_terraform.py` - Renders Terraform wiring from inventory and secrets
 
 **Process:**
 - Reads `inventory/inventory.yml` for server definitions
 - Decrypts `secrets/secrets.yml` using vault password from `.password` file
 - Renders Jinja2 templates from `templates/config/` → `.rendered/` directory
-- Renders Terraform templates from `templates/terraform/` → `terraform/` directory
-- `.rendered/` contains plaintext secrets (gitignored)
+- Generates Terraform wiring files from inventory:
+  - `terraform/docker-providers.tf` (docker provider blocks per host)
+  - `terraform/ixp.tf` (IXP module calls)
+  - `terraform/vlt.tf` (VLT module calls + vlt_servers locals)
+- Renders `templates/terraform/terraform.tfvars.j2` → `terraform/terraform.tfvars`
+- `.rendered/` and `terraform/terraform.tfvars` contain plaintext secrets (gitignored)
+
+**Inventory as source of truth:** adding or removing an IXP/VLT server only requires editing `inventory/inventory.yml`. The wiring files are regenerated automatically by `make render-terraform`.
 
 **Template Structure:**
 - `templates/config/core/coreams01/` - Host-specific configs for core server
@@ -152,9 +175,12 @@ echo "<VAULT_PASSWORD>" > .password
 3. If Terraform didn't change, manually restart: `docker restart <container>`
 
 ### Update Container Image Version
-1. Edit Terraform file: `terraform/{hostname}.tf`
-2. Update `docker_image` resource with new tag
-3. Run `make apply`
+1. For core: edit `terraform/coreams01.tf` directly
+2. For IXP: edit `terraform/modules/ixp/main.tf` (applies to all IXP servers)
+3. For VLT: edit `terraform/modules/vlt-containers/main.tf` (applies to all VLT servers)
+4. Run `make apply`
+
+Renovate can update image versions directly in the module files.
 
 ### Update BIRD Configuration
 1. Edit `networks/{hostname}/bird/bird.conf`
@@ -173,12 +199,19 @@ echo "<VAULT_PASSWORD>" > .password
    - Network attachments, volumes, environment variables
 4. Run `make apply`
 
-### Add New IXP/VLT Server
-1. Add host to `inventory/inventory.yml` under appropriate group
-2. For IXP: Create Terraform config (auto-rendered from `templates/terraform/ixp.tf.j2`)
-3. For VLT: Create Terraform config (auto-rendered from `templates/terraform/vlt.tf.j2`)
-4. Add network configs in `networks/{hostname}/`
-5. Run `make apply`
+### Add New IXP Server
+1. Add host to `inventory/inventory.yml` under the `ixp` group
+2. Add network configs in `networks/{hostname}/`
+3. Run `terraform -chdir=./terraform init` then `make apply`
+
+The provider block, module call, and config rendering are all generated automatically from inventory.
+
+### Add New VLT Server
+1. Add host to `inventory/inventory.yml` under the `vlt` group (include `uniprobe0` and `ansible_host`)
+2. Add network configs in `networks/{hostname}/`
+3. Run `terraform -chdir=./terraform init` then `make apply`
+
+The provider block, module call, VLT server entry, and config rendering are all generated automatically from inventory.
 
 ## ClickHouse Databases
 
@@ -246,20 +279,20 @@ infrastructure/
 │   │   ├── ixp/           # Shared IXP configs
 │   │   ├── vlt/           # Shared VLT configs
 │   │   └── shared/        # Common configs
-│   └── terraform/         # Jinja2 templates for Terraform
-│       ├── ixp.tf.j2      # IXP server template
-│       ├── vlt.tf.j2      # VLT server template
-│       ├── providers.tf.j2
+│   └── terraform/         # Jinja2 template for tfvars
 │       └── terraform.tfvars.j2
-├── terraform/             # Rendered Terraform files
-│   ├── coreams01.tf       # Static (not templated)
-│   ├── ixpams01.tf        # Rendered from ixp.tf.j2
-│   ├── ixpams02.tf        # Rendered from ixp.tf.j2
-│   ├── ixpfra01.tf        # Rendered from ixp.tf.j2
-│   ├── vltatl01.tf        # Rendered from vlt.tf.j2
-│   ├── vltcdg01.tf        # Rendered from vlt.tf.j2
-│   ├── providers.tf       # Rendered
-│   └── terraform.tfvars   # Rendered (gitignored)
+├── terraform/             # Terraform configuration
+│   ├── coreams01.tf       # Core server resources (static)
+│   ├── providers.tf       # Provider requirements and non-docker providers (static)
+│   ├── docker-providers.tf # Docker provider blocks (generated from inventory)
+│   ├── ixp.tf             # IXP module calls (generated from inventory)
+│   ├── vlt.tf             # VLT module calls + locals (generated from inventory)
+│   ├── vlt-infrastructure.tf # Vultr servers and DNS for VLT (static)
+│   ├── terraform.tfvars   # Rendered from secrets (gitignored)
+│   └── modules/
+│       ├── ixp/           # Shared IXP container definitions
+│       ├── vlt-containers/ # Shared VLT container definitions
+│       └── vlt-server/    # Vultr server provisioning
 ├── networks/              # Network configurations (BIRD, WireGuard)
 │   ├── coreams01/
 │   │   ├── bird/

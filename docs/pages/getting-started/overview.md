@@ -49,15 +49,16 @@ Everything is managed as code:
 
 ```
 infrastructure/
-├── inventory/          # Server definitions
+├── inventory/          # Server definitions (source of truth)
 ├── templates/          # Jinja2 templates
 │   ├── config/        # Docker container configs
-│   └── terraform/     # Terraform templates
+│   └── terraform/     # terraform.tfvars template (secrets)
 ├── clickhouse-tables/ # ClickHouse database schemas
 ├── playbooks/         # Ansible automation
 ├── render/            # Python rendering scripts
 ├── secrets/           # Encrypted secrets (Ansible Vault)
-└── terraform/         # Generated Terraform files
+└── terraform/         # Terraform configuration
+    └── modules/       # Reusable modules (ixp, vlt-containers, vlt-server)
 ```
 
 ## Deployment Workflow
