@@ -12,11 +12,6 @@ variable "alertmanager_discord_webhook_url" {
   type        = string
 }
 
-variable "chbot_discord_token" {
-  description = "chbot Discord Token"
-  type        = string
-}
-
 variable "dyndns_auth_token" {
   description = "DynDNS Auth Token"
   type        = string

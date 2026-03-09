@@ -841,41 +841,6 @@ resource "docker_container" "docs" {
   }
 }
 
-# chbot
-data "docker_registry_image" "chbot" {
-  name = "ghcr.io/nxthdr/chbot:main"
-  provider = docker.coreams01
-}
-
-resource "docker_image" "chbot" {
-  name = data.docker_registry_image.chbot.name
-  provider = docker.coreams01
-  pull_triggers = [ data.docker_registry_image.chbot.sha256_digest ]
-}
-
-resource "docker_container" "chbot" {
-  image = docker_image.chbot.image_id
-  name  = "chbot"
-  provider = docker.coreams01
-  command = [
-    "--url", "http://[2a06:de00:50:cafe:10::102]:9090",
-    "--user", "read",
-    "--password", "read",  # public read-only access
-    "--output-limit", "20",
-    "--token", var.chbot_discord_token
-  ]
-  restart = "unless-stopped"
-  log_driver = "json-file"
-  log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
-  network_mode = "bridge"
-  networks_advanced {
-    name = docker_network.backend.name
-    ipv6_address = "2a06:de00:50:cafe:10::1001"
-  }
-}
 
 # Geofeed
 resource "docker_container" "geofeed" {
