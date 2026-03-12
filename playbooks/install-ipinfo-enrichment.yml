@@ -1,0 +1,23 @@
+# ansible-playbook -i inventory/ -e "base_dir=$(pwd)" --ask-become-pass playbooks/install-ipinfo-enrichment.yml
+---
+- hosts: core
+  become: yes
+  tasks:
+  - name: Copy systemd service file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/config/shared/ipinfo-enrichment/ipinfo-enrichment.service"
+      dest: /lib/systemd/system/ipinfo-enrichment.service
+
+  - name: Copy systemd timer file
+    ansible.builtin.copy:
+      src: "{{ base_dir }}/templates/config/shared/ipinfo-enrichment/ipinfo-enrichment.timer"
+      dest: /lib/systemd/system/ipinfo-enrichment.timer
+
+  - name: Reload systemd
+    ansible.builtin.command: systemctl daemon-reload
+
+  - name: Enable and start ipinfo-enrichment timer
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      name: ipinfo-enrichment.timer
