@@ -34,6 +34,23 @@ docker run --rm --network=container:clickhouse \
   -mmdb /data/country_asn.mmdb \
   -name country_asn
 
+# Create ASN-to-name dictionary for direct ASN lookups
+echo "Creating ASN-to-name dictionary..."
+docker exec clickhouse clickhouse-client --multiquery -q "
+CREATE OR REPLACE DICTIONARY ipinfo.asn_to_name
+(
+    asn UInt32,
+    as_name String
+)
+PRIMARY KEY asn
+SOURCE(CLICKHOUSE(
+    QUERY 'SELECT toUInt32(replaceOne(asn_str, ''AS'', '''')) AS asn, any(as_name) AS as_name FROM (SELECT asn AS asn_str, as_name FROM ipinfo.country_asn_val_history WHERE partition = (SELECT max(partition) FROM ipinfo.country_asn_val_history) AND asn LIKE ''AS%'') GROUP BY asn'
+))
+LIFETIME(MIN 0 MAX 3600)
+LAYOUT(FLAT());
+SYSTEM RELOAD DICTIONARY ipinfo.asn_to_name;
+"
+
 echo "IPinfo enrichment completed successfully"
 
 # --- Add more MMDB databases below ---
