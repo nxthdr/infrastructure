@@ -1,0 +1,31 @@
+-- IPinfo Enrichment Database
+-- Tables, dictionaries, and functions are created automatically by mmdb-to-clickhouse.
+-- See: https://github.com/maxmouchet/mmdb-to-clickhouse
+--
+-- Created objects (per MMDB database, e.g. country_asn):
+--   Tables:
+--     ipinfo.country_asn_net_history  -- Network ranges with pointers (partitioned, 30-day TTL)
+--     ipinfo.country_asn_val_history  -- Pointer-to-value mappings (partitioned, 30-day TTL)
+--   Dictionaries:
+--     ipinfo.country_asn_net          -- ip_trie dictionary for network lookups
+--     ipinfo.country_asn_val          -- Flat dictionary for value lookups
+--   Functions:
+--     ipinfo.country_asn(ip, attr)    -- Combined lookup function
+--
+-- Usage examples:
+--   SELECT country_asn(toIPv6('1.0.0.1'), 'as_name')     -- 'Cloudflare, Inc.'
+--   SELECT country_asn(toIPv6('8.8.8.8'), 'country')     -- 'US'
+--   SELECT country_asn(toIPv6('8.8.8.8'), 'country_name') -- 'United States'
+--   SELECT country_asn(toIPv6('8.8.8.8'), 'continent')   -- 'NA'
+--   SELECT country_asn(toIPv6('8.8.8.8'), 'as_domain')   -- 'google.com'
+--
+-- Available attributes for country_asn:
+--   as_domain, as_name, continent, continent_name, country, country_name
+--
+-- Enrichment in queries:
+--   SELECT
+--     src_addr,
+--     country_asn(src_addr, 'country') AS country,
+--     country_asn(src_addr, 'as_name') AS as_name
+--   FROM flows.records
+--   LIMIT 10

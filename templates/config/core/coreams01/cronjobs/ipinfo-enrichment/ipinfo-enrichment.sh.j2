@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+
+IPINFO_TOKEN="{{ ipinfo.api_token }}"
+CLICKHOUSE_DSN="clickhouse://localhost:9000/ipinfo"
+MMDB_IMAGE="ghcr.io/maxmouchet/mmdb-to-clickhouse:latest"
+
+WORKDIR=$(mktemp -d)
+chmod 755 "$WORKDIR"
+trap "rm -rf $WORKDIR" EXIT
+
+# Always pull the latest image
+docker pull $MMDB_IMAGE
+
+# Ensure ipinfo database exists
+docker exec clickhouse clickhouse-client -q "CREATE DATABASE IF NOT EXISTS ipinfo"
+
+# --- Country + ASN ---
+echo "Downloading country_asn.mmdb..."
+curl -fsL --retry 3 --retry-delay 5 \
+  "https://ipinfo.io/data/free/country_asn.mmdb?token=${IPINFO_TOKEN}" \
+  -o "${WORKDIR}/country_asn.mmdb"
+
+if [ ! -s "${WORKDIR}/country_asn.mmdb" ]; then
+  echo "ERROR: Downloaded country_asn.mmdb is empty or does not exist"
+  exit 1
+fi
+
+echo "Importing country_asn into ClickHouse..."
+docker run --rm --network=container:clickhouse \
+  -v "${WORKDIR}:/data" \
+  "${MMDB_IMAGE}" \
+  -dsn "${CLICKHOUSE_DSN}" \
+  -mmdb /data/country_asn.mmdb \
+  -name country_asn
+
+# Create ASN-to-name dictionary for direct ASN lookups
+echo "Creating ASN-to-name dictionary..."
+docker exec clickhouse clickhouse-client --multiquery -q "
+CREATE OR REPLACE DICTIONARY ipinfo.asn_to_name
+(
+    asn UInt32,
+    as_name String
+)
+PRIMARY KEY asn
+SOURCE(CLICKHOUSE(
+    QUERY 'SELECT toUInt32(replaceOne(asn_str, ''AS'', '''')) AS asn, any(as_name) AS as_name FROM (SELECT asn AS asn_str, as_name FROM ipinfo.country_asn_val_history WHERE partition = (SELECT max(partition) FROM ipinfo.country_asn_val_history) AND asn LIKE ''AS%'') GROUP BY asn'
+))
+LIFETIME(MIN 0 MAX 3600)
+LAYOUT(FLAT());
+SYSTEM RELOAD DICTIONARY ipinfo.asn_to_name;
+"
+
+echo "IPinfo enrichment completed successfully"
+
+# --- Add more MMDB databases below ---
+# Example: Privacy database
+# curl -fsL --retry 3 --retry-delay 5 \
+#   "https://ipinfo.io/data/free/privacy.mmdb?token=${IPINFO_TOKEN}" \
+#   -o "${WORKDIR}/privacy.mmdb"
+# docker run --rm --network=container:clickhouse \
+#   -v "${WORKDIR}:/data" "${MMDB_IMAGE}" \
+#   -dsn "${CLICKHOUSE_DSN}" -mmdb /data/privacy.mmdb -name privacy

@@ -1,0 +1,10 @@
+[Unit]
+Description=IPinfo Enrichment Timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=ipinfo-enrichment.service
+
+[Install]
+WantedBy=timers.target
