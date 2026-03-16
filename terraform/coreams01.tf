@@ -673,6 +673,7 @@ resource "docker_container" "saimiris_gateway" {
     "--auth0-jwks-uri", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/.well-known/jwks.json",
     "--auth0-issuer", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/",
     "--database-url", "postgresql://[2a06:de00:50:cafe:10::116]:5432/saimiris?user=${var.postgresql_username}&password=${var.postgresql_password}&sslmode=disable",
+    "--metrics-address", "[2a06:de00:50:cafe:10::114]:9090",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
@@ -715,6 +716,7 @@ resource "docker_container" "peerlab_gateway" {
     "--auth0-management-api", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com",
     "--auth0-m2m-app-id", var.peerlab_m2m_app_id,
     "--auth0-m2m-app-secret", var.peerlab_m2m_app_secret,
+    "--metrics-address", "[2a06:de00:50:cafe:10::118]:9090",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
