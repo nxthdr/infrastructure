@@ -14,7 +14,7 @@ resource "docker_network" "backend" {
 
 # Alloy
 resource "docker_image" "alloy" {
-  name = "grafana/alloy:v1.14.0"
+  name = "grafana/alloy:v1.14.1"
 }
 
 resource "docker_container" "alloy" {
