@@ -398,6 +398,7 @@ Some tasks require manual intervention:
 
 | Task | Command | Requires Sudo |
 |------|---------|---------------|
+| VLT agent status | `make vlt-status` | Yes |
 | Full deployment | `make apply` | No |
 | Render configs | `make render` | No |
 | Sync configs | `make sync-config` | No |

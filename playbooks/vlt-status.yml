@@ -1,0 +1,36 @@
+---
+- hosts: vlt
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Get BGP session status
+      command: birdc show protocols
+      register: bird_protocols
+      ignore_errors: true
+
+    - name: Get BGP route count
+      command: birdc show route count
+      register: bird_routes
+      ignore_errors: true
+
+    - name: Get Docker container status
+      command: docker ps --format "  {{.Names}}\t{{.Status}}"
+      become: no
+      register: docker_status
+      ignore_errors: true
+
+    - name: Display status
+      debug:
+        msg: |
+          ══════════════════════════════════════════════
+          {{ inventory_hostname }} ({{ ansible_host }})
+          ══════════════════════════════════════════════
+
+          BGP sessions:
+          {{ bird_protocols.stdout | default('  (unavailable)') }}
+
+          Route count:
+          {{ bird_routes.stdout | default('  (unavailable)') }}
+
+          Containers:
+          {{ docker_status.stdout | default('  (unavailable)') }}

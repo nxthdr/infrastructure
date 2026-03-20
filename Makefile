@@ -85,6 +85,11 @@ vlt: render-terraform vlt-infrastructure vlt-setup vlt-config
 	@echo ""
 	@terraform -chdir=./terraform output vlt_servers
 
+.PHONY: vlt-status
+vlt-status:
+	@echo "==> VLT agent status overview..."
+	@ansible-playbook -i inventory/ --become playbooks/vlt-status.yml
+
 .PHONY: vlt-destroy
 vlt-destroy:
 	@echo "==> Destroying VLT server resources..."
