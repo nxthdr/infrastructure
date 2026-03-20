@@ -43,8 +43,8 @@ This repository contains all the configuration, automation, and documentation ne
 - **ixpcdg02** - FranceIX
 
 ### Probing Servers
-- **vltatl01** - Vultr, Atlanta
-- **vltcdg01** - Vultr, Paris
+
+Vultr instances for active measurements. The list of active probing servers changes frequently — see [`inventory/inventory.yml`](../../inventory/inventory.yml) for the current set of `vlt` hosts.
 
 ## Contributing
 

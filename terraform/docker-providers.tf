@@ -42,13 +42,19 @@ provider "docker" {
 
 # vlt servers
 provider "docker" {
-  host     = "ssh://nxthdr@atl01.vlt.infra.nxthdr.dev:22"
-  alias    = "vltatl01"
+  host     = "ssh://nxthdr@ewr01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltewr01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
 provider "docker" {
   host     = "ssh://nxthdr@cdg01.vlt.infra.nxthdr.dev:22"
   alias    = "vltcdg01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@sgp01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltsgp01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }

@@ -54,10 +54,8 @@ The infrastructure consists of four server groups defined in `inventory/inventor
 Run monitoring and BGP routing
 
 ### VLT (Probing) Servers
-- `vltatl01` - Vultr, Atlanta
-- `vltcdg01` - Vultr, Paris
 
-Run Saimiris probing infrastructure
+Vultr instances running Saimiris probing infrastructure. The set of active VLT servers changes frequently — `inventory/inventory.yml` is the source of truth.
 
 ### Special Groups
 - `ixp` and `vlt` groups use shared templates (same config for all hosts in group)
@@ -75,10 +73,8 @@ All servers are accessible via SSH as the `nxthdr` user. The FQDNs follow the pa
 | ixpfra01 | `ssh nxthdr@fra01.ixp.infra.nxthdr.dev` |
 | ixpcdg01 | `ssh nxthdr@cdg01.ixp.infra.nxthdr.dev` |
 | ixpcdg02 | `ssh nxthdr@cdg02.ixp.infra.nxthdr.dev` |
-| vltatl01 | `ssh nxthdr@atl01.vlt.infra.nxthdr.dev` |
-| vltcdg01 | `ssh nxthdr@cdg01.vlt.infra.nxthdr.dev` |
 
-The exact `ansible_host` values are defined in `inventory/inventory.yml`.
+VLT servers change frequently. See `inventory/inventory.yml` for current hosts and their `ansible_host` values. The pattern is `{region}{index}.vlt.infra.nxthdr.dev`.
 
 ## Main Workflow: `make apply`
 
@@ -126,9 +122,10 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 
 **Process:**
 - Runs `playbooks/sync-bird.yml` with sudo (requires BECOME password)
-- Copies BIRD configs from `networks/{hostname}/bird/` → `/etc/bird/`
-- Reloads BIRD service on: core, ixpfra01, vlt servers
-- Configs are NOT templated (static files in `networks/` directory)
+- For **IXP servers**: copies static configs from `networks/{hostname}/bird/` → `/etc/bird/`
+- For **VLT servers**: copies rendered configs from `.rendered/{hostname}/bird/` → `/etc/bird/`
+- Reloads BIRD service on: ixp and vlt servers
+- IXP configs are static files in `networks/`; VLT configs are Jinja2 templates rendered from `templates/config/vlt/bird/`
 
 **Files:**
 - `networks/{hostname}/bird/bird.conf` - Main BIRD configuration
@@ -208,8 +205,16 @@ The provider block, module call, and config rendering are all generated automati
 
 ### Add New VLT Server
 1. Add host to `inventory/inventory.yml` under the `vlt` group (include `uniprobe0` and `ansible_host`)
-2. Add network configs in `networks/{hostname}/`
-3. Run `terraform -chdir=./terraform init` then `make apply`
+   - Hostname format: `vlt{region}{index}` where `region` is a 3-char Vultr region code (e.g., `sgp`, `atl`, `cdg`)
+   - `uniprobe0`: assign the next available `/48` from `2a0e:97c0:8a0::/44` space
+   - `ansible_host`: `{region}{index}.vlt.infra.nxthdr.dev`
+2. Run `make render-terraform` to regenerate `vlt.tf`, `docker-providers.tf`, and `terraform.tfvars`
+3. Run `terraform -chdir=./terraform init` (to pick up new provider aliases)
+4. Run `make vlt` to provision the server end-to-end (Vultr instance → OS setup → BIRD → Docker containers)
+   - Or step by step: `make vlt-infrastructure` → `make vlt-setup` → `make vlt-config`
+   - Note: `vlt-setup` requires the initial root SSH password from the Vultr console for servers where SSH key injection did not succeed
+
+**Important:** VLT server configs (BIRD, Saimiris, Alloy) are all **template-based** from `templates/config/vlt/` — there is no static `networks/{hostname}/` directory needed for VLT servers (unlike IXP servers). The BIRD config is rendered with the server's actual IPv6 address from Terraform output.
 
 The provider block, module call, VLT server entry, and config rendering are all generated automatically from inventory.
 

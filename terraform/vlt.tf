@@ -4,25 +4,30 @@
 
 locals {
   vlt_servers = {
-    "vltatl01" = {
-      region       = "atl"
+    "vltewr01" = {
+      region       = "ewr"
       uniprobe0    = "2a0e:97c0:8a3::/48"
-      ansible_host = "atl01.vlt.infra.nxthdr.dev"
+      ansible_host = "ewr01.vlt.infra.nxthdr.dev"
     }
     "vltcdg01" = {
       region       = "cdg"
       uniprobe0    = "2a0e:97c0:8a4::/48"
       ansible_host = "cdg01.vlt.infra.nxthdr.dev"
     }
+    "vltsgp01" = {
+      region       = "sgp"
+      uniprobe0    = "2a0e:97c0:8a5::/48"
+      ansible_host = "sgp01.vlt.infra.nxthdr.dev"
+    }
   }
 }
 
-module "vlt_vltatl01" {
+module "vlt_vltewr01" {
   source = "./modules/vlt-containers"
   providers = {
-    docker = docker.vltatl01
+    docker = docker.vltewr01
   }
-  hostname = "vltatl01"
+  hostname = "vltewr01"
 }
 
 module "vlt_vltcdg01" {
@@ -31,4 +36,12 @@ module "vlt_vltcdg01" {
     docker = docker.vltcdg01
   }
   hostname = "vltcdg01"
+}
+
+module "vlt_vltsgp01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltsgp01
+  }
+  hostname = "vltsgp01"
 }

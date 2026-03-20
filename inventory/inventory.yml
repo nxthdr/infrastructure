@@ -28,11 +28,14 @@ ixp:
 
 vlt:
   hosts:
-    vltatl01:
-      ansible_host: atl01.vlt.infra.nxthdr.dev
+    vltewr01:
+      ansible_host: ewr01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a3::/48
     vltcdg01:
       ansible_host: cdg01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a4::/48
+    vltsgp01:
+      ansible_host: sgp01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a5::/48
   vars:
     ansible_user: nxthdr

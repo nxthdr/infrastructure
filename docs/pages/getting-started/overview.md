@@ -39,7 +39,7 @@ Servers connected to Internet Exchange Points (IXPs) for BGP peering:
 Vultr instances for active measurements:
 
 - Run Saimiris probing agents
-- Distributed globally (Atlanta, Paris)
+- Distributed globally (see `inventory/inventory.yml` for current locations)
 - Advertise unicast/anycast prefixes
 - Send measurement data to core services
 
