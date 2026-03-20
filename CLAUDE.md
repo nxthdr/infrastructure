@@ -248,6 +248,34 @@ The infrastructure uses ClickHouse for storing time-series data. Database schema
 
 **Note**: Only IPv6 flow samples are processed (counter samples filtered at producer)
 
+### ClickHouse Geoip / ASN Lookups
+
+IPInfo dictionaries are available for mapping IP addresses to country and ASN. The lookup requires two steps because IPInfo uses a pointer table:
+
+```sql
+-- Step 1: look up the pointer for an address
+-- Step 2: use the pointer to look up country/ASN string fields
+
+SELECT
+    reply_src_addr,
+    dictGetString('ipinfo.country_asn_val', 'asn',
+        dictGetUInt64('ipinfo.country_asn_net', 'pointer',
+            tuple(toIPv6(reply_src_addr)))) AS asn,
+    dictGetString('ipinfo.country_asn_val', 'as_name',
+        dictGetUInt64('ipinfo.country_asn_net', 'pointer',
+            tuple(toIPv6(reply_src_addr)))) AS as_name,
+    dictGetString('ipinfo.country_asn_val', 'country',
+        dictGetUInt64('ipinfo.country_asn_net', 'pointer',
+            tuple(toIPv6(reply_src_addr)))) AS country,
+    count() AS replies
+FROM saimiris.replies
+WHERE probe_src_addr IN ('2a0e:97c0:8a4:42:0:0:1:0')
+GROUP BY reply_src_addr, asn, as_name, country
+ORDER BY replies DESC
+```
+
+Available string fields in `ipinfo.country_asn_val`: `asn`, `as_name`, `country`, `country_name`.
+
 ### Saimiris Database (`saimiris`)
 **Purpose**: Store active measurement results from probing agents
 
