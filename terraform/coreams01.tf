@@ -17,6 +17,7 @@ resource "docker_network" "dmz" {
   }
   ipam_config {
     subnet = local.network_dmz_ipv6_prefix
+    gateway = cidrhost(local.network_dmz_ipv6_prefix, 1)
   }
 }
 
@@ -31,6 +32,7 @@ resource "docker_network" "backend" {
   }
   ipam_config {
     subnet = local.network_backend_ipv6_prefix
+    gateway = cidrhost(local.network_backend_ipv6_prefix, 1)
   }
 }
 

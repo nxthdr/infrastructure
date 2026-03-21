@@ -7,7 +7,7 @@
 }
 
 as215011.net {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -15,7 +15,7 @@ as215011.net {
 }
 
 nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -23,7 +23,7 @@ nxthdr.dev {
 }
 
 blog.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -31,7 +31,7 @@ blog.nxthdr.dev {
 }
 
 docs.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -39,7 +39,7 @@ docs.nxthdr.dev {
 }
 
 geofeed.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -47,7 +47,7 @@ geofeed.nxthdr.dev {
 }
 
 peers.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -55,7 +55,7 @@ peers.nxthdr.dev {
 }
 
 clickhouse.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -63,7 +63,7 @@ clickhouse.nxthdr.dev {
 }
 
 prometheus.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -71,7 +71,7 @@ prometheus.nxthdr.dev {
 }
 
 loki.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -79,7 +79,7 @@ loki.nxthdr.dev {
 }
 
 grafana.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -87,7 +87,7 @@ grafana.nxthdr.dev {
 }
 
 saimiris.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -95,7 +95,7 @@ saimiris.nxthdr.dev {
 }
 
 peerlab.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -107,7 +107,7 @@ headscale.nxthdr.dev {
 }
 
 headplane.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
@@ -115,7 +115,7 @@ headplane.nxthdr.dev {
 }
 
 rpki.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:100::a]:443 {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
         transport http {
            tls_server_name {host}
         }
