@@ -3,10 +3,9 @@
 - hosts: core, ixp, vlt
   become: yes
   tasks:
-  - name: Update and upgrade packages
+  - name: Update package cache
     ansible.builtin.apt:
       update_cache: true
-      upgrade: dist
       cache_valid_time: 3600
 
   - name: Install dependecy packages

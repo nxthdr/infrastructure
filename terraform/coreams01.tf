@@ -11,6 +11,14 @@ resource "docker_network" "dmz" {
   provider = docker.coreams01
   driver = "bridge"
   ipv6 = true
+  # Disable IP isolation so Docker 27+ does not insert ip6tables raw PREROUTING
+  # DROP rules that block externally-routed IPv6 traffic to container addresses.
+  # The dmz network uses globally-routed IPv6 addresses that must be reachable
+  # from outside the host. The ip6tables rules in install-core-firewall.yml
+  # provide per-port access control instead.
+  options = {
+    "com.docker.network.bridge.ip_isolation" = "false"
+  }
   ipam_config {
     subnet = local.network_dmz_ipv4_prefix
     gateway = cidrhost(local.network_dmz_ipv4_prefix, 1)
