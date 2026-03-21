@@ -20,7 +20,7 @@ CREATE TABLE saimiris.from_kafka
     probeProtocol UInt8,
     probeSrcPort UInt16,
     probeDstPort UInt16,
-    rtt UInt16
+    rtt UInt16  -- In tenths of milliseconds (0.1ms). Divide by 10 to get ms. Max: 6553.5ms.
 )
 ENGINE = Kafka()
 SETTINGS
@@ -55,7 +55,7 @@ CREATE TABLE saimiris.replies
     probe_protocol UInt8,
     probe_src_port UInt16,
     probe_dst_port UInt16,
-    rtt UInt16
+    rtt UInt16  -- In tenths of milliseconds (0.1ms). Divide by 10 to get ms. Max: 6553.5ms.
 )
 ENGINE = MergeTree()
 ORDER BY (

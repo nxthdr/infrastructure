@@ -284,7 +284,7 @@ Available string fields in `ipinfo.country_asn_val`: `asn`, `as_name`, `country`
 - `replies` - MergeTree table storing probe replies
 - `from_kafka_mv` - Materialized view transforming Kafka data
 
-**Key Fields**: agent ID, probe/reply addresses, TTL, ICMP type/code, MPLS labels, RTT
+**Key Fields**: agent ID, probe/reply addresses, TTL, ICMP type/code, MPLS labels, RTT (`UInt16`, in **tenths of milliseconds** — divide by 10 to get ms, e.g. `rtt / 10.0 AS rtt_ms`)
 
 **TTL**: 7 days
 
