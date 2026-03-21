@@ -37,5 +37,38 @@ vlt:
     vltsgp01:
       ansible_host: sgp01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a5::/48
+    vltsyd01:
+      ansible_host: syd01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a2::/48
+    vltsao01:
+      ansible_host: sao01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a6::/48
+    vltjnb01:
+      ansible_host: jnb01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a7::/48
+    vltlax01:
+      ansible_host: lax01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a8::/48
+    vltnrt01:
+      ansible_host: nrt01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8a9::/48
+    vltbom01:
+      ansible_host: bom01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8aa::/48
+    vltmex01:
+      ansible_host: mex01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8ab::/48
+    vltsto01:
+      ansible_host: sto01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8ac::/48
+    vltscl01:
+      ansible_host: scl01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8ad::/48
+    vltsea01:
+      ansible_host: sea01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8ae::/48
+    vltmel01:
+      ansible_host: mel01.vlt.infra.nxthdr.dev
+      uniprobe0: 2a0e:97c0:8af::/48
   vars:
     ansible_user: nxthdr

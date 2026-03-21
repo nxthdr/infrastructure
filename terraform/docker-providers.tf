@@ -58,3 +58,69 @@ provider "docker" {
   alias    = "vltsgp01"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
+
+provider "docker" {
+  host     = "ssh://nxthdr@syd01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltsyd01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@sao01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltsao01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@jnb01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltjnb01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@lax01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltlax01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@nrt01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltnrt01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@bom01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltbom01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@mex01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltmex01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@sto01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltsto01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@scl01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltscl01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@sea01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltsea01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
+provider "docker" {
+  host     = "ssh://nxthdr@mel01.vlt.infra.nxthdr.dev:22"
+  alias    = "vltmel01"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
