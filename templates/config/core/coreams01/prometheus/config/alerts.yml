@@ -118,6 +118,32 @@ groups:
     annotations:
       title: 'risotto reports no BGP peers'
 
+  - alert: Pipeline_BMP_No_Data
+    expr: |
+      (up{job="risotto"} == 1)
+      and
+      increase(risotto_kafka_messages_total{status="success"}[15m]) == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'BMP pipeline has produced no data for 15 minutes'
+      description: 'Risotto is up but has sent 0 messages to Kafka in the last 15 minutes. The bmp.updates ClickHouse table is not receiving data.'
+
+- name: pesto
+  rules:
+  - alert: Pipeline_SFlow_No_Data
+    expr: |
+      (up{job="pesto"} == 1)
+      and
+      increase(pesto_kafka_messages_total{status="success"}[15m]) == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'sFlow pipeline has produced no data for 15 minutes'
+      description: 'Pesto is up but has sent 0 messages to Kafka in the last 15 minutes. The flows.records ClickHouse table is not receiving data.'
+
 - name: saimiris
   rules:
   - alert: Probing_Service_Saimiris_Down
@@ -131,6 +157,21 @@ groups:
     annotations:
       title: 'probing service {{ $labels.job }} is down in {{ $labels.instance }}'
       description: 'The Saimiris probing service on {{ $labels.instance }} has stopped reporting metrics for more than 3 minutes.'
+
+  - alert: Pipeline_Saimiris_Kafka_Broken
+    # Fires when an agent is receiving probe replies but not forwarding to Kafka.
+    # This catches the case where the pipeline is broken (e.g. Kafka unreachable)
+    # without false-positiving when no experiments are actively running.
+    expr: |
+      increase(saimiris_receiver_received_total[2h]) > 100
+      and
+      increase(saimiris_kafka_messages_total{status="success"}[2h]) == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      title: 'Saimiris agent {{ $labels.instance }} is receiving replies but not sending to Kafka'
+      description: 'Saimiris on {{ $labels.instance }} received probe replies but sent 0 messages to Kafka in the last 2 hours. The saimiris.replies ClickHouse table is not receiving data.'
 
 - name: peerlab
   rules:
