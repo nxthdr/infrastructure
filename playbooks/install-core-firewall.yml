@@ -1,9 +1,111 @@
 # ansible-playbook -i inventory/ --ask-become-pass playbooks/install-core-firewall.yml
 #
 # Manages host-level firewall rules for the core server.
-# Note: Docker 27+ IP isolation for the dmz network is handled via
-# com.docker.network.bridge.ip_isolation=false in terraform/coreams01.tf.
+#
+# Docker 27+ inserts ip6tables raw PREROUTING DROP rules that block
+# externally-routed IPv6 traffic to container addresses on bridge networks.
+# As of Docker 29.3.0, com.docker.network.bridge.ip_isolation=false does not
+# suppress these rules for IPv6 (only IPv4 appears to be supported).
+#
+# The workaround is to insert ACCEPT rules for specific ports BEFORE Docker's
+# DROP rules. A systemd service re-applies them after Docker daemon restarts,
+# and a timer re-applies them every minute to fix ordering after individual
+# container restarts (which cause Docker to re-insert DROP at position 1).
 ---
 - hosts: core
   become: yes
-  tasks: []
+  tasks:
+  - name: Install Docker dmz ip6tables rules script
+    ansible.builtin.copy:
+      dest: /usr/local/bin/docker-dmz-ip6tables.sh
+      mode: '0755'
+      content: |
+        #!/bin/bash
+        # Re-apply ip6tables raw PREROUTING ACCEPT rules for dmz containers.
+        # Docker 27+ drops external IPv6 traffic to container IPs; these rules
+        # must appear BEFORE Docker's DROP rules in the PREROUTING chain.
+        #
+        # Uses delete-then-insert to guarantee position 1, handling the case
+        # where Docker re-inserts a DROP rule at position 1 after a container
+        # restart.
+
+        set -euo pipefail
+
+        apply_rule() {
+            local dest="$1"
+            local proto="$2"
+            local dport="$3"
+
+            # Delete existing rule (if any) to reset its position, then insert
+            # at position 1 to ensure it appears before Docker's DROP rules.
+            ip6tables -t raw -D PREROUTING -d "$dest" -p "$proto" --dport "$dport" -j ACCEPT 2>/dev/null || true
+            ip6tables -t raw -I PREROUTING 1 -d "$dest" -p "$proto" --dport "$dport" -j ACCEPT
+        }
+
+        # proxy (cafe:100::a): HTTP and HTTPS
+        apply_rule 2a06:de00:50:cafe:100::a tcp 80
+        apply_rule 2a06:de00:50:cafe:100::a tcp 443
+
+        # redpanda/Kafka (cafe:100::b): Kafka broker
+        apply_rule 2a06:de00:50:cafe:100::b tcp 9092
+
+        # risotto BMP collector (cafe:100::c): BMP protocol
+        apply_rule 2a06:de00:50:cafe:100::c tcp 4000
+
+        # pesto sFlow collector (cafe:100::d): sFlow
+        apply_rule 2a06:de00:50:cafe:100::d udp 6343
+
+        # routinator RPKI validator (cafe:100::e): RTR and HTTP
+        apply_rule 2a06:de00:50:cafe:100::e tcp 3323
+        apply_rule 2a06:de00:50:cafe:100::e tcp 8323
+
+  - name: Install Docker dmz ip6tables systemd service
+    ansible.builtin.copy:
+      dest: /etc/systemd/system/docker-dmz-ip6tables.service
+      mode: '0644'
+      content: |
+        [Unit]
+        Description=Apply ip6tables raw PREROUTING rules for Docker dmz containers
+        Documentation=https://github.com/nxthdr/infrastructure
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/local/bin/docker-dmz-ip6tables.sh
+        RemainAfterExit=yes
+
+        [Install]
+        WantedBy=docker.service
+
+  - name: Install Docker dmz ip6tables systemd timer
+    ansible.builtin.copy:
+      dest: /etc/systemd/system/docker-dmz-ip6tables.timer
+      mode: '0644'
+      content: |
+        [Unit]
+        Description=Periodically re-apply ip6tables rules for Docker dmz containers
+        Documentation=https://github.com/nxthdr/infrastructure
+
+        [Timer]
+        OnBootSec=60
+        OnUnitActiveSec=60
+
+        [Install]
+        WantedBy=timers.target
+
+  - name: Reload systemd daemon
+    ansible.builtin.systemd:
+      daemon_reload: yes
+
+  - name: Enable and start docker-dmz-ip6tables service
+    ansible.builtin.systemd:
+      name: docker-dmz-ip6tables.service
+      enabled: yes
+      state: started
+
+  - name: Enable and start docker-dmz-ip6tables timer
+    ansible.builtin.systemd:
+      name: docker-dmz-ip6tables.timer
+      enabled: yes
+      state: started

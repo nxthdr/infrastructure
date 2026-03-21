@@ -11,11 +11,12 @@ resource "docker_network" "dmz" {
   provider = docker.coreams01
   driver = "bridge"
   ipv6 = true
-  # Disable IP isolation so Docker 27+ does not insert ip6tables raw PREROUTING
-  # DROP rules that block externally-routed IPv6 traffic to container addresses.
-  # The dmz network uses globally-routed IPv6 addresses that must be reachable
-  # from outside the host. The ip6tables rules in install-core-firewall.yml
-  # provide per-port access control instead.
+  # Attempt to disable Docker 27+ IP isolation for this network.
+  # Docker 27+ inserts ip6tables raw PREROUTING DROP rules per container that
+  # block externally-routed IPv6 traffic. This option should prevent that, but
+  # as of Docker 29.3.0 it does not appear to suppress the ip6tables DROP rules
+  # (only iptables/IPv4 may be supported). The ip6tables workaround in
+  # install-core-firewall.yml handles the actual enforcement.
   options = {
     "com.docker.network.bridge.ip_isolation" = "false"
   }
