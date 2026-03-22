@@ -90,30 +90,48 @@ vlt-status:
 	@echo "==> VLT agent status overview..."
 	@ansible-playbook -i inventory/ --become playbooks/vlt-status.yml
 
-.PHONY: vlt-destroy
-vlt-destroy:
-	@echo "==> Destroying VLT server resources..."
-	@echo "WARNING: This will destroy Docker containers and then the server."
-	@echo "Make sure the server is still in inventory.yml before running this!"
+.PHONY: vlt-prune
+vlt-prune:
+	@echo "==> Pruning VLT servers removed from inventory..."
 	@echo ""
-	@read -p "Enter hostname to destroy (e.g., vltfra01): " hostname; \
-	if [ -z "$$hostname" ]; then \
-		echo "Error: No hostname provided"; \
-		exit 1; \
+	@inventory_hosts=$$(grep -E '^[[:space:]]+vlt[a-z]+[0-9]+:$$' inventory/inventory.yml | sed 's/[: ]//g'); \
+	state_hosts=$$(terraform -chdir=./terraform state list 2>/dev/null \
+		| grep 'module\.vlt_server\[' \
+		| sed 's/.*\["\(.*\)"\].*/\1/' \
+		| sort -u); \
+	to_remove=""; \
+	for host in $$state_hosts; do \
+		if ! echo "$$inventory_hosts" | grep -qx "$$host"; then \
+			to_remove="$$to_remove $$host"; \
+		fi; \
+	done; \
+	if [ -z "$$to_remove" ]; then \
+		echo "Nothing to prune — all state entries match inventory."; \
+		exit 0; \
 	fi; \
-	echo "Rendering Terraform to ensure provider exists..."; \
+	echo "Servers to remove:$$to_remove"; \
+	echo ""; \
+	read -p "Proceed? (y/N) " confirm; \
+	if [ "$$confirm" != "y" ] && [ "$$confirm" != "Y" ]; then \
+		echo "Aborted."; \
+		exit 0; \
+	fi; \
+	echo ""; \
+	for host in $$to_remove; do \
+		echo "Removing Docker state for $$host..."; \
+		terraform -chdir=./terraform state rm "module.vlt_$${host}" 2>/dev/null || true; \
+	done; \
+	echo ""; \
+	echo "Rendering Terraform from inventory..."; \
 	$(MAKE) render-terraform; \
 	echo ""; \
-	echo "Destroying Docker resources for $$hostname..."; \
-	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_$${hostname} || true; \
+	echo "Re-initializing Terraform..."; \
+	terraform -chdir=./terraform init; \
 	echo ""; \
-	echo "Destroying Vultr server and DNS for $$hostname..."; \
-	terraform -chdir=./terraform destroy -auto-approve -target=module.vlt_server[\"$$hostname\"]; \
+	echo "Destroying Vultr servers for:$$to_remove"; \
+	terraform -chdir=./terraform apply -auto-approve; \
 	echo ""; \
-	echo "Removing module call for $$hostname from terraform/vlt.tf..."; \
-	echo "NOTE: Manually remove the module block for $$hostname from terraform/vlt.tf and terraform/moved.tf"; \
-	echo ""; \
-	echo "==> Server destroyed. You can now remove $$hostname from inventory.yml"
+	echo "==> Pruning complete. Removed:$$to_remove"
 
 # IXP Server Automation
 .PHONY: ixp-setup

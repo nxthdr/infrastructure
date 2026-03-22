@@ -204,19 +204,37 @@ Renovate can update image versions directly in the module files.
 The provider block, module call, and config rendering are all generated automatically from inventory.
 
 ### Add New VLT Server
+
+**Recommended: single command**
+```
+make render-terraform && terraform -chdir=./terraform init && make vlt
+```
+`make vlt` runs the full sequence: `render-terraform` → `vlt-infrastructure` → `vlt-setup` → `vlt-config`.
+
+**Step-by-step (if resuming a failed run):**
 1. Add host to `inventory/inventory.yml` under the `vlt` group (include `uniprobe0` and `ansible_host`)
    - Hostname format: `vlt{region}{index}` where `region` is a 3-char Vultr region code (e.g., `sgp`, `atl`, `cdg`)
    - `uniprobe0`: assign the next available `/48` from `2a0e:97c0:8a0::/44` space
    - `ansible_host`: `{region}{index}.vlt.infra.nxthdr.dev`
 2. Run `make render-terraform` to regenerate `vlt.tf`, `docker-providers.tf`, and `terraform.tfvars`
 3. Run `terraform -chdir=./terraform init` (to pick up new provider aliases)
-4. Run `make vlt` to provision the server end-to-end (Vultr instance → OS setup → BIRD → Docker containers)
-   - Or step by step: `make vlt-infrastructure` → `make vlt-setup` → `make vlt-config`
-   - Note: `vlt-setup` requires the initial root SSH password from the Vultr console for servers where SSH key injection did not succeed
+4. Run `make vlt-infrastructure` — provisions the Vultr server and DNS. **Must complete before the next step** so Terraform state has the server's IPs (required to render the BIRD config).
+5. Run `make vlt-setup` — installs OS packages, Docker, BIRD binary, network config. Note: `vlt-setup` requires the initial root SSH password from the Vultr console for servers where SSH key injection did not succeed. **`vlt-setup` does NOT start BIRD** — the binary is installed but the service file and config are not deployed yet.
+6. Run `make vlt-config` — deploys rendered BIRD config + systemd service, **starts BIRD**, then runs `make apply` to deploy Saimiris/Alloy containers.
 
-**Important:** VLT server configs (BIRD, Saimiris, Alloy) are all **template-based** from `templates/config/vlt/` — there is no static `networks/{hostname}/` directory needed for VLT servers (unlike IXP servers). The BIRD config is rendered with the server's actual IPv6 address from Terraform output.
+**Important:** VLT server configs (BIRD, Saimiris, Alloy) are all **template-based** from `templates/config/vlt/` — there is no static `networks/{hostname}/` directory needed for VLT servers (unlike IXP servers). The BIRD config is rendered with the server's actual IPv6 address from Terraform output. `render_config.py` will exit with an error if a VLT host in inventory is missing from Terraform state — this means `vlt-infrastructure` must run before `vlt-setup`/`vlt-config`.
 
 The provider block, module call, VLT server entry, and config rendering are all generated automatically from inventory.
+
+### Remove VLT Server(s)
+
+1. Remove the host entry (or entries) from `inventory/inventory.yml`.
+2. Run `make vlt-prune`. It will automatically:
+   - Compare inventory with Terraform state to find removed servers
+   - Show the list and ask for confirmation
+   - Remove Docker container resources from Terraform state (containers are destroyed with the VM)
+   - Re-render Terraform files and re-initialize providers
+   - Destroy the Vultr VMs and DNS records via `terraform apply`
 
 ## ClickHouse Databases
 
@@ -405,5 +423,7 @@ Some tasks require manual intervention:
 | Update BIRD | `make sync-bird` | Yes |
 | Update WireGuard | `make sync-wireguard` | Yes |
 | Edit secrets | `make edit-secrets` | No |
+| Add VLT server (full) | `make render-terraform && terraform -chdir=./terraform init && make vlt` | Yes (vlt-setup) |
+| Remove VLT server(s) | `make vlt-prune` | No |
 | Destroy infrastructure | `make destroy` | No |
 | Restart container | `docker restart <name>` | On remote host |

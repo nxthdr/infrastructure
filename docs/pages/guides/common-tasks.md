@@ -67,6 +67,33 @@ cat .rendered/{hostname}/{service}/config/{file}
 - `{{ secrets.key }}` - From secrets.yml
 - Group/host vars from inventory.yml
 
+## VLT Server Management
+
+### Add a VLT Server
+
+1. Add host to `inventory/inventory.yml` under the `vlt` group:
+   ```yaml
+   vltsgp01:
+     ansible_host: sgp01.vlt.infra.nxthdr.dev
+     uniprobe0: 2a0e:97c0:8a5::/48
+   ```
+   - Hostname: `vlt{region}{index}` (3-char Vultr region code)
+   - `uniprobe0`: next available `/48` from `2a0e:97c0:8a0::/44`
+2. Run:
+   ```bash
+   make render-terraform && terraform -chdir=./terraform init && make vlt
+   ```
+
+### Remove VLT Server(s)
+
+1. Remove the host entry (or entries) from `inventory/inventory.yml`
+2. Run:
+   ```bash
+   make vlt-prune
+   ```
+
+This compares inventory with Terraform state, shows which servers will be destroyed, and asks for confirmation before proceeding. It handles Docker state cleanup, Terraform re-rendering, and Vultr VM destruction automatically.
+
 ## Deployment
 
 ### Full Deployment

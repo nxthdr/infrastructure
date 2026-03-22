@@ -51,6 +51,7 @@ def render_template(template_path, output_path, context, jinja_env, base_templat
             f"Error rendering {template_path.name} ({template_rel_path}): Undefined variable - {e}",
             file=sys.stderr,
         )
+        sys.exit(1)
     except Exception as e:
         print(
             f"Error rendering {template_path.name} ({template_rel_path}): {e}",
@@ -196,6 +197,19 @@ def main():
 
     # Load Terraform outputs for VLT servers
     terraform_outputs = load_terraform_outputs()
+
+    # Pre-flight check: ensure all VLT hosts in inventory have Terraform outputs.
+    # Without v6_main_ip/main_ip the BIRD config template fails, and silently skipping
+    # that would leave BIRD unconfigured on the new server.
+    vlt_hosts = inventory.get("vlt", {}).get("hosts", {})
+    missing = [h for h in vlt_hosts if h not in terraform_outputs]
+    if missing:
+        print(
+            f"Error: The following VLT hosts are in inventory but missing from Terraform "
+            f"outputs (run 'make vlt-infrastructure' first): {', '.join(sorted(missing))}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     # Prepare output directory for config files
     if OUTPUT_DIR.exists():
