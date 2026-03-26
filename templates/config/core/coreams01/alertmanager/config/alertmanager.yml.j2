@@ -5,9 +5,9 @@ route:
   group_interval: 5m
   repeat_interval: 3h
 
-  receiver: discord
+  receiver: matrix
 
 receivers:
-- name: discord
-  discord_configs:
-  - webhook_url: {{ alertmanager_discord_webhook_url }}
+- name: matrix
+  webhook_configs:
+  - url: {{ alertmanager.hookshot_webhook_url }}

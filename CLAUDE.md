@@ -156,7 +156,7 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 **Vault File:** `secrets/secrets.yml` (encrypted with Ansible Vault)
 
 **Commands:**
-- `make edit-secrets` - Edit encrypted secrets file
+- `make edit-secrets` - Edit encrypted secrets file (interactive, for humans)
 - Requires `.password` file in repo root (gitignored)
 
 **Setup:**
@@ -164,12 +164,37 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 echo "<VAULT_PASSWORD>" > .password
 ```
 
+**Editing secrets programmatically (for Claude / CI):**
+
+Since `make edit-secrets` opens an interactive editor, use this 3-step process instead:
+
+1. **Decrypt** to a temporary file:
+   ```bash
+   ansible-vault decrypt --vault-password-file .password secrets/secrets.yml --output /tmp/secrets_plain.yml
+   ```
+
+2. **Edit** the plaintext file at `/tmp/secrets_plain.yml` using the Edit tool.
+
+3. **Re-encrypt** and clean up:
+   ```bash
+   ansible-vault encrypt --vault-password-file .password /tmp/secrets_plain.yml --output secrets/secrets.yml
+   rm -f /tmp/secrets_plain.yml
+   ```
+
+Always delete the plaintext file immediately after re-encrypting.
+
 ## Common Tasks
 
 ### Update Container Configuration
 1. Edit template in `templates/config/{group}/{hostname}/{service}/`
 2. Run `make apply`
 3. If Terraform didn't change, manually restart: `docker restart <container>`
+
+**Config-only changes (no Terraform):** If you only changed config templates (not `coreams01.tf`), you can skip the full `make apply` and instead:
+1. `make sync-config` — renders templates and rsyncs to servers
+2. `ssh nxthdr@ams01.core.infra.nxthdr.dev "docker restart <container>"` — restart the affected container
+
+This is faster than a full `make apply` when no Terraform resources changed.
 
 ### Update Container Image Version
 1. For core: edit `terraform/coreams01.tf` directly
@@ -382,6 +407,72 @@ Available in Jinja2 templates:
 Some tasks require manual intervention:
 - **Grafana admin password:** `docker exec -ti grafana grafana cli admin reset-admin-password <PASSWORD>`
 - **Docker firewall rules:** `ip6tables -I DOCKER-USER -d 2a06:de00:50:cafe:100::/80 -j ACCEPT`
+
+### Alerting Pipeline
+
+Alerts flow through: **Prometheus → Alertmanager → Hookshot webhook → Matrix room**
+
+- **Prometheus** scrapes all services and evaluates alert rules from `templates/config/core/coreams01/prometheus/config/alerts.yml`
+- **Alertmanager** receives firing/resolved alerts and forwards them to the Hookshot generic webhook
+- **Hookshot** bridges the webhook payload into the Matrix alert room (`!YVTFkTAELHJcMYskMC:nxthdr.dev`)
+- **Hookshot webhook URL** is stored in `secrets.yml` under `alertmanager.hookshot_webhook_url`
+
+#### Hookshot Webhook Transformation
+
+Hookshot uses a JavaScript transformation function to format alerts with icons and markdown instead of showing raw JSON. This transformation is stored in the **Matrix room state event** `uk.half-shot.matrix-hookshot.generic.hook` (state_key: `alertmanager`) under the `transformationFunction` field.
+
+**Important:**
+- The transformation is **not** stored in any config file — it lives only in Matrix room state (persisted in Synapse's database)
+- It survives Hookshot restarts and container rebuilds
+- It does **not** survive if the webhook is deleted and recreated (e.g., via `!hookshot webhook alertmanager`)
+- There is **no bot command** to set transformations. `!hookshot webhook set-transformation` does not exist — it will be misinterpreted as creating a new webhook named "set-transformation"
+
+**To modify the transformation**, edit the room state event via the Matrix client-server API:
+
+1. Create a temporary Synapse admin user:
+   ```bash
+   ssh nxthdr@ams01.core.infra.nxthdr.dev
+   # Get nonce and register
+   NONCE=$(curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/register" | python3 -c "import sys,json; print(json.load(sys.stdin)['nonce'])")
+   SECRET="<registration_shared_secret from secrets.yml>"
+   MAC=$(printf '%s\0%s\0%s\0admin' "$NONCE" "admin_tmp" "TmpPass123!" | openssl dgst -sha1 -hmac "$SECRET" | awk '{print $2}')
+   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/register" \
+     -X POST -H "Content-Type: application/json" \
+     -d "{\"nonce\":\"$NONCE\",\"username\":\"admin_tmp\",\"password\":\"TmpPass123!\",\"admin\":true,\"mac\":\"$MAC\"}"
+   # Save the access_token from the response
+   ```
+
+2. Join the room and get admin power level:
+   ```bash
+   TOKEN="<access_token>"
+   ROOM_ID="%21YVTFkTAELHJcMYskMC%3Anxthdr.dev"
+   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/join/$ROOM_ID" \
+     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+     -d '{"user_id":"@admin_tmp:nxthdr.dev"}'
+   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/rooms/$ROOM_ID/make_room_admin" \
+     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+     -d '{"user_id":"@admin_tmp:nxthdr.dev"}'
+   ```
+
+3. PUT the updated state event (the JS function receives `data` as already-parsed JSON, set `result` as the output):
+   ```bash
+   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_matrix/client/v3/rooms/$ROOM_ID/state/uk.half-shot.matrix-hookshot.generic.hook/alertmanager" \
+     -X PUT -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+     -d '{"name":"alertmanager","transformationFunction":"<your JS code as a single-line string>"}'
+   ```
+
+4. Restart Hookshot and deactivate the temp user:
+   ```bash
+   docker restart hookshot
+   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/deactivate/@admin_tmp:nxthdr.dev" \
+     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+     -d '{"erase": true}'
+   ```
+
+**Current transformation** formats alerts as:
+- 🔴 **FIRING** | AlertName (job) on instance — for critical firing alerts
+- 🟡 **FIRING** | AlertName (job) on instance — for warning firing alerts
+- ✅ **RESOLVED** | AlertName (job) on instance — for resolved alerts
 
 ## Troubleshooting
 

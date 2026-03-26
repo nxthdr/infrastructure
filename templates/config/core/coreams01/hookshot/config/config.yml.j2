@@ -1,0 +1,22 @@
+bridge:
+  domain: "nxthdr.dev"
+  url: "http://[2a06:de00:50:cafe:10::1008]:8008"
+  mediaUrl: "https://matrix.nxthdr.dev"
+  port: 9993
+
+listeners:
+  - port: 9000
+    bindAddress: "::"
+    resources:
+      - webhooks
+
+logging:
+  level: info
+
+passFile: /data/passkey.pem
+
+generic:
+  enabled: true
+  urlPrefix: "https://hookshot.nxthdr.dev/webhook"
+  allowJsTransformationFunctions: true
+  waitForComplete: false

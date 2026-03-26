@@ -1018,3 +1018,109 @@ resource "docker_container" "routinator" {
   }
 }
 
+# Synapse (Matrix homeserver)
+resource "docker_image" "synapse" {
+  name = "matrixdotorg/synapse:v1.146.0"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "synapse" {
+  image = docker_image.synapse.image_id
+  name  = "synapse"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::1008"
+  }
+  volumes {
+    container_path = "/data/homeserver.yaml"
+    host_path = "/home/nxthdr/synapse/config/homeserver.yaml"
+    read_only = true
+  }
+  volumes {
+    container_path = "/data/log.config"
+    host_path = "/home/nxthdr/synapse/config/log.config"
+    read_only = true
+  }
+  volumes {
+    container_path = "/data/media_store"
+    host_path = "/home/nxthdr/synapse/data/media_store"
+  }
+  volumes {
+    container_path = "/data/nxthdr.dev.signing.key"
+    host_path = "/home/nxthdr/synapse/data/nxthdr.dev.signing.key"
+  }
+  volumes {
+    container_path = "/data/hookshot-registration.yml"
+    host_path = "/home/nxthdr/hookshot/config/registration.yml"
+    read_only = true
+  }
+}
+
+# Cinny (Matrix web client)
+resource "docker_image" "cinny" {
+  name = "ghcr.io/cinnyapp/cinny:v4.10.3"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "cinny" {
+  image = docker_image.cinny.image_id
+  name  = "cinny"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::100a"
+  }
+  volumes {
+    container_path = "/app/config.json"
+    host_path = "/home/nxthdr/cinny/config/config.json"
+  }
+}
+
+# Matrix Hookshot (webhook bridge)
+resource "docker_image" "hookshot" {
+  name = "halfshot/matrix-hookshot:7.2.0"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "hookshot" {
+  image = docker_image.hookshot.image_id
+  name  = "hookshot"
+  provider = docker.coreams01
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::100b"
+  }
+  volumes {
+    container_path = "/data/config.yml"
+    host_path = "/home/nxthdr/hookshot/config/config.yml"
+  }
+  volumes {
+    container_path = "/data/registration.yml"
+    host_path = "/home/nxthdr/hookshot/config/registration.yml"
+  }
+  volumes {
+    container_path = "/data/passkey.pem"
+    host_path = "/home/nxthdr/hookshot/config/passkey.pem"
+  }
+}
+

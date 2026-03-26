@@ -1,0 +1,14 @@
+id: hookshot
+hs_token: "{{ hookshot.hs_token }}"
+as_token: "{{ hookshot.as_token }}"
+url: "http://hookshot:9993"
+sender_localpart: hookshot
+namespaces:
+  users:
+    - regex: "@_hookshot_.*"
+      exclusive: true
+  aliases:
+    - regex: "#_hookshot_.*"
+      exclusive: true
+  rooms: []
+rate_limited: false

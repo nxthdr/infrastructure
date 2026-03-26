@@ -7,8 +7,8 @@ variable "porkbun_secret_api_key" {
   type        = string
 }
 
-variable "alertmanager_discord_webhook_url" {
-  description = "Alertmanager Discord Webhook URL"
+variable "alertmanager_hookshot_webhook_url" {
+  description = "Alertmanager Matrix Hookshot Webhook URL"
   type        = string
 }
 

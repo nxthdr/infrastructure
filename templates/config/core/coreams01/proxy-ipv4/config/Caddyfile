@@ -121,3 +121,27 @@ rpki.nxthdr.dev {
         }
     }
 }
+
+matrix.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+chat.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}
+
+hookshot.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::a]:443 {
+        transport http {
+           tls_server_name {host}
+        }
+    }
+}

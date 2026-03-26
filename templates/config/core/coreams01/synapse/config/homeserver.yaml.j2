@@ -1,0 +1,62 @@
+server_name: "nxthdr.dev"
+public_baseurl: "https://matrix.nxthdr.dev"
+pid_file: /data/homeserver.pid
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ['::']
+    resources:
+      - names: [client, federation]
+        compress: false
+  - port: 9090
+    tls: false
+    type: metrics
+    bind_addresses: ['::']
+
+database:
+  name: psycopg2
+  args:
+    user: "{{ postgresql.username }}"
+    password: "{{ postgresql.password }}"
+    dbname: synapse
+    host: "2a06:de00:50:cafe:10::116"
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+
+log_config: "/data/log.config"
+
+media_store_path: /data/media_store
+
+registration_shared_secret: "{{ synapse.registration_shared_secret }}"
+
+enable_registration: false
+enable_registration_without_verification: false
+
+federation_domain_whitelist: []
+allow_public_rooms_without_auth: false
+allow_public_rooms_over_federation: false
+
+oidc_providers:
+  - idp_id: auth0
+    idp_name: "nxthdr Auth0"
+    issuer: "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/"
+    client_id: "{{ synapse.auth0_client_id }}"
+    client_secret: "{{ synapse.auth0_client_secret }}"
+    scopes: ["openid", "profile", "email"]
+    user_mapping_provider:
+      config:
+        localpart_template: "{{ '{{ user.nickname }}' }}"
+        display_name_template: "{{ '{{ user.name }}' }}"
+        email_template: "{{ '{{ user.email }}' }}"
+
+app_service_config_files:
+  - /data/hookshot-registration.yml
+
+enable_metrics: true
+report_stats: false
+
+suppress_key_server_warning: true

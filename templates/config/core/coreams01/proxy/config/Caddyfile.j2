@@ -19,9 +19,23 @@ as215011.net {
 }
 
 nxthdr.dev {
-    reverse_proxy {
-        import security_headers
-        to [2a06:de00:50:cafe:10::100]:80
+    handle /.well-known/matrix/client {
+        header Content-Type "application/json"
+        header Access-Control-Allow-Origin "*"
+        respond `{"m.homeserver":{"base_url":"https://matrix.nxthdr.dev"}}`
+    }
+
+    handle /.well-known/matrix/server {
+        header Content-Type "application/json"
+        header Access-Control-Allow-Origin "*"
+        respond `{"m.server":"matrix.nxthdr.dev:443"}`
+    }
+
+    handle {
+        reverse_proxy {
+            import security_headers
+            to [2a06:de00:50:cafe:10::100]:80
+        }
     }
 }
 
@@ -92,4 +106,19 @@ headplane.nxthdr.dev {
 
 rpki.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::1007]:8323
+}
+
+matrix.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::1008]:8008
+}
+
+chat.nxthdr.dev {
+    reverse_proxy {
+        import security_headers
+        to [2a06:de00:50:cafe:10::100a]:80
+    }
+}
+
+hookshot.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::100b]:9000
 }
