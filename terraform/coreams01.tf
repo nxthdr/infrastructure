@@ -1092,7 +1092,7 @@ resource "docker_container" "cinny" {
 
 # Matrix Hookshot (webhook bridge)
 resource "docker_image" "hookshot" {
-  name = "halfshot/matrix-hookshot:7.2.0"
+  name = "halfshot/matrix-hookshot:7.3.2"
   provider = docker.coreams01
 }
 
