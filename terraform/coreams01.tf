@@ -1066,7 +1066,7 @@ resource "docker_container" "synapse" {
 
 # Cinny (Matrix web client)
 resource "docker_image" "cinny" {
-  name = "ghcr.io/cinnyapp/cinny:v4.10.3"
+  name = "ghcr.io/cinnyapp/cinny:v4.11.1"
   provider = docker.coreams01
 }
 
