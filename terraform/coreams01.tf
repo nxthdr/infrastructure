@@ -1020,7 +1020,7 @@ resource "docker_container" "routinator" {
 
 # Synapse (Matrix homeserver)
 resource "docker_image" "synapse" {
-  name = "matrixdotorg/synapse:v1.146.0"
+  name = "matrixdotorg/synapse:v1.150.0"
   provider = docker.coreams01
 }
 
