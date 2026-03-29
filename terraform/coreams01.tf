@@ -727,6 +727,9 @@ resource "docker_container" "peerlab_gateway" {
     "--auth0-management-api", "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com",
     "--auth0-m2m-app-id", var.peerlab_m2m_app_id,
     "--auth0-m2m-app-secret", var.peerlab_m2m_app_secret,
+    "--securebit-email", var.peerlab_securebit_email,
+    "--securebit-password", var.peerlab_securebit_password,
+    "--securebit-origin-asn", var.peerlab_securebit_origin_asn,
     "--metrics-address", "[2a06:de00:50:cafe:10::118]:9090",
   ]
   restart = "unless-stopped"

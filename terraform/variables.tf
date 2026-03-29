@@ -38,6 +38,22 @@ variable "peerlab_m2m_app_secret" {
   sensitive   = true
 }
 
+variable "peerlab_securebit_email" {
+  description = "Securebit email for RPKI ROA management"
+  type        = string
+}
+
+variable "peerlab_securebit_password" {
+  description = "Securebit password for RPKI ROA management"
+  type        = string
+  sensitive   = true
+}
+
+variable "peerlab_securebit_origin_asn" {
+  description = "Origin ASN for RPKI ROA entries"
+  type        = string
+}
+
 variable "saimiris_redpanda_username" {
   description = "Saimiris Redpanda username"
   type        = string
