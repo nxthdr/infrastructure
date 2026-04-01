@@ -71,7 +71,9 @@ resource "docker_container" "node_exporter" {
     "--path.procfs=/host/proc",
     "--path.rootfs=/rootfs",
     "--path.sysfs=/host/sys",
-    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)",
+    "--collector.systemd",
+    "--collector.systemd.unit-include=peerlab-bird-config.service"
   ]
   restart    = "unless-stopped"
   log_driver = "json-file"
@@ -98,6 +100,11 @@ resource "docker_container" "node_exporter" {
   volumes {
     container_path = "/rootfs"
     host_path      = "/"
+    read_only      = true
+  }
+  volumes {
+    container_path = "/run/dbus/system_bus_socket"
+    host_path      = "/run/dbus/system_bus_socket"
     read_only      = true
   }
 }

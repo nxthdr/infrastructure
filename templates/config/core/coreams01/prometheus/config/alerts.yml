@@ -51,6 +51,17 @@ groups:
     annotations:
       summary: host almost out of memory in {{ $labels.instance }}
 
+- name: peerlab
+  rules:
+  - alert: PeerLab_Bird_Config_Failing
+    expr: node_systemd_unit_state{name="peerlab-bird-config.service",state="failed"} == 1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      title: 'peerlab-bird-config is failing on {{ $labels.instance }}'
+      description: 'The peerlab-bird-config service has been in failed state for more than 5 minutes. PeerLab prefix authorization is not being updated. Check the Headscale API key.'
+
 - name: risotto
   rules:
   - alert: Risotto_No_BGP_Peers

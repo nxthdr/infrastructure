@@ -1,0 +1,118 @@
+2a06:de00:50::/48:
+  description: NXTHDR-CORE
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a06:de00:5b::/48:
+  description: NXTHDR-PEERLAB
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a06:de00:5c::/48:
+  description: NXTHDR-PEERLAB
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a0::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a1::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a2::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a3::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a4::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a5::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a6::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a7::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a8::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8a9::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8aa::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8ab::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8ac::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8ad::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8ae::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+2a0e:97c0:8af::/48:
+  description: NXHTDR-PROBING
+  asn: 215011
+  ignoreMorespecifics: false
+  ignore: false
+
+options:
+  monitorASns:
+    215011:
+      group: default

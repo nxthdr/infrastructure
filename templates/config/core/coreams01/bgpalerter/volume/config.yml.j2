@@ -1,0 +1,103 @@
+connectors:
+  - file: connectorRIS
+    name: ris
+    params:
+      url: ws://ris-live.ripe.net/v1/ws/
+      perMessageDeflate: true
+      carefulSubscription: true
+      subscription:
+        moreSpecific: true
+        type: UPDATE
+        socketOptions:
+          includeRaw: false
+
+monitors:
+  - file: monitorHijack
+    channel: hijack
+    name: basic-hijack-detection
+    params:
+      thresholdMinPeers: 2
+
+  - file: monitorVisibility
+    channel: visibility
+    name: basic-visibility-loss
+    params:
+      thresholdMinPeers: 40
+
+  - file: monitorNewPrefix
+    channel: newprefix
+    name: prefix-detection
+    params:
+      thresholdMinPeers: 2
+
+  - file: monitorAS
+    channel: misconfiguration
+    name: as-monitor
+    params:
+      thresholdMinPeers: 2
+
+  - file: monitorPath
+    channel: path
+    name: path-matching
+    params:
+      thresholdMinPeers: 0
+
+  - file: monitorROAS
+    channel: roa
+    name: rpki-monitor
+    params:
+      thresholdMinPeers: 2
+      enableDiffAlerts: true
+      enableExpirationAlerts: true
+      enableExpirationCheckTA: true
+      checkOnlyASns: true
+
+reports:
+  - file: reportHTTP
+    channels:
+      - hijack
+      - visibility
+      - newprefix
+      - misconfiguration
+      - path
+      - roa
+    params:
+      showPaths: 4
+      isTemplateJSON: true
+      headers:
+        Content-Type: application/json
+      templates:
+        default: '{"text": "${summary}"}'
+      hooks:
+        default: {{ bgpalerter.hookshot_webhook_url }}
+
+notificationIntervalSeconds: 86400
+persistStatus: true
+
+logging:
+  directory: logs
+  logRotatePattern: YYYY-MM-DD
+  maxRetainedFiles: 10
+  maxFileSizeMB: 15
+  compressOnRotation: false
+  useUTC: true
+
+checkForUpdatesAtBoot: false
+generatePrefixListEveryDays: 0
+
+monitoredPrefixesFiles:
+  - prefixes.yml
+
+rpki:
+  vrpProvider: rpkiclient
+  refreshVrpListMinutes: 15
+  markDataAsStaleAfterMinutes: 120
+
+alertOnlyOnce: false
+fadeOffSeconds: 360
+checkFadeOffGroupsSeconds: 30
+pidFile: bgpalerter.pid
+maxMessagesPerSecond: 6000
+multiProcess: false
+environment: production
+configVersion: 2

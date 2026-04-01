@@ -1127,3 +1127,34 @@ resource "docker_container" "hookshot" {
   }
 }
 
+# BGPalerter
+resource "docker_image" "bgpalerter" {
+  name = "nttgin/bgpalerter:latest"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "bgpalerter" {
+  image = docker_image.bgpalerter.image_id
+  name  = "bgpalerter"
+  provider = docker.coreams01
+  command = ["run", "serve", "--", "--d", "/opt/bgpalerter/volume/"]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::100c"
+  }
+  volumes {
+    container_path = "/opt/bgpalerter/volume/config.yml"
+    host_path = "/home/nxthdr/bgpalerter/volume/config.yml"
+  }
+  volumes {
+    container_path = "/opt/bgpalerter/volume/prefixes.yml"
+    host_path = "/home/nxthdr/bgpalerter/volume/prefixes.yml"
+  }
+}
+
