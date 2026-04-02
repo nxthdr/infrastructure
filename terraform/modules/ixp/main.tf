@@ -124,6 +124,10 @@ resource "docker_container" "cadvisor" {
   }
   privileged   = true
   network_mode = "bridge"
+  command = [
+    "--housekeeping_interval=30s",
+    "--docker_only=true",
+  ]
   networks_advanced {
     name = docker_network.backend.name
   }
