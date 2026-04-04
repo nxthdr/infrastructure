@@ -61,7 +61,7 @@ resource "docker_container" "alloy" {
 
 # Node Exporter
 resource "docker_image" "node_exporter" {
-  name = "prom/node-exporter:v1.10.2"
+  name = "prom/node-exporter:v1.11.0"
 }
 
 resource "docker_container" "node_exporter" {
