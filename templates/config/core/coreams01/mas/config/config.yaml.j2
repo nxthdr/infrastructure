@@ -1,0 +1,121 @@
+# Matrix Authentication Service (MAS) configuration
+# Docs: https://element-hq.github.io/matrix-authentication-service/reference/configuration.html
+
+http:
+  listeners:
+    - name: web
+      resources:
+        - name: discovery
+        - name: human
+        - name: oauth
+        - name: compat
+        - name: graphql
+        - name: assets
+      binds:
+        - address: "[::]:8080"
+      proxy_protocol: false
+    - name: internal
+      resources:
+        - name: health
+        - name: prometheus
+      binds:
+        - address: "[::]:8081"
+      proxy_protocol: false
+  trusted_proxies:
+    - 2a06:de00:50:cafe:10::/80
+    - 127.0.0.1/32
+    - ::1/128
+  public_base: https://auth.nxthdr.dev/
+  issuer: https://auth.nxthdr.dev/
+
+database:
+  uri: postgresql://{{ postgresql.username }}:{{ postgresql.password }}@[2a06:de00:50:cafe:10::116]:5432/mas
+
+secrets:
+  encryption: "{{ mas.encryption_key }}"
+  keys:
+{% for key in mas.signing_keys %}
+    - kid: "{{ key.kid }}"
+      key: |
+{{ key.key | indent(8, true) }}
+{% endfor %}
+
+matrix:
+  homeserver: nxthdr.dev
+  secret: "{{ mas.synapse_shared_secret }}"
+  endpoint: http://[2a06:de00:50:cafe:10::1008]:8008/
+
+# Static clients. The Synapse homeserver is a privileged client of MAS.
+clients:
+  - client_id: 0000000000000000000SYNAPSE
+    client_auth_method: client_secret_basic
+    client_secret: "{{ mas.synapse_client_secret }}"
+
+# Upstream OIDC providers (identity federation).
+# MAS delegates actual user authentication to Auth0.
+upstream_oauth2:
+  providers:
+    - id: 000001P39QT1FS0WK0B1N0S0Z3  # ULID; pinned for Auth0 callback URL
+      # Matches Synapse's pre-migration oidc_providers[].idp_id (prefixed
+      # with `oidc-` by Synapse). syn2mas uses this to remap users from
+      # the legacy oidc-auth0 provider onto this MAS upstream provider.
+      synapse_idp_id: "oidc-auth0"
+      human_name: nxthdr Auth0
+      issuer: https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/
+      client_id: "{{ mas.upstream_client_id }}"
+      client_secret: "{{ mas.upstream_client_secret }}"
+      scope: "openid profile email"
+      token_endpoint_auth_method: client_secret_basic
+      claims_imports:
+        subject:
+          template: "{% raw %}{{ user.sub }}{% endraw %}"
+        localpart:
+          action: require
+          template: "{% raw %}{{ user.nickname }}{% endraw %}"
+        displayname:
+          action: suggest
+          template: "{% raw %}{{ user.name }}{% endraw %}"
+        email:
+          action: suggest
+          template: "{% raw %}{{ user.email }}{% endraw %}"
+          set_email_verification: always
+
+# Local password auth disabled — all logins go through Auth0.
+# A bcrypt scheme is still declared so syn2mas's config validation passes
+# during the one-time migration. No passwords actually migrate since all
+# users came in via Auth0.
+passwords:
+  enabled: false
+  schemes:
+    - version: 1
+      algorithm: bcrypt
+
+# Account self-service settings. Since Auth0 owns identity, disallow
+# local changes that would diverge from the upstream.
+account:
+  password_registration_enabled: false
+  password_recovery_enabled: false
+  email_change_allowed: false
+  displayname_change_allowed: true
+  account_deactivation_allowed: false
+
+# Matrix-spec compatibility endpoints (/_matrix/client/v3/login etc.)
+# Legacy clients that don't do MSC3861 discovery fall back to these.
+experimental:
+  access_token_ttl: 300
+  compat_token_ttl: 300
+
+branding:
+  service_name: "nxthdr"
+
+telemetry:
+  tracing:
+    exporter: none
+  metrics:
+    exporter: prometheus
+
+policy:
+  data:
+    admin_users: []
+    admin_clients:
+      - 0000000000000000000SYNAPSE

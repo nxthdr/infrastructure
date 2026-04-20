@@ -429,18 +429,18 @@ Hookshot uses a JavaScript transformation function to format alerts with icons a
 
 **To modify the transformation**, edit the room state event via the Matrix client-server API:
 
-1. Create a temporary Synapse admin user:
+1. Create a temporary admin user via MAS (post-MSC3861 migration):
    ```bash
    ssh nxthdr@ams01.core.infra.nxthdr.dev
-   # Get nonce and register
-   NONCE=$(curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/register" | python3 -c "import sys,json; print(json.load(sys.stdin)['nonce'])")
-   SECRET="<registration_shared_secret from secrets.yml>"
-   MAC=$(printf '%s\0%s\0%s\0admin' "$NONCE" "admin_tmp" "TmpPass123!" | openssl dgst -sha1 -hmac "$SECRET" | awk '{print $2}')
-   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/register" \
-     -X POST -H "Content-Type: application/json" \
-     -d "{\"nonce\":\"$NONCE\",\"username\":\"admin_tmp\",\"password\":\"TmpPass123!\",\"admin\":true,\"mac\":\"$MAC\"}"
-   # Save the access_token from the response
+   # Register a temporary user, then issue an access token with Synapse admin rights
+   docker exec -ti mas mas-cli manage register-user \
+     --yes -p 'TmpPass123!' -e admin_tmp@nxthdr.dev admin_tmp
+   docker exec -ti mas mas-cli manage issue-compatibility-token \
+     --yes-i-want-to-grant-synapse-admin-privileges admin_tmp ADMINTMP01
+   # Save the printed access_token
    ```
+   Note: the legacy `/_synapse/admin/v1/register` endpoint no longer works —
+   Synapse delegates auth to MAS, so `registration_shared_secret` is inert.
 
 2. Join the room and get admin power level:
    ```bash
@@ -473,6 +473,88 @@ Hookshot uses a JavaScript transformation function to format alerts with icons a
 - 🔴 **FIRING** | AlertName (job) on instance — for critical firing alerts
 - 🟡 **FIRING** | AlertName (job) on instance — for warning firing alerts
 - ✅ **RESOLVED** | AlertName (job) on instance — for resolved alerts
+
+## Matrix Authentication Service (MAS)
+
+Authentication for Synapse is delegated to MAS (MSC3861 native OIDC). MAS runs at `auth.nxthdr.dev` and federates to Auth0 for actual credentials.
+
+**Topology:**
+```
+Client ──OIDC──► MAS (auth.nxthdr.dev) ──OIDC upstream──► Auth0
+                   │
+                   └──MSC3861──► Synapse (matrix.nxthdr.dev)
+```
+
+**What MAS owns:**
+- All user auth (there are no Synapse-local passwords anymore)
+- Access token issuance and introspection
+- Compatibility `/login`/`/logout` endpoints for legacy clients
+- User registration (gated on Auth0 identity)
+
+**What it does *not* touch:**
+- Appservices (Hookshot) — they use appservice tokens and bypass MAS entirely
+- Room state, messages, federation — all still Synapse
+
+### One-time migration runbook (syn2mas)
+
+Only needed the first time MAS is stood up. Performed 2026-04-20; kept here
+for reference and for future deployments.
+
+Two gotchas that bit us:
+- The MAS container image is distroless; `syn2mas --synapse-database-uri` with
+  an IPv6-in-brackets URL silently falls back to localhost, so pass DB config
+  via libpq `PG*` env vars with URI `postgresql:`.
+- `syn2mas` needs to see the *old* `oidc_providers:` block to map legacy
+  users onto MAS upstream providers. After MSC3861 is merged into
+  `homeserver.yaml.j2`, you must reconstruct a temporary homeserver.yaml
+  with the pre-migration `oidc_providers:` block for the tool to read. The
+  corresponding MAS upstream provider needs a matching `synapse_idp_id:
+  "oidc-<idp_id>"` field.
+
+```bash
+ssh nxthdr@ams01.core.infra.nxthdr.dev
+
+# 1. Backup Postgres (mandatory — syn2mas is not reversible).
+docker exec postgresql pg_dumpall -U postgres | gzip > ~/pgdump-pre-mas-$(date +%F).sql.gz
+
+# 2. Create the MAS database and let MAS boot (migrations run on startup).
+docker exec postgresql psql -U postgres -c 'CREATE DATABASE mas;'
+docker restart mas
+
+# 3. Upload a reconstructed homeserver.yaml with the pre-migration
+#    oidc_providers block into the MAS container at /tmp/homeserver.yaml.
+
+# 4. Check, then migrate.
+docker exec \
+  -e PGHOST=2a06:de00:50:cafe:10::116 -e PGPORT=5432 \
+  -e PGUSER=postgres -e PGPASSWORD=<password> -e PGDATABASE=synapse \
+  mas mas-cli syn2mas -c /config/config.yaml \
+  --synapse-config /tmp/homeserver.yaml \
+  --synapse-database-uri 'postgresql:' check
+
+docker stop synapse
+docker exec <same-env> mas mas-cli syn2mas -c /config/config.yaml \
+  --synapse-config /tmp/homeserver.yaml \
+  --synapse-database-uri 'postgresql:' migrate
+docker start synapse
+```
+
+### Admin operations
+
+Available `mas-cli manage` subcommands: `register-user`,
+`issue-compatibility-token`, `lock-user`, `unlock-user`, `set-password`,
+`kill-sessions`, `provision-all-users`. There's no `list-users`; query the
+`users` table in the `mas` Postgres DB directly if you need a listing.
+
+The old `registration_shared_secret` flow in Synapse admin API is inert post-migration.
+
+### Rollback
+
+If MAS goes wrong and you need to revert to Auth0-direct:
+1. Restore Postgres dump from step 1 above (this rolls back syn2mas data changes).
+2. Revert the `experimental_features.msc3861:` block in `homeserver.yaml.j2`; restore the `oidc_providers:` block and `registration_shared_secret:` line from git.
+3. `make apply` + `docker restart synapse`.
+4. MAS container can keep running or be removed.
 
 ## Troubleshooting
 

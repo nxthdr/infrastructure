@@ -31,8 +31,6 @@ log_config: "/data/log.config"
 
 media_store_path: /data/media_store
 
-registration_shared_secret: "{{ synapse.registration_shared_secret }}"
-
 enable_registration: false
 enable_registration_without_verification: false
 
@@ -40,18 +38,23 @@ federation_domain_whitelist: []
 allow_public_rooms_without_auth: false
 allow_public_rooms_over_federation: false
 
-oidc_providers:
-  - idp_id: auth0
-    idp_name: "nxthdr Auth0"
-    issuer: "https://dev-zk3qmxl3o0m8lvk3.eu.auth0.com/"
-    client_id: "{{ synapse.auth0_client_id }}"
-    client_secret: "{{ synapse.auth0_client_secret }}"
-    scopes: ["openid", "profile", "email"]
-    user_mapping_provider:
-      config:
-        localpart_template: "{{ '{{ user.nickname }}' }}"
-        display_name_template: "{{ '{{ user.name }}' }}"
-        email_template: "{{ '{{ user.email }}' }}"
+# Authentication is delegated to Matrix Authentication Service (MSC3861).
+# Local passwords, SSO/OIDC providers, and shared-secret registration are all
+# disabled — MAS owns authentication entirely. Admin user management happens
+# via `mas-cli` instead of the Synapse admin API.
+experimental_features:
+  msc3861:
+    enabled: true
+    issuer: https://auth.nxthdr.dev/
+    introspection_endpoint: http://[2a06:de00:50:cafe:10::100d]:8080/oauth2/introspect
+    client_id: "0000000000000000000SYNAPSE"
+    client_auth_method: client_secret_basic
+    client_secret: "{{ mas.synapse_client_secret }}"
+    # Must match MAS `matrix.secret` — MAS uses this as the bearer token
+    # when calling Synapse's admin API; Synapse bypasses introspection for
+    # requests whose bearer matches this value.
+    admin_token: "{{ mas.synapse_shared_secret }}"
+    account_management_url: https://auth.nxthdr.dev/account/
 
 app_service_config_files:
   - /data/hookshot-registration.yml

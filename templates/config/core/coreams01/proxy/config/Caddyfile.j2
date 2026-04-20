@@ -22,7 +22,7 @@ nxthdr.dev {
     handle /.well-known/matrix/client {
         header Content-Type "application/json"
         header Access-Control-Allow-Origin "*"
-        respond `{"m.homeserver":{"base_url":"https://matrix.nxthdr.dev"}}`
+        respond `{"m.homeserver":{"base_url":"https://matrix.nxthdr.dev"},"org.matrix.msc2965.authentication":{"issuer":"https://auth.nxthdr.dev/","account":"https://auth.nxthdr.dev/account/"}}`
     }
 
     handle /.well-known/matrix/server {
@@ -109,7 +109,36 @@ rpki.nxthdr.dev {
 }
 
 matrix.nxthdr.dev {
-    reverse_proxy [2a06:de00:50:cafe:10::1008]:8008
+    # MSC3861: Synapse disables legacy /login, /logout, /refresh. Route
+    # those to MAS, which serves Matrix-compat endpoints on the same host
+    # so clients that don't do MSC2965 discovery (Cinny, older Element)
+    # still work.
+    handle /_matrix/client/*/login {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+    handle /_matrix/client/*/login/sso/redirect {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+    handle /_matrix/client/*/login/sso/redirect/* {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+    handle /_matrix/client/*/logout {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+    handle /_matrix/client/*/logout/all {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+    handle /_matrix/client/*/refresh {
+        reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
+    }
+
+    handle {
+        reverse_proxy [2a06:de00:50:cafe:10::1008]:8008
+    }
+}
+
+auth.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::100d]:8080
 }
 
 chat.nxthdr.dev {

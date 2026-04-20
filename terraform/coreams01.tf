@@ -1067,6 +1067,35 @@ resource "docker_container" "synapse" {
   }
 }
 
+# Matrix Authentication Service (MSC3861 native OIDC for Matrix)
+resource "docker_image" "mas" {
+  name = "ghcr.io/element-hq/matrix-authentication-service:0.19.0"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "mas" {
+  image = docker_image.mas.image_id
+  name  = "mas"
+  provider = docker.coreams01
+  command = ["server", "--config", "/config/config.yaml"]
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  dns = [ "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::100d"
+  }
+  volumes {
+    container_path = "/config/config.yaml"
+    host_path = "/home/nxthdr/mas/config/config.yaml"
+    read_only = true
+  }
+}
+
 # Cinny (Matrix web client)
 resource "docker_image" "cinny" {
   name = "ghcr.io/cinnyapp/cinny:v4.11.1"
