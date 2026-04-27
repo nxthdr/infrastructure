@@ -10,7 +10,7 @@ terraform {
     }
     porkbun = {
       source  = "cullenmcdermott/porkbun"
-      version = "~> 0.2"
+      version = "~> 0.3"
     }
   }
 }
