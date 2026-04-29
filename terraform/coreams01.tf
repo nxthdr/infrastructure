@@ -365,7 +365,7 @@ resource "docker_container" "grafana" {
 
 # Alertmanager
 resource "docker_image" "alertmanager" {
-  name = "prom/alertmanager:v0.32.0"
+  name = "prom/alertmanager:v0.32.1"
   provider = docker.coreams01
 }
 
