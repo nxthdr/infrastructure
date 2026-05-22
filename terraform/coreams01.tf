@@ -160,7 +160,7 @@ resource "docker_container" "nxthdr_dev" {
 
 # ClickHouse
 resource "docker_image" "clickhouse" {
-  name = "docker.io/clickhouse/clickhouse-server:26.4.3"
+  name = "docker.io/clickhouse/clickhouse-server:26.5.1"
   provider = docker.coreams01
 }
 
