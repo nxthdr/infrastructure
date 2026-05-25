@@ -76,3 +76,5 @@ nav:
     - Adding Services: guides/adding-services.md
   - Reference:
     - Architecture: reference/architecture.md
+    - MAS Migration: reference/mas-migration.md
+    - Hookshot Transformation: reference/hookshot-transformation.md

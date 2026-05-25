@@ -30,11 +30,12 @@ The infrastructure supports three main data pipelines:
 - **Note**: Only flow samples are processed (counter samples filtered out)
 
 ### 3. Active Measurements
-- **Service**: Saimiris (probing agent)
+- **Service**: Saimiris (probing agent), driven by Saimprowler (probe dispatcher)
 - **Database**: `saimiris` in ClickHouse
-- **Data Flow**: Saimiris agents → Redpanda (Kafka) → ClickHouse
+- **Data Flow**: Saimprowler (cron on `coreams01`, every 30 min) → dispatches probe batch → Saimiris agents (VLT hosts) → Redpanda (Kafka) → ClickHouse
 - **Schema**: Cap'n Proto format (`reply.capnp:Reply`)
 - **Purpose**: Active network measurements (traceroute, ping, etc.)
+- **Cadence**: `saimiris.replies` is **bursty, not continuous** — a batch arrives every ~30 min when `saimprowler.timer` fires on `coreams01` (see `templates/config/shared/saimprowler/saimprowler.timer`). Between bursts, the table receives no inserts; this is expected. Health checks must use at least a 1-hour window to detect real outages, not 5 minutes.
 
 ## Server Inventory
 
@@ -277,6 +278,17 @@ The infrastructure uses ClickHouse for storing time-series data. Database schema
 
 **TTL**: 7 days
 
+### Public Read-Only Access (chproxy)
+
+ClickHouse is reachable from outside the infrastructure via `chproxy` at `https://clickhouse.nxthdr.dev`, with hardcoded read-only credentials `read:read` (see `templates/config/core/coreams01/chproxy/config/config.yml` — not a secret). Use this for ad-hoc queries, dashboards, and scripts instead of SSH-ing to the core and running `clickhouse-client`.
+
+**chproxy only accepts the query as a GET URL parameter.** Sending it as a POST body causes chproxy to forward un-decoded form data to ClickHouse and you get a `Syntax error` on `%3E` (the encoded `>`). Use `curl -G --data-urlencode`:
+
+```bash
+curl -s -G 'https://clickhouse.nxthdr.dev/?user=read&password=read' \
+  --data-urlencode 'query=SELECT count() FROM bmp.updates WHERE time_received_ns > now() - INTERVAL 5 MINUTE FORMAT PrettyCompact'
+```
+
 ### Flows Database (`flows`)
 **Purpose**: Store network flow data from sFlow collectors
 
@@ -419,60 +431,9 @@ Alerts flow through: **Prometheus → Alertmanager → Hookshot webhook → Matr
 
 #### Hookshot Webhook Transformation
 
-Hookshot uses a JavaScript transformation function to format alerts with icons and markdown instead of showing raw JSON. This transformation is stored in the **Matrix room state event** `uk.half-shot.matrix-hookshot.generic.hook` (state_key: `alertmanager`) under the `transformationFunction` field.
+Hookshot uses a JavaScript transformation function to format alerts with icons and markdown. The function lives in the Matrix room state event `uk.half-shot.matrix-hookshot.generic.hook` (state_key: `alertmanager`) under `transformationFunction` — **not** in any config file. It survives Hookshot restarts but not webhook re-creation; there is no bot command to update it.
 
-**Important:**
-- The transformation is **not** stored in any config file — it lives only in Matrix room state (persisted in Synapse's database)
-- It survives Hookshot restarts and container rebuilds
-- It does **not** survive if the webhook is deleted and recreated (e.g., via `!hookshot webhook alertmanager`)
-- There is **no bot command** to set transformations. `!hookshot webhook set-transformation` does not exist — it will be misinterpreted as creating a new webhook named "set-transformation"
-
-**To modify the transformation**, edit the room state event via the Matrix client-server API:
-
-1. Create a temporary admin user via MAS (post-MSC3861 migration):
-   ```bash
-   ssh nxthdr@ams01.core.infra.nxthdr.dev
-   # Register a temporary user, then issue an access token with Synapse admin rights
-   docker exec -ti mas mas-cli manage register-user \
-     --yes -p 'TmpPass123!' -e admin_tmp@nxthdr.dev admin_tmp
-   docker exec -ti mas mas-cli manage issue-compatibility-token \
-     --yes-i-want-to-grant-synapse-admin-privileges admin_tmp ADMINTMP01
-   # Save the printed access_token
-   ```
-   Note: the legacy `/_synapse/admin/v1/register` endpoint no longer works —
-   Synapse delegates auth to MAS, so `registration_shared_secret` is inert.
-
-2. Join the room and get admin power level:
-   ```bash
-   TOKEN="<access_token>"
-   ROOM_ID="%21YVTFkTAELHJcMYskMC%3Anxthdr.dev"
-   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/join/$ROOM_ID" \
-     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-     -d '{"user_id":"@admin_tmp:nxthdr.dev"}'
-   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/rooms/$ROOM_ID/make_room_admin" \
-     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-     -d '{"user_id":"@admin_tmp:nxthdr.dev"}'
-   ```
-
-3. PUT the updated state event (the JS function receives `data` as already-parsed JSON, set `result` as the output):
-   ```bash
-   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_matrix/client/v3/rooms/$ROOM_ID/state/uk.half-shot.matrix-hookshot.generic.hook/alertmanager" \
-     -X PUT -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-     -d '{"name":"alertmanager","transformationFunction":"<your JS code as a single-line string>"}'
-   ```
-
-4. Restart Hookshot and deactivate the temp user:
-   ```bash
-   docker restart hookshot
-   curl -s "http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/deactivate/@admin_tmp:nxthdr.dev" \
-     -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-     -d '{"erase": true}'
-   ```
-
-**Current transformation** formats alerts as:
-- 🔴 **FIRING** | AlertName (job) on instance — for critical firing alerts
-- 🟡 **FIRING** | AlertName (job) on instance — for warning firing alerts
-- ✅ **RESOLVED** | AlertName (job) on instance — for resolved alerts
+To modify it: see `docs/pages/reference/hookshot-transformation.md` for the full procedure (create temp MAS admin user → PUT the room state event via Matrix client-server API → deactivate temp user).
 
 ## Matrix Authentication Service (MAS)
 
@@ -497,47 +458,7 @@ Client ──OIDC──► MAS (auth.nxthdr.dev) ──OIDC upstream──► Au
 
 ### One-time migration runbook (syn2mas)
 
-Only needed the first time MAS is stood up. Performed 2026-04-20; kept here
-for reference and for future deployments.
-
-Two gotchas that bit us:
-- The MAS container image is distroless; `syn2mas --synapse-database-uri` with
-  an IPv6-in-brackets URL silently falls back to localhost, so pass DB config
-  via libpq `PG*` env vars with URI `postgresql:`.
-- `syn2mas` needs to see the *old* `oidc_providers:` block to map legacy
-  users onto MAS upstream providers. After MSC3861 is merged into
-  `homeserver.yaml.j2`, you must reconstruct a temporary homeserver.yaml
-  with the pre-migration `oidc_providers:` block for the tool to read. The
-  corresponding MAS upstream provider needs a matching `synapse_idp_id:
-  "oidc-<idp_id>"` field.
-
-```bash
-ssh nxthdr@ams01.core.infra.nxthdr.dev
-
-# 1. Backup Postgres (mandatory — syn2mas is not reversible).
-docker exec postgresql pg_dumpall -U postgres | gzip > ~/pgdump-pre-mas-$(date +%F).sql.gz
-
-# 2. Create the MAS database and let MAS boot (migrations run on startup).
-docker exec postgresql psql -U postgres -c 'CREATE DATABASE mas;'
-docker restart mas
-
-# 3. Upload a reconstructed homeserver.yaml with the pre-migration
-#    oidc_providers block into the MAS container at /tmp/homeserver.yaml.
-
-# 4. Check, then migrate.
-docker exec \
-  -e PGHOST=2a06:de00:50:cafe:10::116 -e PGPORT=5432 \
-  -e PGUSER=postgres -e PGPASSWORD=<password> -e PGDATABASE=synapse \
-  mas mas-cli syn2mas -c /config/config.yaml \
-  --synapse-config /tmp/homeserver.yaml \
-  --synapse-database-uri 'postgresql:' check
-
-docker stop synapse
-docker exec <same-env> mas mas-cli syn2mas -c /config/config.yaml \
-  --synapse-config /tmp/homeserver.yaml \
-  --synapse-database-uri 'postgresql:' migrate
-docker start synapse
-```
+Performed 2026-04-20. The full step-by-step procedure, the two gotchas (distroless MAS image + IPv6 DB URI; `oidc_providers` reconstruction), and the rollback steps live in `docs/pages/reference/mas-migration.md` to keep this file lean. Read that file if you ever need to redo the migration or recover from one.
 
 ### Admin operations
 
@@ -547,14 +468,6 @@ Available `mas-cli manage` subcommands: `register-user`,
 `users` table in the `mas` Postgres DB directly if you need a listing.
 
 The old `registration_shared_secret` flow in Synapse admin API is inert post-migration.
-
-### Rollback
-
-If MAS goes wrong and you need to revert to Auth0-direct:
-1. Restore Postgres dump from step 1 above (this rolls back syn2mas data changes).
-2. Revert the `experimental_features.msc3861:` block in `homeserver.yaml.j2`; restore the `oidc_providers:` block and `registration_shared_secret:` line from git.
-3. `make apply` + `docker restart synapse`.
-4. MAS container can keep running or be removed.
 
 ## Troubleshooting
 
