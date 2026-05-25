@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(make destroy:*)",
+      "Bash(make vlt-prune:*)",
+      "Bash(terraform -chdir=./terraform destroy:*)",
+      "Bash(terraform -chdir=./terraform apply -auto-approve:*)",
+      "Bash(rm .password)",
+      "Bash(rm secrets/secrets.yml)"
+    ]
+  }
+}
