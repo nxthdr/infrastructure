@@ -51,7 +51,16 @@ Capture pre-deploy state so we can diff it later. Save to `/tmp/deploy-baseline.
 make render
 ```
 
-`make render` regenerates `.rendered/` and the Terraform wiring files (`terraform/docker-providers.tf`, `terraform/ixp.tf`, `terraform/vlt.tf`, `terraform/terraform.tfvars`). If it fails (missing secret key, undefined template variable, VLT host not in Terraform state), stop and surface the error. Common causes are in `CLAUDE.md` under "Troubleshooting".
+`make render` regenerates `.rendered/` and the Terraform wiring files (`terraform/docker-providers.tf`, `terraform/ixp.tf`, `terraform/vlt.tf`, `terraform/terraform.tfvars`). If it fails, surface the error.
+
+**Common failure: Terraform provider cache is out of date.** When a Renovate batch bumps `kreuzwerker/docker`, `vultr/vultr`, or other Terraform providers, `make render` reports `Required plugins are not installed` / `there is no package for registry.terraform.io/X/Y vX.Y.Z cached in .terraform/providers`, followed by `VLT BIRD configs may be missing IP addresses` because the render script can't read Terraform outputs. This is **expected** after provider bumps and is safe to fix automatically — `terraform init -upgrade` only downloads providers to the local `.terraform/providers/` cache; it does not touch infrastructure. Run it and re-render:
+
+```bash
+terraform -chdir=./terraform init -upgrade
+make render
+```
+
+Other failure modes (missing secret key, undefined template variable, VLT host not in Terraform state) require human attention — stop and surface the error. Common causes are in `CLAUDE.md` under "Troubleshooting".
 
 ### Phase 4 — Plan
 
