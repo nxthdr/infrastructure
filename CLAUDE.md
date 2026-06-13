@@ -429,6 +429,10 @@ Alerts flow through: **Prometheus → Alertmanager → Hookshot webhook → Matr
 - **Hookshot** bridges the webhook payload into the Matrix alert room (`!YVTFkTAELHJcMYskMC:nxthdr.dev`)
 - **Hookshot webhook URL** is stored in `secrets.yml` under `alertmanager.hookshot_webhook_url`
 
+#### Silencing alerts
+
+Alertmanager has a UI behind HTTP basic auth at **https://alertmanager.nxthdr.dev** (`admin` / shared admin password; Caddy `basic_auth` using `alertmanager.hashed_password` from `secrets.yml`). Use it to create/expire silences when an issue is known and tracked. The full procedure (UI and v2-API methods, useful label matchers, the LocIX example) is in `docs/pages/reference/alert-silences.md`. Scope silences to the specific instance/session and always set an expiry + comment.
+
 #### Hookshot Webhook Transformation
 
 Hookshot uses a JavaScript transformation function to format alerts with icons and markdown. The function lives in the Matrix room state event `uk.half-shot.matrix-hookshot.generic.hook` (state_key: `alertmanager`) under `transformationFunction` — **not** in any config file. It survives Hookshot restarts but not webhook re-creation; there is no bot command to update it.

@@ -76,5 +76,6 @@ nav:
     - Adding Services: guides/adding-services.md
   - Reference:
     - Architecture: reference/architecture.md
+    - Alert Silences: reference/alert-silences.md
     - MAS Migration: reference/mas-migration.md
     - Hookshot Transformation: reference/hookshot-transformation.md

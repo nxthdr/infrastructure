@@ -47,6 +47,13 @@ prometheus.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::104]:9090
 }
 
+alertmanager.nxthdr.dev {
+    reverse_proxy [2a06:de00:50:cafe:10::106]:9093
+    basic_auth {
+		admin {{ alertmanager.hashed_password }}
+	}
+}
+
 grafana.nxthdr.dev {
     reverse_proxy [2a06:de00:50:cafe:10::105]:3000
 }
