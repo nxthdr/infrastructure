@@ -443,6 +443,38 @@ resource "docker_container" "node_exporter" {
   }
 }
 
+# Bird Exporter
+resource "docker_image" "bird_exporter" {
+  name = "ghcr.io/czerwonk/bird_exporter:v1.5.0"
+  provider = docker.coreams01
+}
+
+resource "docker_container" "bird_exporter" {
+  image = docker_image.bird_exporter.image_id
+  name  = "bird_exporter"
+  provider = docker.coreams01
+  command = [
+    "--bird.socket=/var/run/bird.ctl",
+    "--bird.v2",
+  ]
+  # BIRD control socket is root:root 0660, so the exporter must run as root.
+  user = "0:0"
+  restart = "unless-stopped"
+  log_driver = "json-file"
+  log_opts = {
+    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+  network_mode = "bridge"
+  networks_advanced {
+    name = docker_network.backend.name
+    ipv6_address = "2a06:de00:50:cafe:10::119"
+  }
+  volumes {
+    container_path = "/var/run/bird.ctl"
+    host_path = "/usr/local/var/run/bird.ctl"
+  }
+}
+
 # Cadvisor
 resource "docker_image" "cadvisor" {
   name = "gcr.io/cadvisor/cadvisor:v0.55.1"

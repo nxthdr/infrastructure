@@ -114,3 +114,20 @@ groups:
     annotations:
       title: 'Saimiris agent {{ $labels.instance }} is receiving replies but not sending to Kafka'
       description: 'Saimiris on {{ $labels.instance }} received probe replies but sent 0 messages to Kafka in the last 2 hours. The saimiris.replies ClickHouse table is not receiving data.'
+
+- name: bird
+  rules:
+  # Fires when a configured BGP session is not Established. bird_exporter reports
+  # configured-but-down protocols (unlike BGPalerter / BMP), so this catches
+  # chronically-down sessions, not just flaps.
+  # peerlab.* sessions are excluded: they are experimental peers that flap by
+  # design (covered by PeerLab_Bird_Config_Failing), and they are the only
+  # sessions that emit a dual-stack duplicate series with an empty state label.
+  - alert: BGP_Session_Down
+    expr: bird_protocol_up{proto="BGP", name!~"peerlab.*"} == 0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      title: 'BGP session {{ $labels.name }} is down on {{ $labels.instance }}'
+      description: 'BIRD BGP session {{ $labels.name }} on {{ $labels.instance }} has not been Established for more than 10 minutes (current state: {{ $labels.state }}).'
