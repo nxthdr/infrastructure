@@ -1,3 +1,10 @@
+# ⚠️  EXPERIMENT IN PROGRESS — DO NOT DEPLOY THIS TEMPLATE TO ixpams02.
+# ixpams02 currently runs a hand-managed experiment config in its live
+# /etc/bird/bird.conf that DIVERGES from this template. `make sync-bird`
+# copies .rendered/ixpams02/bird/bird.conf over the live file and reloads
+# BIRD, so running it would OVERWRITE the experiment. Do not sync-bird
+# ixpams01/ixpams02 until the experiment ends.
+
 router id 193.148.248.238;
 
 # Peering Course - Dynamic BGP for peerlab participants

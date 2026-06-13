@@ -123,14 +123,13 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 
 **Process:**
 - Runs `playbooks/sync-bird.yml` with sudo (requires BECOME password)
-- For **IXP servers**: copies static configs from `networks/{hostname}/bird/` → `/etc/bird/`
-- For **VLT servers**: copies rendered configs from `.rendered/{hostname}/bird/` → `/etc/bird/`
-- Reloads BIRD service on: ixp and vlt servers
-- IXP configs are static files in `networks/`; VLT configs are Jinja2 templates rendered from `templates/config/vlt/bird/`
+- For **both IXP and VLT servers**: copies the **rendered** config `.rendered/{hostname}/bird/bird.conf` → `/etc/bird/bird.conf` (and `peerlab.conf` if present), then reloads BIRD. Both groups' configs are Jinja2 templates under `templates/config/{ixp,vlt}/...`.
+- Core BIRD is **not** managed by `sync-bird` (the playbook only targets `ixp, vlt`). `sync-config` rsyncs the rendered core config to `/home/nxthdr/bird/`, but applying it to `/etc/bird/bird.conf` on coreams01 is manual (`sudo cp` + `sudo birdc configure`).
+
+> ⚠️ **ixpams01 / ixpams02 experiment:** these two hosts currently run hand-managed experiment configs in their live `/etc/bird/bird.conf` that diverge from the repo templates (they announce `2a06:de00:58::/47`). Because `sync-bird` deploys from `.rendered/`, running `make sync-bird` against them would **overwrite the experiment** — do not, until it ends. See the guard headers in those templates.
 
 **Files:**
-- `networks/{hostname}/bird/bird.conf` - Main BIRD configuration
-- `networks/{hostname}/bird/peerlab.conf` - Optional peerlab config
+- `templates/config/{ixp,vlt}/{...}/bird/bird.conf.j2` - Main BIRD configuration (rendered)
 - `templates/config/shared/bird/bird.service` - Systemd service file
 
 ### WireGuard (VPN)

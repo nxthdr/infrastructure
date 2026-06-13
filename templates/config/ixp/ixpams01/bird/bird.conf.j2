@@ -1,3 +1,12 @@
+# ⚠️  EXPERIMENT IN PROGRESS — DO NOT DEPLOY THIS TEMPLATE TO ixpams01.
+# ixpams01 currently runs a hand-managed experiment config in its live
+# /etc/bird/bird.conf that DIVERGES from this template (it announces the
+# 2a06:de00:58::/47 experiment prefix and runs a reduced session set).
+# `make sync-bird` copies .rendered/ixpams01/bird/bird.conf over the live
+# file and reloads BIRD, so running it would OVERWRITE the experiment.
+# Do not sync-bird ixpams01/ixpams02 until the experiment ends. See the
+# core IXPiFogAMS note in templates/config/core/coreams01/bird/bird.conf.j2.
+
 router id 193.148.248.249;
 
 # Peering Course - Dynamic BGP for peerlab participants
@@ -75,15 +84,19 @@ filter NXTHDRFilter {
 }
 
 # BGP downstreams
-## Core
-protocol bgp Core {
-    local 2a06:de00:50:ffff:beef::1 as 215011;
-    neighbor 2a06:de00:50:ffff:beef::2 as 65000;
-    ipv6 {
-        import filter NXTHDRFilter;
-        export all;
-    };
-}
+## Core — DISABLED (experiment)
+# ixpams01/ixpams02 are currently dedicated to an experiment; nxthdr production
+# traffic only transits via FRA, so this session toward the core is intentionally
+# disabled. Re-enable together with the IXPiFogAMS block in
+# templates/config/core/coreams01/bird/bird.conf.j2.
+# protocol bgp Core {
+#     local 2a06:de00:50:ffff:beef::1 as 215011;
+#     neighbor 2a06:de00:50:ffff:beef::2 as 65000;
+#     ipv6 {
+#         import filter NXTHDRFilter;
+#         export all;
+#     };
+# }
 
 # BGP upstreams
 ## iFog Uplink

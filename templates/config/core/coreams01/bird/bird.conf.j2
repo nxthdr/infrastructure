@@ -38,12 +38,18 @@ protocol bgp IXPiFogFRA  {
         export filter AnnFilter;
     };
 }
-## IXPiFogAMS
-protocol bgp IXPiFogAMS  {
-    local 2a06:de00:50:ffff:beef::2 as 65000;
-    neighbor 2a06:de00:50:ffff:beef::1 as 215011;
-    ipv6 {
-        import all;
-        export filter AnnFilter;
-    };
-}
+## IXPiFogAMS — DISABLED (experiment)
+# ixpams01/ixpams02 are currently dedicated to an experiment; nxthdr production
+# traffic only transits via FRA. This core<->AMS iBGP session is therefore
+# intentionally disabled — left up it just sits in Connect ("connection reset by
+# peer", since the AMS side has no matching session) and trips BGP_Session_Down.
+# To re-enable: uncomment this block AND the matching `Core` protocol in
+# templates/config/ixp/ixpams01/bird/bird.conf.j2, then redeploy both.
+# protocol bgp IXPiFogAMS  {
+#     local 2a06:de00:50:ffff:beef::2 as 65000;
+#     neighbor 2a06:de00:50:ffff:beef::1 as 215011;
+#     ipv6 {
+#         import all;
+#         export filter AnnFilter;
+#     };
+# }
