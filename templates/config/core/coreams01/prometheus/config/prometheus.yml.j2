@@ -115,6 +115,12 @@ scrape_configs:
         replacement: coreams01
 
   - job_name: bird
+    # The core BIRD is the BMP collector with a large table; bird_exporter
+    # computes per-protocol prefix counts on each scrape, which can take >10s
+    # and trip the default scrape_timeout (false Service_Down flaps). Give it
+    # a longer interval/timeout. BGP session state doesn't need fine resolution.
+    scrape_interval: 60s
+    scrape_timeout: 50s
     static_configs:
       - targets: ['[2a06:de00:50:cafe:10::119]:9324']
     relabel_configs:
