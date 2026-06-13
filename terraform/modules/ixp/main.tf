@@ -29,7 +29,12 @@ resource "docker_container" "alloy" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns          = ["2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1"]
+  # Quad9 over IPv4: the IPv6 resolvers (2a00:1098:2b::1/2c::1) are unreachable
+  # from some IXP hosts (e.g. ixpams02 has no IPv6 route to them), which left
+  # Alloy unable to resolve prometheus/loki and silently dropped all metrics.
+  # The nxthdr endpoints themselves are reachable over IPv6; only external DNS
+  # was the problem, so an IPv4 resolver every host can reach fixes it.
+  dns          = ["9.9.9.9", "149.112.112.112"]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
