@@ -29,7 +29,7 @@ resource "docker_container" "alloy" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns          = ["2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1"]
+  dns          = ["2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1"]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -195,7 +195,7 @@ resource "docker_container" "saimiris" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns          = ["2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1"]
+  dns          = ["2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1"]
   network_mode = "host"
   volumes {
     container_path = "/config/saimiris.yml"

@@ -67,7 +67,7 @@ resource "docker_container" "proxy" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   env = [ "CADDY_ADMIN=[::]:2019" ]
   user = "1001:1001"
   network_mode = "bridge"
@@ -99,7 +99,7 @@ resource "docker_container" "proxy_ipv4" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   env = [ "CADDY_ADMIN=[::]:2019" ]
   user = "1001:1001"
   network_mode = "bridge"
@@ -575,7 +575,7 @@ resource "docker_container" "alloy" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -723,7 +723,7 @@ resource "docker_container" "saimiris_gateway" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -769,7 +769,7 @@ resource "docker_container" "peerlab_gateway" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -937,7 +937,7 @@ resource "docker_container" "peers" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -1068,7 +1068,7 @@ resource "docker_container" "synapse" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
@@ -1115,7 +1115,7 @@ resource "docker_container" "mas" {
   log_opts = {
     tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   }
-  dns = [ "2a00:1098:2c::1", "2a00:1098:2b::1" ]
+  dns = [ "2a01:4f9:c010:3f02::1", "2a00:1098:2b::1", "2a01:4f8:c2c:123f::1" ]
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
