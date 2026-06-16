@@ -38,7 +38,7 @@ Parse the output and flag anything that is:
 
 ClickHouse is publicly reachable through chproxy at `https://clickhouse.nxthdr.dev` with the read-only user `read:read` (hardcoded in `templates/config/core/coreams01/chproxy/config/config.yml`, not a secret). Query it directly with `curl` — no SSH hop needed.
 
-**Important:** chproxy only accepts the query as a GET URL parameter — use `curl -G --data-urlencode` (not POST). Otherwise chproxy passes the un-decoded body to ClickHouse and you get a `Syntax error` on `%3E` (the encoded `>`).
+**Important:** Two curl patterns work — GET query param or raw POST body. What **doesn't** work is form-encoded POST (`--data-urlencode` without `-G`): chproxy passes the URL-encoded body verbatim to ClickHouse, which then fails on `%3E` (the encoded `>`) with a `SYNTAX_ERROR`.
 
 The three pipelines have different cadences and need different freshness windows:
 

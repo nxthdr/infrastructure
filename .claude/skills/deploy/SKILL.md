@@ -103,6 +103,16 @@ This runs `render` → `sync-config` → `terraform apply -auto-approve`. Stream
 Invoke the same checks as `/health-check`:
 1. Fleet container status (compare against `/tmp/deploy-baseline.txt` to highlight what actually changed). To confirm a *specific* service came back, query the host directly with `--filter name=<svc>` and no `--one-line` — do not text-split the baseline blob (see the Phase 2 caveat).
 2. ClickHouse pipeline freshness on the core server. Query via the public chproxy endpoint (`https://clickhouse.nxthdr.dev`, `read:read`) per `CLAUDE.md` — no SSH needed. `saimiris.replies` is **bursty**: use a ≥1-hour window, not 5 minutes. Column names differ per table (`flows.records`/`saimiris.replies` use `time_received_ns`); confirm against `system.columns` if a query errors with `UNKNOWN_IDENTIFIER`.
+
+   Send the SQL as a raw POST body (`--data-binary @-`). Do **not** use `--data-urlencode` without `-G`: that sends a form-encoded POST body which chproxy passes verbatim to ClickHouse — `>` arrives as `%3E` and causes `SYNTAX_ERROR`.
+
+   ```bash
+   echo "SELECT count() FROM flows.records WHERE time_received_ns > now() - INTERVAL 1 HOUR" | \
+     curl -s "https://clickhouse.nxthdr.dev/?user=read&password=read" --data-binary @-
+
+   echo "SELECT count() FROM saimiris.replies WHERE time_received_ns > now() - INTERVAL 1 HOUR" | \
+     curl -s "https://clickhouse.nxthdr.dev/?user=read&password=read" --data-binary @-
+   ```
 3. BIRD service status on `ixp:vlt` (`systemctl is-active bird` — no sudo needed).
 4. Content-level check for any web service that was deployed: `curl` the public URL and assert HTTP 200 (the Prometheus jobs for `docs`/`blog`/`nxthdr_dev`/`peers` scrape Caddy's admin port `:2019`, which only proves the process is up — not that the site serves valid content).
 
