@@ -39,11 +39,14 @@ Decision rules:
 Capture pre-deploy state so we can diff it later. Save to `/tmp/deploy-baseline.txt`:
 
 ```bash
-{
-  ansible -i inventory/inventory.yml all \
-    -a 'docker ps --format "{{.Names}}\t{{.Image}}\t{{.Status}}"' --one-line 2>/dev/null
-} > /tmp/deploy-baseline.txt
+ansible -i inventory/inventory.yml all \
+  -a '{% raw %}docker ps --format "{{.Names}}|{{.Image}}|{{.Status}}"{% endraw %}' --one-line 2>/dev/null \
+  > /tmp/deploy-baseline.txt
 ```
+
+> ⚠️ **Ansible evaluates `{{ }}` as Jinja.** Any `docker ... --format "{{.Field}}"` run through Ansible must be wrapped in `{% raw %}...{% endraw %}`, or the task fails with `template error while templating string: unexpected '.'`. This applies to **every** `docker --format` command in this skill (Phases 2 and 7).
+>
+> ⚠️ **Don't text-split the `--one-line` output for per-container diffs.** `--one-line` collapses each host's multi-container `docker ps` onto one line with literal `\n` separators; `tr`/`grep`-splitting it mangles names (e.g. `synapse` → `…apse`, `redpanda` → `…da`) and produces false "missing container" alarms. To check a specific service in Phase 7, query the host directly with `--filter name=<svc>` and **no** `--one-line`.
 
 ### Phase 3 — Render and validate
 
@@ -70,6 +73,15 @@ terraform -chdir=./terraform plan
 
 Show the plan output to the user. Summarize the meaningful parts (containers added/removed/changed, image bumps, network changes). If the plan is empty (`No changes`), tell the user — the deploy is a no-op at the Terraform level, but `make apply` will still re-sync configs and may restart containers if their rendered config changed. Ask whether to proceed.
 
+> ⚠️ **`make apply` is an untargeted, fleet-wide apply.** Most containers track floating tags (`ghcr.io/nxthdr/*:main`, `caddy:latest`) via `pull_triggers` on the registry digest, so the plan replaces **every** service whose upstream image has drifted since the last apply — not just the one you set out to deploy. A single-service intent (e.g. "deploy docs") routinely shows up alongside incidental replacements: `saimiris` on the VLT probing hosts, `synapse`/`mas` (Matrix auth), `proxy`/`proxy-ipv4` (edge), the gateways, collectors, etc.
+>
+> In your Phase 5 summary, **separate intended changes from incidental drift** and name the impact of the incidental ones (probing restarts, auth/proxy blips). If the user only wants one service, offer a scoped apply instead of `make apply` (which can't target):
+>
+> ```bash
+> # only run sync-config first if that service mounts rendered config
+> terraform -chdir=./terraform apply -target=docker_image.<svc> -target=docker_container.<svc>
+> ```
+
 ### Phase 5 — Confirm
 
 **Stop here. Ask the user explicitly: "Apply this plan? (yes/no)"**
@@ -89,9 +101,10 @@ This runs `render` → `sync-config` → `terraform apply -auto-approve`. Stream
 ### Phase 7 — Verify
 
 Invoke the same checks as `/health-check`:
-1. Fleet container status (compare against `/tmp/deploy-baseline.txt` to highlight what actually changed).
-2. ClickHouse pipeline freshness on the core server.
-3. BIRD service status on `ixp:vlt`.
+1. Fleet container status (compare against `/tmp/deploy-baseline.txt` to highlight what actually changed). To confirm a *specific* service came back, query the host directly with `--filter name=<svc>` and no `--one-line` — do not text-split the baseline blob (see the Phase 2 caveat).
+2. ClickHouse pipeline freshness on the core server. Query via the public chproxy endpoint (`https://clickhouse.nxthdr.dev`, `read:read`) per `CLAUDE.md` — no SSH needed. `saimiris.replies` is **bursty**: use a ≥1-hour window, not 5 minutes. Column names differ per table (`flows.records`/`saimiris.replies` use `time_received_ns`); confirm against `system.columns` if a query errors with `UNKNOWN_IDENTIFIER`.
+3. BIRD service status on `ixp:vlt` (`systemctl is-active bird` — no sudo needed).
+4. Content-level check for any web service that was deployed: `curl` the public URL and assert HTTP 200 (the Prometheus jobs for `docs`/`blog`/`nxthdr_dev`/`peers` scrape Caddy's admin port `:2019`, which only proves the process is up — not that the site serves valid content).
 
 **Wait ~30 seconds** after `make apply` returns before running pipeline freshness checks — containers may still be restarting and Kafka consumers need a moment to catch up.
 
