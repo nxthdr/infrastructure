@@ -947,7 +947,7 @@ resource "docker_container" "peers" {
 
 # Headscale
 resource "docker_image" "headscale" {
-  name = "ghcr.io/juanfont/headscale:v0.28"
+  name = "ghcr.io/juanfont/headscale:v0.29"
   provider = docker.coreams01
 }
 
