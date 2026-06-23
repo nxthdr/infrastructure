@@ -112,7 +112,7 @@ WireGuard tunnels connect:
 
 ### State Management
 
-- Terraform state committed to git (not recommended for production)
+- Terraform state (`terraform.tfstate`) is **gitignored** — kept locally on the deployment machine, not committed
 - No remote state backend currently configured
 - Manual coordination required for concurrent changes
 

@@ -27,7 +27,8 @@ This repository contains all the configuration, automation, and documentation ne
 - [Setup](getting-started/setup.md) - Set up your local environment
 - [Quick Start](getting-started/quick-start.md) - Deploy your first change
 - [Common Tasks](guides/common-tasks.md) - Frequently performed operations
-- [Troubleshooting](reference/troubleshooting.md) - Common issues and solutions
+- [Operations & Tooling](reference/operations.md) - Operator skills and querying the data
+- [Architecture](reference/architecture.md) - Technical deep-dive and data pipelines
 
 ## Server Inventory
 

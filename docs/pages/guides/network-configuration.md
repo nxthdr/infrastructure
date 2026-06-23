@@ -8,40 +8,44 @@ BIRD is used for BGP routing on core, IXP, and VLT servers to announce AS215011 
 
 ### Configuration Files
 
-BIRD configurations are located in `networks/{hostname}/bird/`:
+BIRD configurations are Jinja2 templates under `templates/config/{group}/.../bird/`:
 
 ```
-networks/
-├── coreams01/
-│   └── bird/
-│       └── bird.conf
-├── ixpams01/
-│   └── bird/
-│       ├── bird.conf
-│       └── peerlab.conf  # Optional
-└── ...
+templates/config/
+├── core/coreams01/bird/bird.conf.j2      # core (applied manually — see warning below)
+├── ixp/{hostname}/bird/
+│   ├── bird.conf.j2
+│   └── peerlab.conf.j2                    # optional, present on some IXP hosts
+├── vlt/bird/bird.conf.j2                  # shared across all VLT hosts
+└── shared/bird/bird.service              # systemd unit (all hosts)
 ```
 
-!!! note "Not Templated"
-    BIRD configs are **not** Jinja2 templates. They are static files copied as-is to servers.
+!!! note "Templated and rendered"
+    BIRD configs **are** Jinja2 templates. `make render` renders them — injecting the host's IPv6 address from Terraform output, secrets, and inventory vars — into `.rendered/{hostname}/bird/bird.conf`. `make sync-bird` deploys the **rendered** file, never the template directly.
 
 ### Update BIRD Configuration
 
-1. **Edit the configuration**:
+1. **Edit the template** (pick the right scope):
+   - IXP host: `templates/config/ixp/{hostname}/bird/bird.conf.j2`
+   - All VLT hosts: `templates/config/vlt/bird/bird.conf.j2`
+
    ```bash
-   vim networks/coreams01/bird/bird.conf
+   vim templates/config/ixp/ixpams01/bird/bird.conf.j2
    ```
 
-2. **Sync to server**:
+2. **Render and sync to the servers**:
    ```bash
    make sync-bird
    ```
 
-   This will prompt for your BECOME password (sudo password).
+   This renders the templates and runs `playbooks/sync-bird.yml` against the **`ixp` and `vlt`** groups (prompts for your BECOME / sudo password).
+
+   !!! warning "Core BIRD is manual"
+       `sync-bird` does **not** target `coreams01`. `make sync-config` rsyncs the rendered core config to `/home/nxthdr/bird/`, but applying it to `/etc/bird/bird.conf` and reloading is a manual step on the core host (`sudo cp` + `sudo birdc configure`).
 
 3. **Verify the change**:
    ```bash
-   ssh nxthdr@ams01.core.infra.nxthdr.dev
+   ssh nxthdr@ams01.ixp.infra.nxthdr.dev
    sudo birdc show status
    sudo birdc show protocols all
    ```
@@ -50,14 +54,14 @@ networks/
 
 The `sync-bird` playbook (`playbooks/sync-bird.yml`):
 
-1. Creates `/etc/bird` directory
-2. Copies `bird.conf` from `networks/{hostname}/bird/`
-3. Copies optional `peerlab.conf` if it exists
-4. Copies systemd service file
-5. Reloads systemd daemon
-6. Reloads BIRD service
+1. Creates the `/etc/bird` directory
+2. Copies the rendered `.rendered/{hostname}/bird/bird.conf` → `/etc/bird/bird.conf`
+3. Copies the rendered `peerlab.conf` if it exists
+4. Copies `templates/config/shared/bird/bird.service` → systemd
+5. Reloads the systemd daemon
+6. Enables and reloads the BIRD service
 
-**Target hosts**: `core`, `ixp`, `vlt`
+**Target hosts**: `ixp`, `vlt` (not `core` — see the warning above)
 
 ### Common BIRD Operations
 
@@ -93,37 +97,33 @@ WireGuard VPN tunnels connect IXP servers to the core server.
 
 ### Configuration Files
 
-WireGuard configurations are in `networks/{hostname}/wireguard/`:
+WireGuard configurations are Jinja2 templates under `templates/config/{group}/{hostname}/wireguard/`:
 
 ```
-networks/
-├── coreams01/
-│   └── wireguard/
-│       ├── wg0.conf
-│       └── wg1.conf
-├── ixpams01/
-│   └── wireguard/
-│       ├── wg0.conf
-│       └── wg1.conf
-└── ...
+templates/config/
+├── core/coreams01/wireguard/
+│   ├── wg0.conf.j2
+│   └── wg1.conf.j2
+└── ixp/{hostname}/wireguard/
+    └── wg0.conf.j2          # some IXP hosts also have wg1.conf.j2
 ```
 
-!!! note "Templated"
-    WireGuard configs **are** Jinja2 templates and can use variables from inventory and secrets.
+!!! note "Templated and rendered"
+    WireGuard configs **are** Jinja2 templates (they reference keys from `secrets.yml` and inventory vars). `make render` writes them to `.rendered/{hostname}/wireguard/`, and `make sync-wireguard` deploys the **rendered** `.conf` files.
 
 ### Update WireGuard Configuration
 
-1. **Edit the configuration**:
+1. **Edit the template**:
    ```bash
-   vim networks/coreams01/wireguard/wg0.conf
+   vim templates/config/core/coreams01/wireguard/wg0.conf.j2
    ```
 
-2. **Sync to server**:
+2. **Render and sync to the servers**:
    ```bash
    make sync-wireguard
    ```
 
-   This will prompt for your BECOME password.
+   This renders the templates and deploys the rendered configs to the **`core` and `ixp`** groups (prompts for your BECOME password).
 
 3. **Verify the tunnel**:
    ```bash
@@ -135,10 +135,9 @@ networks/
 
 The `sync-wireguard` playbook (`playbooks/sync-wireguard.yml`):
 
-1. Templates all files from `networks/{hostname}/wireguard/`
-2. Copies to `/etc/wireguard/` on remote server
-3. Restarts `wg-quick@wg0.service`
-4. Restarts `wg-quick@wg1.service`
+1. Copies the rendered `.rendered/{hostname}/wireguard/*.conf` → `/etc/wireguard/` (mode `0600`)
+2. Restarts `wg-quick@wg0.service`
+3. Restarts `wg-quick@wg1.service`
 
 **Target hosts**: `core`, `ixp`
 

@@ -1,5 +1,7 @@
 # Common Tasks
 
+This is the hub for day-to-day operations. The [Operations & Tooling](../reference/operations.md) reference covers the operator skills (`/deploy`, `/health-check`, `/rollback`) and the public ClickHouse query endpoint. For deeper, one-off runbooks, see the rest of the Reference section: [Architecture](../reference/architecture.md), [Alert Silences](../reference/alert-silences.md), [MAS Migration](../reference/mas-migration.md), and [Hookshot Transformation](../reference/hookshot-transformation.md).
+
 ## Container Management
 
 ### Update Container Configuration
@@ -19,13 +21,13 @@
 
 ### Update BIRD
 
-1. Edit: `networks/{hostname}/bird/bird.conf`
-2. Run: `make sync-bird` (requires sudo password)
+1. Edit the template: `templates/config/ixp/{hostname}/bird/bird.conf.j2` (IXP) or `templates/config/vlt/bird/bird.conf.j2` (VLT)
+2. Run: `make sync-bird` (requires sudo password; targets `ixp`+`vlt`, not core)
 3. Verify: `sudo birdc show status`
 
 ### Update WireGuard
 
-1. Edit: `networks/{hostname}/wireguard/{interface}.conf`
+1. Edit the template: `templates/config/{core,ixp}/{hostname}/wireguard/wg*.conf.j2`
 2. Run: `make sync-wireguard` (requires sudo password)
 3. Verify: `sudo wg show`
 

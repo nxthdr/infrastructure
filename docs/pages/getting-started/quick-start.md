@@ -98,7 +98,7 @@ Find the image resource and update the version:
 
 ```hcl
 resource "docker_image" "grafana" {
-  name = "grafana/grafana:10.2.0"  # Update this version
+  name = "grafana/grafana:13.0.2"  # bump this tag to update
   provider = docker.coreams01
 }
 ```
@@ -122,41 +122,35 @@ docker ps | grep grafana
 
 ## Example: Update BIRD Configuration
 
-Network configurations are in `networks/{hostname}/`.
+BIRD configs are Jinja2 templates under `templates/config/{group}/.../bird/`.
 
-### Step 1: Edit BIRD Config
+### Step 1: Edit the BIRD Template
 
 ```bash
-vim networks/coreams01/bird/bird.conf
+# IXP host (per-host); or templates/config/vlt/bird/bird.conf.j2 for all VLT hosts
+vim templates/config/ixp/ixpams01/bird/bird.conf.j2
 ```
 
-### Step 2: Sync Configuration
+### Step 2: Render and Sync
 
 ```bash
 make sync-bird
 ```
 
-You'll be prompted for the BECOME password (sudo password).
+This renders the templates and deploys the rendered config to the `ixp` and `vlt` groups. You'll be prompted for the BECOME password (sudo). `sync-bird` does **not** target the core server — core BIRD is applied manually.
 
 ### Step 3: Verify
 
-BIRD will automatically reload. Check status:
+BIRD reloads automatically. Check status:
 
 ```bash
-ssh nxthdr@ams01.core.infra.nxthdr.dev
+ssh nxthdr@ams01.ixp.infra.nxthdr.dev
 sudo birdc show status
 ```
 
 ## Common Commands Reference
 
-| Task | Command | Requires Sudo |
-|------|---------|---------------|
-| Full deployment | `make apply` | No |
-| Render only | `make render` | No |
-| Sync configs | `make sync-config` | No |
-| Update BIRD | `make sync-bird` | Yes |
-| Update WireGuard | `make sync-wireguard` | Yes |
-| Edit secrets | `make edit-secrets` | No |
+See [Common Tasks](../guides/common-tasks.md) for the full command reference and day-to-day operations.
 
 ## Best Practices
 

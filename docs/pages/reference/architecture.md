@@ -169,6 +169,9 @@ IPv4-only network for IPv4 proxy.
 
 ### Active Measurement Pipeline
 
+!!! note "Active measurements are bursty, not continuous"
+    The `saimiris.replies` pipeline only flows when `saimprowler` dispatches a probe batch — a systemd timer on `coreams01` fires every **30 minutes** (`OnUnitActiveSec=30min`). Between bursts the table receives no inserts; this is expected. Freshness/health checks must use a **≥1-hour** window to detect real outages, not 5 minutes.
+
 ```
 ┌─────────────┐
 │ VLT Servers │
@@ -346,14 +349,25 @@ Database schemas are maintained in `clickhouse-tables/` directory:
 - Caddy handles renewal automatically
 - Certificates synced to IPv4 proxy manually
 
+### Authentication (MAS)
+
+User authentication for the Matrix homeserver (Synapse) is delegated to the **Matrix Authentication Service (MAS)** at `auth.nxthdr.dev`, which federates to Auth0 for credentials (MSC3861 native OIDC):
+
+```
+Client ──OIDC──► MAS (auth.nxthdr.dev) ──OIDC upstream──► Auth0
+                   └──MSC3861──► Synapse (matrix.nxthdr.dev)
+```
+
+MAS owns all user auth, access-token issuance/introspection, and registration. Room state, messages, and federation remain in Synapse; appservices (Hookshot) use appservice tokens and bypass MAS. See the [MAS Migration](mas-migration.md) runbook for migration details and admin operations.
+
 ## Deployment Architecture
 
 ### Terraform State
 
 **Current Setup**:
-- State stored in git repository
+- State (`terraform.tfstate`) is gitignored — stored locally on the deployment machine
 - No remote backend
-- Manual coordination required
+- Manual coordination required for concurrent changes
 
 **Providers**:
 - Docker provider for container management
@@ -383,7 +397,7 @@ Database schemas are maintained in `clickhouse-tables/` directory:
 ### Current Limitations
 
 1. **Single core server**: No redundancy
-2. **Terraform state in git**: Not suitable for team collaboration
+2. **Local Terraform state**: No remote backend — not ideal for team collaboration
 3. **Manual certificate sync**: Requires manual intervention
 4. **IPv6-only core**: Requires IPv4 proxy for dual-stack
 
@@ -399,32 +413,35 @@ Database schemas are maintained in `clickhouse-tables/` directory:
 ### Metrics Collection
 
 **Prometheus Scraping**:
-- All services expose `/metrics` endpoint
-- Prometheus scrapes every 15s
-- Retention: 15 days
+- All services expose a `/metrics` endpoint
+- Default scrape interval: 30s (some jobs scrape at 60s)
+- Retention: 30 days (`--storage.tsdb.retention.time=30d`)
 
 **Exporters**:
 - cAdvisor: Container metrics
-- Node Exporter: System metrics (if installed)
-- Custom exporters: Service-specific metrics
+- Node Exporter: System metrics
+- bird_exporter: BGP / BIRD metrics (IXP and VLT)
 
 ### Log Aggregation
 
 **Loki Pipeline**:
 - Docker logs forwarded to Loki
 - Structured logging with labels
-- Retention: 30 days
+- Retention: 7 days
 
 ### Alerting
 
-**Alertmanager**:
-- Receives alerts from Prometheus
-- Routes to appropriate channels
-- Deduplication and grouping
+Alerts flow through **Prometheus → Alertmanager → Hookshot webhook → Matrix room**:
+
+- **Prometheus** evaluates alert rules and fires to Alertmanager
+- **Alertmanager** deduplicates/groups and forwards to a Hookshot generic webhook
+- **Hookshot** bridges the payload into the Matrix alert room
+
+Alertmanager exposes a UI (HTTP basic auth) at `https://alertmanager.nxthdr.dev` for creating and expiring silences. See the [Alert Silences](alert-silences.md) runbook for the full procedure, and [Hookshot Transformation](hookshot-transformation.md) for how alert formatting is configured.
 
 ## Next Steps
 
-- [Directory Structure](directory-structure.md) - Detailed file organization
-- [Makefile Commands](makefile.md) - Command reference
-- [Secrets Management](secrets.md) - Working with secrets
-- [Troubleshooting](troubleshooting.md) - Common issues
+- [Common Tasks](../guides/common-tasks.md) - Day-to-day operations
+- [Network Configuration](../guides/network-configuration.md) - BIRD and WireGuard
+- [Alert Silences](alert-silences.md) - Silencing alerts
+- [MAS Migration](mas-migration.md) - Matrix authentication migration runbook

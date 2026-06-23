@@ -137,7 +137,7 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 
 **Process:**
 - Runs `playbooks/sync-wireguard.yml` with sudo (requires BECOME password)
-- Templates configs from `networks/{hostname}/wireguard/` → `/etc/wireguard/`
+- Deploys the rendered `.rendered/{hostname}/wireguard/*.conf` (rendered from `templates/config/{core,ixp}/{hostname}/wireguard/`) → `/etc/wireguard/`
 - Restarts `wg-quick@wg0` and `wg-quick@wg1` services
 - Targets: core, ixp groups
 
@@ -204,12 +204,16 @@ This is faster than a full `make apply` when no Terraform resources changed.
 
 Renovate can update image versions directly in the module files.
 
+### Roll Back a Failing Service
+
+Most first-party services track the floating `ghcr.io/nxthdr/*:main` tag via a `data.docker_registry_image` + `pull_triggers` block, so the running version is **not recorded in git** and re-running `make apply` does **not** roll back (it re-pulls the same `:main`). To roll back you must repoint the reference at an immutable image (a `@sha256:` digest or immutable tag), then apply **scoped** with `-target` (never `make apply`, which would drag every other `:main` service forward at once). The full runbook — finding the last-good digest (host `docker images --digests`, Loki, GHCR), pinning it, scoped apply, verify, and the un-pin follow-up — is the `rollback` skill (`.claude/skills/rollback/SKILL.md`). Floating-tag services: `:main` first-party (risotto, pesto, saimiris [all VLT], saimiris-gateway, peerlab-gateway, nxthdr.dev, blog, docs, peers) and `:latest` third-party (tailscale [all IXP], bgpalerter).
+
 ### Update BIRD Configuration
-1. Edit `networks/{hostname}/bird/bird.conf`
-2. Run `make sync-bird` (requires sudo password)
+1. Edit the template: `templates/config/ixp/{hostname}/bird/bird.conf.j2` (IXP, per-host) or `templates/config/vlt/bird/bird.conf.j2` (VLT, shared)
+2. Run `make sync-bird` (requires sudo password; targets `ixp`+`vlt`, not core)
 
 ### Update WireGuard Configuration
-1. Edit `networks/{hostname}/wireguard/*.conf`
+1. Edit the template: `templates/config/{core,ixp}/{hostname}/wireguard/wg*.conf.j2`
 2. Run `make sync-wireguard` (requires sudo password)
 
 ### Add New Service to Core Server
@@ -223,7 +227,7 @@ Renovate can update image versions directly in the module files.
 
 ### Add New IXP Server
 1. Add host to `inventory/inventory.yml` under the `ixp` group
-2. Add network configs in `networks/{hostname}/`
+2. Add per-host configs under `templates/config/ixp/{hostname}/` (`bird/`, `wireguard/`)
 3. Run `terraform -chdir=./terraform init` then `make apply`
 
 The provider block, module call, and config rendering are all generated automatically from inventory.
@@ -247,7 +251,7 @@ make render-terraform && terraform -chdir=./terraform init && make vlt
 5. Run `make vlt-setup` — installs OS packages, Docker, BIRD binary, network config. Note: `vlt-setup` requires the initial root SSH password from the Vultr console for servers where SSH key injection did not succeed. **`vlt-setup` does NOT start BIRD** — the binary is installed but the service file and config are not deployed yet.
 6. Run `make vlt-config` — deploys rendered BIRD config + systemd service, **starts BIRD**, then runs `make apply` to deploy Saimiris/Alloy containers.
 
-**Important:** VLT server configs (BIRD, Saimiris, Alloy) are all **template-based** from `templates/config/vlt/` — there is no static `networks/{hostname}/` directory needed for VLT servers (unlike IXP servers). The BIRD config is rendered with the server's actual IPv6 address from Terraform output. `render_config.py` will exit with an error if a VLT host in inventory is missing from Terraform state — this means `vlt-infrastructure` must run before `vlt-setup`/`vlt-config`.
+**Important:** VLT server configs (BIRD, Saimiris, Alloy) are all **template-based** from the shared `templates/config/vlt/` (IXP, by contrast, uses per-host `templates/config/ixp/{hostname}/` templates; neither group uses a static `networks/` directory). The BIRD config is rendered with the server's actual IPv6 address from Terraform output. `render_config.py` will exit with an error if a VLT host in inventory is missing from Terraform state — this means `vlt-infrastructure` must run before `vlt-setup`/`vlt-config`.
 
 The provider block, module call, VLT server entry, and config rendering are all generated automatically from inventory.
 
@@ -380,12 +384,6 @@ infrastructure/
 │       ├── ixp/           # Shared IXP container definitions
 │       ├── vlt-containers/ # Shared VLT container definitions
 │       └── vlt-server/    # Vultr server provisioning
-├── networks/              # Network configurations (BIRD, WireGuard)
-│   ├── coreams01/
-│   │   ├── bird/
-│   │   └── wireguard/
-│   ├── ixpams01/
-│   └── ...
 ├── playbooks/             # Ansible playbooks
 │   ├── sync-config.yml    # Sync Docker configs
 │   ├── sync-bird.yml      # Sync BIRD configs
