@@ -83,15 +83,17 @@ Confirm the candidate predates the breakage (its commit / push time is before th
 
 ### Phase 3 — Pin it in Terraform
 
-Make the **smallest** change that points at the immutable image. For a `:main` (data-source) service, change the data source `name` from the floating tag to the pinned reference — one line, trivially revertible:
+For a `:main` (data-source) service, **replace the data-source + `pull_triggers` block with a direct digest pin on the `docker_image` resource**, and delete the `data "docker_registry_image"` block:
 
 ```hcl
-data "docker_registry_image" "risotto" {
-  name = "ghcr.io/nxthdr/risotto@sha256:<good-digest>"   # ROLLBACK <date> — was :main, see <incident>
+# ROLLBACK <date>: <reason>. Restore the :main data-source block + pull_triggers once upstream is fixed (issue filed).
+resource "docker_image" "risotto" {
+  name     = "ghcr.io/nxthdr/risotto@sha256:<good-digest>"
+  provider = docker.coreams01
 }
 ```
 
-(An immutable tag works too: `ghcr.io/nxthdr/risotto:sha-abc1234`.) Leave the `pull_triggers` line as-is — once `name` is a fixed digest the trigger is stable.
+> ⚠️ **Do NOT just repoint the `data "docker_registry_image"` `name` to a `@sha256:` digest.** Verified 2026-06-24: that data source returns **`404 Not Found`** when given a digest reference (it resolves *tags*, not digests), so `terraform plan` errors out before it can pin anything — and because data sources are read regardless of references, leaving a digest in the block breaks the plan even if nothing uses it. Pin the digest directly on the `docker_image` resource and remove the data source, as above. (An immutable *tag* — e.g. `:sha-abc1234` — would work in the data source, but nxthdr's first-party images don't publish per-commit tags; only `:main` and branch/PR tags exist.)
 
 For a plain `:latest` service (tailscale / bgpalerter), pin the `docker_image` resource `name` directly to a published version tag:
 
