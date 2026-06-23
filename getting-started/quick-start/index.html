@@ -699,10 +699,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-edit-bird-config" class="md-nav__link">
+  <a href="#step-1-edit-the-bird-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Edit BIRD Config
+        Step 1: Edit the BIRD Template
       
     </span>
   </a>
@@ -710,10 +710,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-sync-configuration" class="md-nav__link">
+  <a href="#step-2-render-and-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Sync Configuration
+        Step 2: Render and Sync
       
     </span>
   </a>
@@ -1069,6 +1069,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations & Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/alert-silences/" class="md-nav__link">
         
   
@@ -1325,10 +1353,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-edit-bird-config" class="md-nav__link">
+  <a href="#step-1-edit-the-bird-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Edit BIRD Config
+        Step 1: Edit the BIRD Template
       
     </span>
   </a>
@@ -1336,10 +1364,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-sync-configuration" class="md-nav__link">
+  <a href="#step-2-render-and-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Sync Configuration
+        Step 2: Render and Sync
       
     </span>
   </a>
@@ -1533,7 +1561,7 @@
 </span></code></pre></div>
 <p>Find the image resource and update the version:</p>
 <div class="language-hcl highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;grafana&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grafana/grafana:10.2.0&quot;</span><span class="c1">  # Update this version</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grafana/grafana:13.0.2&quot;</span><span class="c1">  # bump this tag to update</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
 </span></code></pre></div>
@@ -1547,61 +1575,22 @@
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>docker<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>grafana
 </span></code></pre></div>
 <h2 id="example-update-bird-configuration">Example: Update BIRD Configuration<a class="headerlink" href="#example-update-bird-configuration" title="Permanent link">&para;</a></h2>
-<p>Network configurations are in <code>networks/{hostname}/</code>.</p>
-<h3 id="step-1-edit-bird-config">Step 1: Edit BIRD Config<a class="headerlink" href="#step-1-edit-bird-config" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vim<span class="w"> </span>networks/coreams01/bird/bird.conf
+<p>BIRD configs are Jinja2 templates under <code>templates/config/{group}/.../bird/</code>.</p>
+<h3 id="step-1-edit-the-bird-template">Step 1: Edit the BIRD Template<a class="headerlink" href="#step-1-edit-the-bird-template" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># IXP host (per-host); or templates/config/vlt/bird/bird.conf.j2 for all VLT hosts</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vim<span class="w"> </span>templates/config/ixp/ixpams01/bird/bird.conf.j2
 </span></code></pre></div>
-<h3 id="step-2-sync-configuration">Step 2: Sync Configuration<a class="headerlink" href="#step-2-sync-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="step-2-render-and-sync">Step 2: Render and Sync<a class="headerlink" href="#step-2-render-and-sync" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>make<span class="w"> </span>sync-bird
 </span></code></pre></div>
-<p>You'll be prompted for the BECOME password (sudo password).</p>
+<p>This renders the templates and deploys the rendered config to the <code>ixp</code> and <code>vlt</code> groups. You'll be prompted for the BECOME password (sudo). <code>sync-bird</code> does <strong>not</strong> target the core server — core BIRD is applied manually.</p>
 <h3 id="step-3-verify_1">Step 3: Verify<a class="headerlink" href="#step-3-verify_1" title="Permanent link">&para;</a></h3>
-<p>BIRD will automatically reload. Check status:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+<p>BIRD reloads automatically. Check status:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ssh<span class="w"> </span>nxthdr@ams01.ixp.infra.nxthdr.dev
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>status
 </span></code></pre></div>
 <h2 id="common-commands-reference">Common Commands Reference<a class="headerlink" href="#common-commands-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Command</th>
-<th>Requires Sudo</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Full deployment</td>
-<td><code>make apply</code></td>
-<td>No</td>
-</tr>
-<tr>
-<td>Render only</td>
-<td><code>make render</code></td>
-<td>No</td>
-</tr>
-<tr>
-<td>Sync configs</td>
-<td><code>make sync-config</code></td>
-<td>No</td>
-</tr>
-<tr>
-<td>Update BIRD</td>
-<td><code>make sync-bird</code></td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Update WireGuard</td>
-<td><code>make sync-wireguard</code></td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Edit secrets</td>
-<td><code>make edit-secrets</code></td>
-<td>No</td>
-</tr>
-</tbody>
-</table>
+<p>See <a href="../../guides/common-tasks/">Common Tasks</a> for the full command reference and day-to-day operations.</p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Test on one host first</strong> for multi-host changes</li>
@@ -1654,7 +1643,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 5, 2025 16:35:55 UTC">October 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 21:56:57 UTC">June 23, 2026</span>
   </span>
 
     

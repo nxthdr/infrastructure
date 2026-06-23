@@ -1097,6 +1097,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations & Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/alert-silences/" class="md-nav__link">
         
   
@@ -1531,38 +1559,38 @@
 <h2 id="bird-configuration">BIRD Configuration<a class="headerlink" href="#bird-configuration" title="Permanent link">&para;</a></h2>
 <p>BIRD is used for BGP routing on core, IXP, and VLT servers to announce AS215011 routes.</p>
 <h3 id="configuration-files">Configuration Files<a class="headerlink" href="#configuration-files" title="Permanent link">&para;</a></h3>
-<p>BIRD configurations are located in <code>networks/{hostname}/bird/</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>networks/
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── coreams01/
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   └── bird/
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│       └── bird.conf
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── ixpams01/
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── bird/
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       ├── bird.conf
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│       └── peerlab.conf  # Optional
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── ...
+<p>BIRD configurations are Jinja2 templates under <code>templates/config/{group}/.../bird/</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>templates/config/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── core/coreams01/bird/bird.conf.j2      # core (applied manually — see warning below)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── ixp/{hostname}/bird/
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── bird.conf.j2
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── peerlab.conf.j2                    # optional, present on some IXP hosts
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── vlt/bird/bird.conf.j2                  # shared across all VLT hosts
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── shared/bird/bird.service              # systemd unit (all hosts)
 </span></code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">Not Templated</p>
-<p>BIRD configs are <strong>not</strong> Jinja2 templates. They are static files copied as-is to servers.</p>
+<p class="admonition-title">Templated and rendered</p>
+<p>BIRD configs <strong>are</strong> Jinja2 templates. <code>make render</code> renders them — injecting the host's IPv6 address from Terraform output, secrets, and inventory vars — into <code>.rendered/{hostname}/bird/bird.conf</code>. <code>make sync-bird</code> deploys the <strong>rendered</strong> file, never the template directly.</p>
 </div>
 <h3 id="update-bird-configuration">Update BIRD Configuration<a class="headerlink" href="#update-bird-configuration" title="Permanent link">&para;</a></h3>
 <ol>
-<li>
-<p><strong>Edit the configuration</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vim<span class="w"> </span>networks/coreams01/bird/bird.conf
-</span></code></pre></div></p>
-</li>
-<li>
-<p><strong>Sync to server</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>make<span class="w"> </span>sync-bird
-</span></code></pre></div></p>
-</li>
+<li><strong>Edit the template</strong> (pick the right scope):</li>
+<li>IXP host: <code>templates/config/ixp/{hostname}/bird/bird.conf.j2</code></li>
+<li>All VLT hosts: <code>templates/config/vlt/bird/bird.conf.j2</code></li>
 </ol>
-<p>This will prompt for your BECOME password (sudo password).</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vim<span class="w"> </span>templates/config/ixp/ixpams01/bird/bird.conf.j2
+</span></code></pre></div>
+<ol>
+<li><strong>Render and sync to the servers</strong>:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>make<span class="w"> </span>sync-bird
+</span></code></pre></div></li>
+</ol>
+<p>This renders the templates and runs <code>playbooks/sync-bird.yml</code> against the <strong><code>ixp</code> and <code>vlt</code></strong> groups (prompts for your BECOME / sudo password).</p>
+<p>!!! warning "Core BIRD is manual"
+       <code>sync-bird</code> does <strong>not</strong> target <code>coreams01</code>. <code>make sync-config</code> rsyncs the rendered core config to <code>/home/nxthdr/bird/</code>, but applying it to <code>/etc/bird/bird.conf</code> and reloading is a manual step on the core host (<code>sudo cp</code> + <code>sudo birdc configure</code>).</p>
 <ol>
 <li><strong>Verify the change</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>nxthdr@ams01.ixp.infra.nxthdr.dev
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>status
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>birdc<span class="w"> </span>show<span class="w"> </span>protocols<span class="w"> </span>all
 </span></code></pre></div></li>
@@ -1570,14 +1598,14 @@
 <h3 id="bird-playbook-details">BIRD Playbook Details<a class="headerlink" href="#bird-playbook-details" title="Permanent link">&para;</a></h3>
 <p>The <code>sync-bird</code> playbook (<code>playbooks/sync-bird.yml</code>):</p>
 <ol>
-<li>Creates <code>/etc/bird</code> directory</li>
-<li>Copies <code>bird.conf</code> from <code>networks/{hostname}/bird/</code></li>
-<li>Copies optional <code>peerlab.conf</code> if it exists</li>
-<li>Copies systemd service file</li>
-<li>Reloads systemd daemon</li>
-<li>Reloads BIRD service</li>
+<li>Creates the <code>/etc/bird</code> directory</li>
+<li>Copies the rendered <code>.rendered/{hostname}/bird/bird.conf</code> → <code>/etc/bird/bird.conf</code></li>
+<li>Copies the rendered <code>peerlab.conf</code> if it exists</li>
+<li>Copies <code>templates/config/shared/bird/bird.service</code> → systemd</li>
+<li>Reloads the systemd daemon</li>
+<li>Enables and reloads the BIRD service</li>
 </ol>
-<p><strong>Target hosts</strong>: <code>core</code>, <code>ixp</code>, <code>vlt</code></p>
+<p><strong>Target hosts</strong>: <code>ixp</code>, <code>vlt</code> (not <code>core</code> — see the warning above)</p>
 <h3 id="common-bird-operations">Common BIRD Operations<a class="headerlink" href="#common-bird-operations" title="Permanent link">&para;</a></h3>
 <p><strong>Check BIRD status</strong>:
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
@@ -1598,36 +1626,32 @@
 <h2 id="wireguard-configuration">WireGuard Configuration<a class="headerlink" href="#wireguard-configuration" title="Permanent link">&para;</a></h2>
 <p>WireGuard VPN tunnels connect IXP servers to the core server.</p>
 <h3 id="configuration-files_1">Configuration Files<a class="headerlink" href="#configuration-files_1" title="Permanent link">&para;</a></h3>
-<p>WireGuard configurations are in <code>networks/{hostname}/wireguard/</code>:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>networks/
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── coreams01/
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   └── wireguard/
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│       ├── wg0.conf
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│       └── wg1.conf
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>├── ixpams01/
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│   └── wireguard/
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│       ├── wg0.conf
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│       └── wg1.conf
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>└── ...
+<p>WireGuard configurations are Jinja2 templates under <code>templates/config/{group}/{hostname}/wireguard/</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>templates/config/
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── core/coreams01/wireguard/
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   ├── wg0.conf.j2
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│   └── wg1.conf.j2
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>└── ixp/{hostname}/wireguard/
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    └── wg0.conf.j2          # some IXP hosts also have wg1.conf.j2
 </span></code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">Templated</p>
-<p>WireGuard configs <strong>are</strong> Jinja2 templates and can use variables from inventory and secrets.</p>
+<p class="admonition-title">Templated and rendered</p>
+<p>WireGuard configs <strong>are</strong> Jinja2 templates (they reference keys from <code>secrets.yml</code> and inventory vars). <code>make render</code> writes them to <code>.rendered/{hostname}/wireguard/</code>, and <code>make sync-wireguard</code> deploys the <strong>rendered</strong> <code>.conf</code> files.</p>
 </div>
 <h3 id="update-wireguard-configuration">Update WireGuard Configuration<a class="headerlink" href="#update-wireguard-configuration" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p><strong>Edit the configuration</strong>:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vim<span class="w"> </span>networks/coreams01/wireguard/wg0.conf
+<p><strong>Edit the template</strong>:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vim<span class="w"> </span>templates/config/core/coreams01/wireguard/wg0.conf.j2
 </span></code></pre></div></p>
 </li>
 <li>
-<p><strong>Sync to server</strong>:
+<p><strong>Render and sync to the servers</strong>:
    <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>make<span class="w"> </span>sync-wireguard
 </span></code></pre></div></p>
 </li>
 </ol>
-<p>This will prompt for your BECOME password.</p>
+<p>This renders the templates and deploys the rendered configs to the <strong><code>core</code> and <code>ixp</code></strong> groups (prompts for your BECOME password).</p>
 <ol>
 <li><strong>Verify the tunnel</strong>:
    <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev
@@ -1637,8 +1661,7 @@
 <h3 id="wireguard-playbook-details">WireGuard Playbook Details<a class="headerlink" href="#wireguard-playbook-details" title="Permanent link">&para;</a></h3>
 <p>The <code>sync-wireguard</code> playbook (<code>playbooks/sync-wireguard.yml</code>):</p>
 <ol>
-<li>Templates all files from <code>networks/{hostname}/wireguard/</code></li>
-<li>Copies to <code>/etc/wireguard/</code> on remote server</li>
+<li>Copies the rendered <code>.rendered/{hostname}/wireguard/*.conf</code> → <code>/etc/wireguard/</code> (mode <code>0600</code>)</li>
 <li>Restarts <code>wg-quick@wg0.service</code></li>
 <li>Restarts <code>wg-quick@wg1.service</code></li>
 </ol>
@@ -1812,7 +1835,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 5, 2025 16:35:55 UTC">October 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 21:56:57 UTC">June 23, 2026</span>
   </span>
 
     

@@ -1070,6 +1070,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations & Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/alert-silences/" class="md-nav__link">
         
   
@@ -1473,6 +1501,7 @@
 
 
 <h1 id="common-tasks">Common Tasks<a class="headerlink" href="#common-tasks" title="Permanent link">&para;</a></h1>
+<p>This is the hub for day-to-day operations. The <a href="../../reference/operations/">Operations &amp; Tooling</a> reference covers the operator skills (<code>/deploy</code>, <code>/health-check</code>, <code>/rollback</code>) and the public ClickHouse query endpoint. For deeper, one-off runbooks, see the rest of the Reference section: <a href="../../reference/architecture/">Architecture</a>, <a href="../../reference/alert-silences/">Alert Silences</a>, <a href="../../reference/mas-migration/">MAS Migration</a>, and <a href="../../reference/hookshot-transformation/">Hookshot Transformation</a>.</p>
 <h2 id="container-management">Container Management<a class="headerlink" href="#container-management" title="Permanent link">&para;</a></h2>
 <h3 id="update-container-configuration">Update Container Configuration<a class="headerlink" href="#update-container-configuration" title="Permanent link">&para;</a></h3>
 <ol>
@@ -1490,13 +1519,13 @@
 <h2 id="network-configuration">Network Configuration<a class="headerlink" href="#network-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="update-bird">Update BIRD<a class="headerlink" href="#update-bird" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Edit: <code>networks/{hostname}/bird/bird.conf</code></li>
-<li>Run: <code>make sync-bird</code> (requires sudo password)</li>
+<li>Edit the template: <code>templates/config/ixp/{hostname}/bird/bird.conf.j2</code> (IXP) or <code>templates/config/vlt/bird/bird.conf.j2</code> (VLT)</li>
+<li>Run: <code>make sync-bird</code> (requires sudo password; targets <code>ixp</code>+<code>vlt</code>, not core)</li>
 <li>Verify: <code>sudo birdc show status</code></li>
 </ol>
 <h3 id="update-wireguard">Update WireGuard<a class="headerlink" href="#update-wireguard" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Edit: <code>networks/{hostname}/wireguard/{interface}.conf</code></li>
+<li>Edit the template: <code>templates/config/{core,ixp}/{hostname}/wireguard/wg*.conf.j2</code></li>
 <li>Run: <code>make sync-wireguard</code> (requires sudo password)</li>
 <li>Verify: <code>sudo wg show</code></li>
 </ol>
@@ -1590,7 +1619,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 22, 2026 17:28:34 UTC">March 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 21:56:57 UTC">June 23, 2026</span>
   </span>
 
     

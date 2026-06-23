@@ -12,25 +12,31 @@
         <meta name="author" content="nxthdr">
       
       
+        <link rel="canonical" href="https://nxthdr.github.io/infrastructure/reference/operations/">
       
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+        <link rel="next" href="../alert-silences/">
       
       
         
       
       
-      <link rel="icon" href="/infrastructure/assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Infrastructure</title>
+        <title>Operations & Tooling - Infrastructure</title>
       
     
     
-      <link rel="stylesheet" href="/infrastructure/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/infrastructure/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL("/infrastructure/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#operations-tooling" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -83,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/infrastructure/." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -103,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Operations & Tooling
             
           </span>
         </div>
@@ -216,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/infrastructure/." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -237,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/infrastructure/getting-started/overview/" class="md-tabs__link">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
           
   
   
@@ -257,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/infrastructure/guides/common-tasks/" class="md-tabs__link">
+        <a href="../../guides/common-tasks/" class="md-tabs__link">
           
   
   
@@ -273,11 +284,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/infrastructure/reference/architecture/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../architecture/" class="md-tabs__link">
           
   
   
@@ -311,7 +324,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/infrastructure/." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
+    <a href="../.." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -341,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -422,7 +435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/getting-started/overview/" class="md-nav__link">
+      <a href="../../getting-started/overview/" class="md-nav__link">
         
   
   
@@ -450,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/getting-started/setup/" class="md-nav__link">
+      <a href="../../getting-started/setup/" class="md-nav__link">
         
   
   
@@ -478,7 +491,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/getting-started/quick-start/" class="md-nav__link">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -567,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/guides/common-tasks/" class="md-nav__link">
+      <a href="../../guides/common-tasks/" class="md-nav__link">
         
   
   
@@ -595,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/guides/network-configuration/" class="md-nav__link">
+      <a href="../../guides/network-configuration/" class="md-nav__link">
         
   
   
@@ -623,7 +636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/guides/adding-services/" class="md-nav__link">
+      <a href="../../guides/adding-services/" class="md-nav__link">
         
   
   
@@ -655,28 +668,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -694,7 +710,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -712,7 +728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/reference/architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -737,10 +753,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/infrastructure/reference/operations/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations & Tooling
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -756,6 +799,82 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operator-skills-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator skills (Claude Code)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator skills (Claude Code)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-rollback-needs-a-dedicated-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why rollback needs a dedicated procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying-the-data-chproxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying the data (chproxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Querying the data (chproxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-freshness-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline freshness windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -768,7 +887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/reference/alert-silences/" class="md-nav__link">
+      <a href="../alert-silences/" class="md-nav__link">
         
   
   
@@ -796,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/reference/mas-migration/" class="md-nav__link">
+      <a href="../mas-migration/" class="md-nav__link">
         
   
   
@@ -824,7 +943,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/infrastructure/reference/hookshot-transformation/" class="md-nav__link">
+      <a href="../hookshot-transformation/" class="md-nav__link">
         
   
   
@@ -869,6 +988,72 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operator-skills-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator skills (Claude Code)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operator skills (Claude Code)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-rollback-needs-a-dedicated-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why rollback needs a dedicated procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying-the-data-chproxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying the data (chproxy)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Querying the data (chproxy)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-freshness-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline freshness windows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -881,8 +1066,136 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/pages/reference/operations.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="operations-tooling">Operations &amp; Tooling<a class="headerlink" href="#operations-tooling" title="Permanent link">&para;</a></h1>
+<p>Day-to-day operation of the infrastructure is supported by repository tooling (Claude Code skills) and a public, read-only query endpoint.</p>
+<h2 id="operator-skills-claude-code">Operator skills (Claude Code)<a class="headerlink" href="#operator-skills-claude-code" title="Permanent link">&para;</a></h2>
+<p>The repository ships Claude Code skills under <code>.claude/skills/</code> that encode the common operational workflows. When working in the repo with Claude Code, invoke them with <code>/&lt;name&gt;</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>What it does</th>
+<th>Safety</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/deploy</code></td>
+<td>Renders configs, runs <code>terraform plan</code>, <strong>pauses for explicit confirmation</strong>, applies, then verifies the fleet.</td>
+<td>Never auto-applies</td>
+</tr>
+<tr>
+<td><code>/health-check</code></td>
+<td>Read-only fleet sweep: container status across core/ixp/vlt, ClickHouse pipeline freshness, BIRD status.</td>
+<td>No sudo, no writes</td>
+</tr>
+<tr>
+<td><code>/rollback</code></td>
+<td>Rolls a service back to a known-good image after a bad update — finds the last-good digest, pins it in Terraform, applies scoped to that service, then verifies.</td>
+<td>Plan + confirm before apply</td>
+</tr>
+</tbody>
+</table>
+<p>Each skill's <code>SKILL.md</code> holds the full step-by-step procedure.</p>
+<h3 id="why-rollback-needs-a-dedicated-procedure">Why rollback needs a dedicated procedure<a class="headerlink" href="#why-rollback-needs-a-dedicated-procedure" title="Permanent link">&para;</a></h3>
+<p>Most first-party services track the floating <code>ghcr.io/nxthdr/*:main</code> tag via a <code>data.docker_registry_image</code> + <code>pull_triggers</code> block, so the running version is <strong>not recorded in git</strong>, and re-running <code>make apply</code> simply re-pulls the same (possibly broken) <code>:main</code>. Rolling back therefore means repointing at an <strong>immutable</strong> image — a <code>@sha256:</code> digest or an immutable tag — and applying <strong>scoped</strong> with <code>-target</code> (never <code>make apply</code>, which would drag every other <code>:main</code> service forward at the same time). The <code>/rollback</code> skill walks through finding the last-good digest (host <code>docker images --digests</code>, Loki, or GHCR), pinning it, and the un-pin follow-up.</p>
+<p>Floating-tag services: <code>:main</code> first-party (<code>risotto</code>, <code>pesto</code>, <code>saimiris</code> [all VLT hosts], <code>saimiris-gateway</code>, <code>peerlab-gateway</code>, <code>nxthdr.dev</code>, <code>blog</code>, <code>docs</code>, <code>peers</code>) and <code>:latest</code> third-party (<code>tailscale</code> [all IXP hosts], <code>bgpalerter</code>). Everything else is pinned to an explicit version and rolls back with a plain <code>git revert</code> of the version bump.</p>
+<h2 id="querying-the-data-chproxy">Querying the data (chproxy)<a class="headerlink" href="#querying-the-data-chproxy" title="Permanent link">&para;</a></h2>
+<p>ClickHouse is reachable read-only from outside the infrastructure through <strong>chproxy</strong> at <code>https://clickhouse.nxthdr.dev</code>, using the hardcoded read-only credentials <code>read:read</code> (not a secret). Use this for ad-hoc queries, dashboards, and scripts instead of SSH-ing to the core server.</p>
+<div class="admonition warning">
+<p class="admonition-title">Send the query as a GET parameter, not a form-encoded POST body</p>
+<p>chproxy forwards an un-decoded form body verbatim to ClickHouse, so <code>&gt;</code> arrives as <code>%3E</code> and you get a syntax error. Use <code>curl -G --data-urlencode</code> (a raw <code>--data-binary @-</code> POST body also works):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-G<span class="w"> </span><span class="s1">&#39;https://clickhouse.nxthdr.dev/?user=read&amp;password=read&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;query=SELECT count() FROM bmp.updates</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s1">    WHERE time_received_ns &gt; now() - INTERVAL 5 MINUTE FORMAT PrettyCompact&#39;</span>
+</span></code></pre></div>
+</div>
+<h3 id="pipeline-freshness-windows">Pipeline freshness windows<a class="headerlink" href="#pipeline-freshness-windows" title="Permanent link">&para;</a></h3>
+<p>The three data pipelines have different cadences — use the right window when checking freshness:</p>
+<table>
+<thead>
+<tr>
+<th>Pipeline</th>
+<th>Cadence</th>
+<th>Stale if no rows in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bmp.updates</code></td>
+<td>continuous (BGP updates from peers)</td>
+<td>last 5 min</td>
+</tr>
+<tr>
+<td><code>flows.records</code></td>
+<td>continuous (sFlow samples)</td>
+<td>last 5 min</td>
+</tr>
+<tr>
+<td><code>saimiris.replies</code></td>
+<td><strong>bursty</strong> — <code>saimprowler</code> dispatches a batch every 30 min</td>
+<td>last 1 hour</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>saimiris.replies</code> gap inside a 5-minute window is almost always the normal inter-burst lull, not an outage — see the note in <a href="../architecture/#active-measurement-pipeline">Architecture → Active Measurement Pipeline</a>. For the database/table layout, see <a href="../architecture/#clickhouse-database-architecture">Architecture → ClickHouse Database Architecture</a>.</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 21:56:57 UTC">June 23, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 23, 2026 21:56:57 UTC">June 23, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -925,10 +1238,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/infrastructure/", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "/infrastructure/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/infrastructure/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
