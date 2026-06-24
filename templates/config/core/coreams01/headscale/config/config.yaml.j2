@@ -82,8 +82,17 @@ derp:
 # Disables the automatic check for headscale updates on startup
 disable_check_updates: false
 
-# Time before an inactive ephemeral node is deleted?
-ephemeral_node_inactivity_timeout: 30m
+# Node lifecycle configuration.
+node:
+  # The amount of time from when a node is authenticated until it expires and
+  # needs to reauthenticate. Applies to all registration methods (auth key,
+  # CLI, web, OIDC). Setting the value to "0" means no expiry.
+  # Replaces the `oidc.expiry` key removed in headscale v0.29.
+  expiry: 180d
+
+  ephemeral:
+    # Time before an inactive ephemeral node is deleted.
+    inactivity_timeout: 30m
 
 # Period to check for node updates within the tailnet.
 # A value too low will cause many updates, a value too
@@ -261,15 +270,11 @@ oidc:
   client_id: "{{ headscale.oidc.client_id }}"
   client_secret: "{{ headscale.oidc.client_secret }}"
 
-  # The amount of time from a node is authenticated with OpenID until it
-  # expires and needs to reauthenticate.
-  # Setting the value to "0" will mean no expiry.
-  expiry: 180d
-
   # Use the expiry from the token received from OpenID when the user logged
   # in, this will typically lead to frequent need to reauthenticate and should
   # only been enabled if you know what you are doing.
-  # Note: enabling this will cause `oidc.expiry` to be ignored.
+  # Note: enabling this will cause `node.expiry` to be ignored for
+  # OIDC-authenticated nodes.
   use_expiry_from_token: false
 
   # Customize the scopes used in the OIDC flow
@@ -309,7 +314,8 @@ logtail:
   # disabled by default. Enabling this will make your clients send logs to Tailscale Inc.
   enabled: false
 
-# Enabling this option makes devices prefer a random port for WireGuard traffic over the
-# default static port 41641. This option is intended as a workaround for some buggy
-# firewall devices. See https://tailscale.com/kb/1181/firewalls/ for more information.
-randomize_client_port: false
+# NOTE: `randomize_client_port` was removed in headscale v0.29 (headscale refuses
+# to start if the key is set). The toggle now lives in the policy file as a
+# top-level `randomizeClientPort` field. We keep the default (off) and have no
+# policy file (policy.path is empty), so there is nothing to set here — do not
+# re-add the old server-config key.

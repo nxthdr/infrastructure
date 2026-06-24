@@ -947,7 +947,6 @@ resource "docker_container" "peers" {
 
 # Headscale
 resource "docker_image" "headscale" {
-  # ROLLBACK 2026-06-24: v0.29 removed config keys oidc.expiry + randomize_client_port (FATAL crash-loop). Re-bump only after migrating config to node.expiry + policy randomizeClientPort.
   name = "ghcr.io/juanfont/headscale:v0.29"
   provider = docker.coreams01
 }
