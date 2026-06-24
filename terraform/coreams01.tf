@@ -689,11 +689,15 @@ resource "docker_container" "pesto" {
 }
 
 # Saimiris Gateway
-# ROLLBACK 2026-06-24: :main regressed IPv6 DB-URL parsing (getaddrinfo on bracketed literal). Pinned to last-good digest;
-# restore the `:main` data-source block + pull_triggers once upstream fixes it (issue filed).
-resource "docker_image" "saimiris_gateway" {
-  name = "ghcr.io/nxthdr/saimiris-gateway@sha256:f830e941c1ee9dcb742be66d3a4e3bd39f8ec9d1019477cfcda0ae21a4dfc563"
+data "docker_registry_image" "saimiris_gateway" {
+  name = "ghcr.io/nxthdr/saimiris-gateway:main"
   provider = docker.coreams01
+}
+
+resource "docker_image" "saimiris_gateway" {
+  name = data.docker_registry_image.saimiris_gateway.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.saimiris_gateway.sha256_digest ]
 }
 
 resource "docker_container" "saimiris_gateway" {
@@ -728,11 +732,15 @@ resource "docker_container" "saimiris_gateway" {
 }
 
 # Peerlab Gateway
-# ROLLBACK 2026-06-24: :main regressed IPv6 DB-URL parsing (getaddrinfo on bracketed literal). Pinned to last-good digest;
-# restore the `:main` data-source block + pull_triggers once upstream fixes it (issue filed).
-resource "docker_image" "peerlab_gateway" {
-  name = "ghcr.io/nxthdr/peerlab-gateway@sha256:b5d972cff2c0f3d18c83bb9d5de8a48cc4dab34be5a6b013781005b58300c7e4"
+data "docker_registry_image" "peerlab_gateway" {
+  name = "ghcr.io/nxthdr/peerlab-gateway:main"
   provider = docker.coreams01
+}
+
+resource "docker_image" "peerlab_gateway" {
+  name = data.docker_registry_image.peerlab_gateway.name
+  provider = docker.coreams01
+  pull_triggers = [ data.docker_registry_image.peerlab_gateway.sha256_digest ]
 }
 
 resource "docker_container" "peerlab_gateway" {
