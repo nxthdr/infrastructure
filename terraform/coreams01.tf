@@ -980,7 +980,7 @@ resource "docker_container" "headscale" {
 
 # Headplane
 resource "docker_image" "headplane" {
-  name = "ghcr.io/tale/headplane:0.6.3"
+  name = "ghcr.io/tale/headplane:0.7.0"
   provider = docker.coreams01
 }
 
