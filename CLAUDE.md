@@ -421,6 +421,8 @@ Some tasks require manual intervention:
 
 Alerts flow through: **Prometheus → Alertmanager → Hookshot webhook → Matrix room**
 
+**To read/triage what is firing right now, use the `check-alerts` skill** (`.claude/skills/check-alerts/`). It fetches the internal Alertmanager v2 API from the core host (no vault, no basic-auth — the public endpoint's password is in `secrets.yml`, and decrypting it is blocked by the auto-classifier) and separates real alerts from known-noise (Frankfurt LocIX BGP outage, VLT OOM flaps). Don't hand-roll the curl.
+
 - **Prometheus** scrapes all services and evaluates alert rules from `templates/config/core/coreams01/prometheus/config/alerts.yml`
 - **Alertmanager** receives firing/resolved alerts and forwards them to the Hookshot generic webhook
 - **Hookshot** bridges the webhook payload into the Matrix alert room (`!YVTFkTAELHJcMYskMC:nxthdr.dev`)

@@ -7,6 +7,8 @@ description: Read-only fleet health sweep for the nxthdr infrastructure. Verifie
 
 Run a full-fleet, read-only health sweep of the nxthdr infrastructure and report a concise status summary.
 
+**Investigating a specific alert/page?** Start with the `check-alerts` skill — it reads and triages what Alertmanager is actually firing (and filters known-noise) before you go probing hosts. Use this skill for the broader "is the fleet healthy?" sweep.
+
 ## Source of truth
 
 `inventory/inventory.yml` defines the current set of servers. **Servers change over time** — never hard-code hostnames. Always use `ansible` with `-i inventory/inventory.yml` so the inventory is consulted on every run.
