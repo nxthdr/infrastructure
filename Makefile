@@ -90,6 +90,11 @@ vlt-status:
 	@echo "==> VLT agent status overview..."
 	@ansible-playbook -i inventory/ --become playbooks/vlt-status.yml
 
+.PHONY: docker-maintenance
+docker-maintenance:
+	@echo "==> Installing Docker log rotation + weekly image prune on all hosts..."
+	@ansible-playbook -i inventory/ playbooks/install-docker-maintenance.yml
+
 .PHONY: vlt-prune
 vlt-prune:
 	@echo "==> Pruning VLT servers removed from inventory..."

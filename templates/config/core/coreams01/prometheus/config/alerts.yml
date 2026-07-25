@@ -35,13 +35,62 @@ groups:
 
 - name: host
   rules:
-  - alert: Host_Disk_Full
-    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
-    for: 1m
+  # Disk alerting is three tiers. The single <10% warning this replaced had no
+  # trend component, so the first notification and the outage arrived together;
+  # and it only watched mountpoint="/", so any future data volume would have
+  # been invisible.
+  #
+  # Deliberately percentage-based rather than an absolute byte floor: root disks
+  # on this fleet range from 9.1GB (ixpcdg01/02) to 232GB (coreams01), so any
+  # single GB threshold is either constant noise on the small hosts or useless
+  # on the large one. Size-independence comes from the predictive tier.
+  #
+  # fstype filter keeps this on real filesystems — node_exporter also reports
+  # tmpfs mounts (/run, /run/user/*) which are memory and churn by design.
+
+  # Tier 1 — lead time. The trend says this filesystem runs out within 24h.
+  # Gated on being past 70% used so a transient dip on a mostly-empty disk does
+  # not page, and for: 30m rides out short write bursts (compactions, pulls).
+  - alert: Host_Disk_Filling
+    expr: |
+      (
+        predict_linear(node_filesystem_avail_bytes{fstype=~"ext4|xfs|btrfs"}[6h], 24 * 3600) < 0
+        and on(instance, mountpoint)
+        (
+          node_filesystem_avail_bytes{fstype=~"ext4|xfs|btrfs"}
+            / node_filesystem_size_bytes{fstype=~"ext4|xfs|btrfs"}
+        ) < 0.30
+      )
+    for: 30m
     labels:
       severity: warning
     annotations:
-      title: host disk is almost full in {{ $labels.instance }}
+      title: 'disk {{ $labels.mountpoint }} on {{ $labels.instance }} is on track to fill within 24h'
+      description: 'Based on the last 6h trend, {{ $labels.mountpoint }} on {{ $labels.instance }} runs out of space within 24 hours. Act now rather than at <10% free: check `docker system df` (unpruned images accumulate on every :main pull) and oversized container json-file logs.'
+
+  # Tier 2 — earlier static notice than the old single 10% tier.
+  - alert: Host_Disk_Low
+    expr: |
+      node_filesystem_avail_bytes{fstype=~"ext4|xfs|btrfs"}
+        / node_filesystem_size_bytes{fstype=~"ext4|xfs|btrfs"} * 100 < 20
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      title: 'disk {{ $labels.mountpoint }} on {{ $labels.instance }} is below 20% free'
+
+  # Tier 3 — the original threshold, escalated from warning. ENOSPC on
+  # coreams01 hard-fails ClickHouse, Postgres and Redpanda: Postgres can refuse
+  # to start again and ClickHouse parts can be left needing repair. Not warning.
+  - alert: Host_Disk_Full
+    expr: |
+      node_filesystem_avail_bytes{fstype=~"ext4|xfs|btrfs"}
+        / node_filesystem_size_bytes{fstype=~"ext4|xfs|btrfs"} * 100 < 10
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      title: 'disk {{ $labels.mountpoint }} on {{ $labels.instance }} is almost full'
 
   - alert: Host_Out_Of_Memory
     expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
