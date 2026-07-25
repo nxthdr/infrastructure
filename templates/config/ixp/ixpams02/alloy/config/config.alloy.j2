@@ -36,15 +36,34 @@ loki.process "containers" {
                 format = "RFC3339Nano"
         }
 
+        // Only low-cardinality labels are promoted to Loki. Every unique label
+        // *value* combination creates a new Loki stream, and container_id,
+        // image_id, image_name and tag all change whenever a container is
+        // recreated or an image is re-pulled - which happens on every
+        // `make apply`, because the first-party services track floating :main
+        // tags. Promoting them meant the stream count grew without bound on
+        // every deploy (measured: 52 container_id / 52 tag values for only 24
+        // real containers, i.e. already 2x within the retention window).
+        //
+        // `tag` was the worst: its value is the whole
+        // ImageName|Name|ImageFullID|FullID docker log-tag string, ~250 bytes of
+        // mostly-sha256, stored as a label value on every stream.
+        //
+        // container_name is the one that is actually queried and it is stable.
+        // The regex above still parses all four fields; they are simply not
+        // turned into labels, so no container needs replacing to fix this.
         stage.labels {
                 values = {
-                        container_id   = null,
                         container_name = null,
-                        image_id       = null,
-                        image_name     = null,
                         stream         = null,
-                        tag            = null,
                 }
+        }
+
+        // filename is added automatically by loki.source.file and its value is
+        // /var/lib/docker/containers/<64-hex-id>/<64-hex-id>-json.log, so it is
+        // another per-container-instance label that grows on every recreation.
+        stage.label_drop {
+                values = ["filename"]
         }
 
         stage.output {

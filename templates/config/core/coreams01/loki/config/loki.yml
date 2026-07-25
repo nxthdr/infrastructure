@@ -3,6 +3,11 @@ auth_enabled: false
 server:
   http_listen_port: 3100
   grpc_listen_port: 9096
+  # Loki defaults to info, which emits a "recalculate owned streams" start/complete
+  # pair every 30s plus a line per chunk flush. Amplified by the docker json-file
+  # log tag, that produced a 3.99GB container log on coreams01 - the single
+  # largest file on the host, all of it routine. warn keeps the actionable output.
+  log_level: warn
 
 common:
   instance_addr: 0.0.0.0
