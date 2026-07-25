@@ -95,6 +95,32 @@ docker-maintenance:
 	@echo "==> Installing Docker log rotation + weekly image prune on all hosts..."
 	@ansible-playbook -i inventory/ playbooks/install-docker-maintenance.yml
 
+.PHONY: backup-postgres
+backup-postgres:
+	@echo "==> Dumping all PostgreSQL databases from coreams01..."
+	@mkdir -p backups/postgres
+	@stamp=$$(date -u +%Y%m%dT%H%M%SZ); \
+	out="backups/postgres/postgresql-$$stamp.sql.gz"; \
+	ssh -o ConnectTimeout=15 nxthdr@ams01.core.infra.nxthdr.dev \
+		'docker exec postgresql sh -c "pg_dumpall -U \$$POSTGRES_USER --clean --if-exists" | gzip -9' > "$$out"; \
+	if ! gzip -t "$$out" 2>/dev/null; then \
+		echo "FAILED: $$out is not a valid gzip stream (dump aborted?)"; rm -f "$$out"; exit 1; \
+	fi; \
+	dbs=$$(gzip -dc "$$out" | grep -c '^CREATE DATABASE'); \
+	roles=$$(gzip -dc "$$out" | grep -c '^CREATE ROLE'); \
+	if [ "$$dbs" -lt 4 ]; then \
+		echo "FAILED: expected >=4 databases in the dump, found $$dbs"; rm -f "$$out"; exit 1; \
+	fi; \
+	echo "    $$out"; \
+	echo "    $$(du -h "$$out" | cut -f1)  |  $$dbs databases, $$roles roles"; \
+	gzip -dc "$$out" | grep '^CREATE DATABASE' | sed -E 's/CREATE DATABASE ([a-z_]+).*/      - \1/'; \
+	echo ""; \
+	echo "==> Pruning dumps older than the most recent 14..."; \
+	ls -1t backups/postgres/postgresql-*.sql.gz 2>/dev/null | tail -n +15 | while read old; do \
+		echo "    removed $$old"; rm -f "$$old"; \
+	done; \
+	echo "==> Done. $$(ls -1 backups/postgres/postgresql-*.sql.gz 2>/dev/null | wc -l | tr -d ' ') dump(s) retained."
+
 .PHONY: vlt-prune
 vlt-prune:
 	@echo "==> Pruning VLT servers removed from inventory..."

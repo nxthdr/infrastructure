@@ -48,3 +48,8 @@ operations/variable-scripts/variable.json
 # Rendered files (contains credentials)
 .rendered
 terraform/terraform.tfvars
+
+# Local database dumps (`make backup-postgres`). These contain personal data:
+# MAS user identities, peerlab ASN/prefix leases, saimiris allocations and
+# Synapse message history. Never commit them.
+backups/
