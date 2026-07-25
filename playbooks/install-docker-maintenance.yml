@@ -55,8 +55,12 @@
               rotate {{ log_keep }}
               size {{ log_max_size }}
               daily
+              # No delaycompress on purpose: it exists to avoid compressing a
+              # file the writer may still be appending to, but copytruncate
+              # truncates the original immediately, so the .1 archive is already
+              # complete. Delaying would just leave the full uncompressed copy
+              # on disk for another day and reclaim nothing on the first pass.
               compress
-              delaycompress
               missingok
               notifempty
               copytruncate
