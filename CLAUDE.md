@@ -411,6 +411,65 @@ Available in Jinja2 templates:
 
 - `terraform.tfstate` is git ignored (not committed)
 - State managed locally on deployment machine
+- **Single point of failure.** 172 resources, no remote backend, no locking, and
+  `terraform.tfstate.backup` is one step of history. It also contains plaintext
+  secrets (`POSTGRES_PASSWORD`, several `*_password`), so it cannot simply be
+  committed. Migrating to an S3-compatible backend with versioning and
+  `use_lockfile = true` (supported from Terraform 1.10) is the open fix.
+
+## Backups
+
+### PostgreSQL — `make backup-postgres`
+
+Dumps **all** databases from `coreams01` to `backups/postgres/` on the machine
+you run it from (gitignored). This is the only copy of the platform's
+unreconstructable state:
+
+| database | holds |
+|---|---|
+| `mas` | every user identity — the auth source of truth post-syn2mas |
+| `peerlab_gateway` | ASN and prefix leases |
+| `saimiris` | per-user limits, prefix allocations, probe accounting |
+| `synapse` | Matrix rooms, messages, state |
+
+`pg_dumpall` runs over the container's local socket, which `pg_hba.conf` grants
+`trust`, so **no password or vault access is needed**. The dump is gzipped
+remotely before transfer. The target verifies gzip integrity and that ≥4
+databases are present, deleting the output and failing loudly otherwise — a
+silently truncated dump that looks like a backup is worse than none. Keeps the
+most recent 14.
+
+**To restore** (verify in a throwaway container first, never straight into prod):
+
+```bash
+gzip -dc backups/postgres/postgresql-<stamp>.sql.gz | \
+  docker exec -i postgresql psql -U <POSTGRES_USER>
+```
+
+Two errors are expected and harmless when restoring as the same superuser:
+`current user cannot be dropped` and `role "postgres" already exists`.
+
+**Known limitations:** it is manual, and the copy lands on the same machine that
+already holds the only `terraform.tfstate`, so one lost laptop loses both.
+Pushing dumps off-host is the next step.
+
+⚠️ Dumps contain **personal data**. This matters for GDPR erasure
+(`roadmap#44`): an erased user still exists in retained dumps, so the erasure
+runbook must account for them.
+
+### Docker disk growth — `make docker-maintenance`
+
+Installs a logrotate drop-in (`copytruncate`, so it caps the logs of containers
+that already exist without recreating them) and a weekly `docker-prune.timer`
+that removes unused images older than 14 days. The 14-day window is deliberate:
+the `rollback` skill resolves last-good digests from `docker images --digests`,
+and floating `:main` tags are not pinned in git, so the host image list is the
+only record of what was running.
+
+Note that the per-container `log_opts` in the Terraform modules only take effect
+when a container is **replaced**, and `/etc/docker/daemon.json` log defaults
+require a **docker daemon restart** (which restarts every container). Hence
+logrotate.
 
 ### Manual Configuration
 Some tasks require manual intervention:
@@ -495,7 +554,12 @@ The old `registration_shared_secret` flow in Synapse admin API is inert post-mig
 
 1. **Review changes:** Check what will change before applying
 2. **Review Terraform plan:** Use `terraform -chdir=./terraform plan` if needed
-3. **Backup before major changes:** Terraform state is in git, but configs are not
+3. **Backup before major changes:** Terraform state is **not** in git — it is a
+   single local file (`terraform/terraform.tfstate`, gitignored, no remote
+   backend, no locking). `terraform.tfstate.backup` is only one step of history.
+   Losing it means Terraform no longer knows the 3 Vultr instances exist and the
+   next `make apply` would try to **create new ones**. Copy it somewhere safe
+   before anything invasive. See "Backups" below.
 4. **Use descriptive commit messages:** Infrastructure changes should be well-documented
 5. **Test on single host first:** For multi-host changes, test on one server before rolling out
 6. **Keep secrets secure:** Never commit `.password` or `.rendered/` directory
@@ -512,6 +576,8 @@ The old `registration_shared_secret` flow in Synapse admin API is inert post-mig
 | Update BIRD | `make sync-bird` | Yes |
 | Update WireGuard | `make sync-wireguard` | Yes |
 | Edit secrets | `make edit-secrets` | No |
+| Backup PostgreSQL | `make backup-postgres` | No |
+| Install log rotation + image prune | `make docker-maintenance` | Yes |
 | Add VLT server (full) | `make render-terraform && terraform -chdir=./terraform init && make vlt` | Yes (vlt-setup) |
 | Remove VLT server(s) | `make vlt-prune` | No |
 | Destroy infrastructure | `make destroy` | No |
