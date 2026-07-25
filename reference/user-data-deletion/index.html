@@ -1,0 +1,1947 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for nxthdr infrastructure repository">
+      
+      
+        <meta name="author" content="nxthdr">
+      
+      
+        <link rel="canonical" href="https://nxthdr.github.io/infrastructure/reference/user-data-deletion/">
+      
+      
+        <link rel="prev" href="../operations/">
+      
+      
+        <link rel="next" href="../alert-silences/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>User Data Deletion - Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#user-data-deletion-gdpr-erasure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure" class="md-header__button md-logo" aria-label="Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              User Data Deletion
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nxthdr/infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nxthdr/infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/common-tasks/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../architecture/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure" class="md-nav__button md-logo" aria-label="Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nxthdr/infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nxthdr/infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/common-tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Tasks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/network-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/adding-services/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations & Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Data Deletion
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Data Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#guiding-principle-two-classes-of-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guiding principle: two classes of data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-data-is-actually-linked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the data is actually linked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-verify-the-requester" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Verify the requester
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-compute-the-user_hash-and-capture-the-before-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Compute the user_hash and capture the "before" state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-tear-down-active-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Tear down active resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Tear down active resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3a-peering-remove-roas-then-leases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3a. Peering — remove ROAs, then leases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3b-headscale-deregister-node-and-oidc-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. Headscale — deregister node and OIDC user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3c-probing-nothing-to-stop-server-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. Probing — nothing to stop server-side
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-delete-account-records-from-both-gateways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Delete account records from both gateways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-clickhouse-dissociate-let-the-ttl-expire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — ClickHouse: dissociate, let the TTL expire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-erase-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Erase identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Erase identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6a-auth0-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6a. Auth0 (always)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6b-matrix-mas-only-if-the-user-has-a-matrix-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6b. Matrix / MAS — only if the user has a Matrix account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-logs-and-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Logs and backups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-confirm-and-tombstone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8 — Confirm and tombstone
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundaries-what-deletion-does-not-cover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundaries — what deletion does not cover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-the-runbook-against-a-test-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying the runbook against a test account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toward-automation-admin-endpoint-design-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toward automation — admin endpoint design (planned)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alert-silences/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alert Silences
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mas-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MAS Migration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hookshot-transformation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hookshot Transformation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#guiding-principle-two-classes-of-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guiding principle: two classes of data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-data-is-actually-linked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the data is actually linked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-verify-the-requester" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Verify the requester
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-compute-the-user_hash-and-capture-the-before-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Compute the user_hash and capture the "before" state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-tear-down-active-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Tear down active resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3 — Tear down active resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3a-peering-remove-roas-then-leases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3a. Peering — remove ROAs, then leases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3b-headscale-deregister-node-and-oidc-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3b. Headscale — deregister node and OIDC user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3c-probing-nothing-to-stop-server-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3c. Probing — nothing to stop server-side
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-delete-account-records-from-both-gateways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Delete account records from both gateways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-clickhouse-dissociate-let-the-ttl-expire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — ClickHouse: dissociate, let the TTL expire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-erase-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Erase identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6 — Erase identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6a-auth0-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6a. Auth0 (always)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6b-matrix-mas-only-if-the-user-has-a-matrix-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6b. Matrix / MAS — only if the user has a Matrix account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-logs-and-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Logs and backups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-confirm-and-tombstone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8 — Confirm and tombstone
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundaries-what-deletion-does-not-cover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boundaries — what deletion does not cover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-the-runbook-against-a-test-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying the runbook against a test account
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#toward-automation-admin-endpoint-design-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toward automation — admin endpoint design (planned)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/nxthdr/infrastructure/edit/main/docs/pages/reference/user-data-deletion.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="user-data-deletion-gdpr-erasure">User Data Deletion (GDPR Erasure)<a class="headerlink" href="#user-data-deletion-gdpr-erasure" title="Permanent link">&para;</a></h1>
+<p>Operator runbook for fulfilling a <strong>right-to-erasure</strong> request (GDPR Art. 17) — either
+when a user emails <code>admin@nxthdr.dev</code> asking for deletion, or when they delete their
+account. The <a href="https://docs.nxthdr.dev/docs/reference/privacy/">public privacy policy</a>
+promises this right; this page is how an operator actually delivers it.</p>
+<div class="admonition warning">
+<p class="admonition-title">This is a destructive, mostly-irreversible procedure</p>
+<p>Most steps hard-delete rows or deactivate accounts. Work through the steps <strong>in
+order</strong> — you cannot cleanly delete a user who still has live BGP announcements or a
+connected VPN node. Capture the read-only "before" state (Step 2) <strong>before</strong> you
+delete anything; some of it (the probing <code>user_id</code>) is needed later and cannot be
+recovered once deleted.</p>
+</div>
+<h2 id="guiding-principle-two-classes-of-data">Guiding principle: two classes of data<a class="headerlink" href="#guiding-principle-two-classes-of-data" title="Permanent link">&para;</a></h2>
+<p>This is the backbone of the whole procedure. nxthdr holds two kinds of user data and
+treats them differently:</p>
+<ul>
+<li><strong>Identity / account data → erase.</strong> Auth0 profile and email, the raw Auth0 <code>sub</code>
+  stored in peerlab-gateway, ASN/prefix leases, per-user limits, the Headscale node and
+  OIDC user, and (if present) the Matrix account. This is unambiguously personal data and
+  is hard-deleted.</li>
+<li><strong>Pseudonymous research data → dissociate, don't purge.</strong> The probe replies in
+  ClickHouse (<code>saimiris.replies</code>) are linked to a person <em>only</em> indirectly, via the
+  source IPv6 prefix. They are <a href="https://opendatacommons.org/licenses/pddl/">PDDL</a> open
+  research data and fall under the GDPR Art. 17(3)(d) scientific-research carve-out. We
+  delete the <strong>linkage</strong>, not the measurements: once the gateway mapping is gone, the rows
+  are just "measurements from prefix X", attributable to no natural person. The <strong>7-day
+  TTL</strong> then expires them anyway.</li>
+</ul>
+<p>Two facts make the research side tractable:</p>
+<ul>
+<li><strong>7-day TTL</strong> on <code>saimiris.replies</code> (<code>TTL date + INTERVAL 7 DAY DELETE</code>) — live
+  measurement data self-expires within a week. "Delete from ClickHouse" is mostly <em>stop
+  new inserts + wait out the TTL</em>.</li>
+<li><strong>Already-published data can't be recalled.</strong> Anything exported or cited under PDDL is
+  out there; GDPR Art. 17(2) only requires <em>reasonable</em> steps. See
+  <a href="#boundaries-what-deletion-does-not-cover">Boundaries</a>.</li>
+</ul>
+<h2 id="how-the-data-is-actually-linked">How the data is actually linked<a class="headerlink" href="#how-the-data-is-actually-linked" title="Permanent link">&para;</a></h2>
+<p>Everything keys off a single pseudonymous identifier, the <strong><code>user_hash</code></strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>user_hash = SHA256(auth0_sub)        # hex, 64 chars, NO salt
+</span></code></pre></div>
+<p>Both gateways compute it identically and with no salt, so <strong>one person has one
+<code>user_hash</code> everywhere</strong>. That is the key you use throughout this runbook.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>What it holds</th>
+<th>Keyed by</th>
+<th>Erasure action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auth0</strong></td>
+<td>identity, email, <code>sub</code>, profile</td>
+<td>the account</td>
+<td>delete user (Management API / dashboard)</td>
+</tr>
+<tr>
+<td><strong>peerlab-gateway</strong> PG (<code>peerlab_gateway</code>)</td>
+<td><code>user_asn_mappings</code> — ASN, <code>max_leases</code>, <strong>raw Auth0 <code>sub</code></strong> in <code>user_id</code>; <code>prefix_leases</code> — leased /48s (soft-deleted via <code>revoked_at</code>)</td>
+<td><code>user_hash</code></td>
+<td>remove ROAs, hard-delete rows</td>
+</tr>
+<tr>
+<td><strong>saimiris-gateway</strong> PG (<code>saimiris</code>)</td>
+<td><code>user_id_mappings</code> (<code>user_hash</code>↔32-bit <code>user_id</code>), <code>user_limits</code> (quota), <code>measurement_tracking</code></td>
+<td><code>user_hash</code></td>
+<td>hard-delete rows</td>
+</tr>
+<tr>
+<td><strong>Headscale</strong> (<code>headscale</code> container)</td>
+<td>VPN node + OIDC user</td>
+<td>OIDC <code>sub</code> / email</td>
+<td>deregister node, destroy user</td>
+</tr>
+<tr>
+<td><strong>Securebit</strong> (external)</td>
+<td>RPKI ROAs for leased /48s</td>
+<td>prefix</td>
+<td>remove ROA per leased prefix</td>
+</tr>
+<tr>
+<td><strong>ClickHouse</strong> <code>saimiris.replies</code></td>
+<td>probe replies — <strong>only</strong> <code>probe_src_addr</code>, no <code>user_hash</code>, no <code>measurement_id</code></td>
+<td>source prefix</td>
+<td><strong>dissociate</strong> (delete gateway mapping); 7-day TTL expires rows</td>
+</tr>
+<tr>
+<td><strong>MAS / Synapse</strong> (<code>mas</code> / <code>synapse</code>)</td>
+<td>Matrix account, if the user has one</td>
+<td>MXID ↔ Auth0 <code>sub</code></td>
+<td>conditional: lock in MAS + deactivate (erase) in Synapse</td>
+</tr>
+<tr>
+<td><strong>Loki</strong> (<code>loki</code>)</td>
+<td>container logs containing <code>sub</code> / IPs</td>
+<td>—</td>
+<td>nothing — <code>retention_period: 7d</code> self-expires</td>
+</tr>
+<tr>
+<td><strong>Postgres backups</strong></td>
+<td>residual copies of every table above</td>
+<td>—</td>
+<td>purge retained dumps (see <a href="#step-7-logs-and-backups">Backups</a>)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Why ClickHouse needs no row-level delete</p>
+<p><code>saimiris.replies</code> has <strong>no <code>user_hash</code> and no <code>measurement_id</code> column</strong> — only
+<code>probe_src_addr</code>. The <em>only</em> path from a reply back to a person is
+<code>probe_src_addr</code> → (deterministic prefix math) → <code>user_id</code> → <code>user_id_mappings.user_hash</code>
+→ (Auth0) → person. Deleting the <code>user_id_mappings</code> row <strong>and</strong> the Auth0 user removes
+that path. After that the rows are unattributable, and the TTL clears them within 7
+days. We deliberately do <strong>not</strong> run a heavy <code>ALTER … DELETE</code>.</p>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>SSH access to the core server: <code>ssh nxthdr@ams01.core.infra.nxthdr.dev</code>.</li>
+<li>The requester's <strong>Auth0 <code>sub</code></strong> (e.g. <code>auth0|0123456789abcdef</code>). Verify it is the
+  authenticated user — see Step 1.</li>
+<li>Postgres runs in the <code>postgresql</code> container on the core; databases <code>peerlab_gateway</code>
+  and <code>saimiris</code> share host <code>[2a06:de00:50:cafe:10::116]:5432</code>.</li>
+<li>Securebit web-UI credentials and the MAS/Synapse admin token live in
+  <code>secrets/secrets.yml</code> (<code>securebit.*</code>, <code>mas.synapse_shared_secret</code>). Decrypt with
+  <code>make edit-secrets</code> in the infrastructure repo if you need them.</li>
+</ul>
+<hr />
+<h2 id="step-1-verify-the-requester">Step 1 — Verify the requester<a class="headerlink" href="#step-1-verify-the-requester" title="Permanent link">&para;</a></h2>
+<p>Erasure must only be performed for the <strong>authenticated user</strong>. Confirm the request comes
+from the email on the Auth0 account, or that the requester can prove control of the
+account (logged-in session, signed request). Record the Auth0 <code>sub</code> you will act on.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SUB</span><span class="o">=</span><span class="s1">&#39;auth0|0123456789abcdef&#39;</span><span class="w">    </span><span class="c1"># the verified Auth0 subject</span>
+</span></code></pre></div>
+<h2 id="step-2-compute-the-user_hash-and-capture-the-before-state">Step 2 — Compute the <code>user_hash</code> and capture the "before" state<a class="headerlink" href="#step-2-compute-the-user_hash-and-capture-the-before-state" title="Permanent link">&para;</a></h2>
+<p>The <code>user_hash</code> is the SHA-256 of the <strong>exact</strong> <code>sub</code> string, with no trailing newline:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">USER_HASH</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUB</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER_HASH</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>Now record everything you are about to delete. <strong>Do this before any delete</strong> — the
+probing <code>user_id</code> cannot be recovered afterwards and you need it to reason about (and
+optionally verify) the ClickHouse rows.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">peerlab-gateway</label><label for="__tabbed_1_2">saimiris-gateway</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>peerlab_gateway<span class="w"> </span><span class="s">&lt;&lt;SQL</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s">SELECT user_hash, user_id, asn, max_leases FROM user_asn_mappings WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s">SELECT prefix::text, start_time, end_time, revoked_at FROM prefix_leases WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">SQL</span>
+</span></code></pre></div>
+<p>Note the <strong>ASN</strong> and <strong>every <code>prefix</code></strong> (including already-revoked ones) — you need the
+prefixes for the Securebit ROA removal in Step 3.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>saimiris<span class="w"> </span><span class="s">&lt;&lt;SQL</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s">SELECT user_hash, user_id FROM user_id_mappings WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">SELECT probe_limit FROM user_limits WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">SELECT count(*), min(created_at), max(updated_at) FROM measurement_tracking WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s">SQL</span>
+</span></code></pre></div>
+<p>Note the <strong><code>user_id</code></strong> (a 32-bit integer). The user's probing source prefixes are
+<em>derived</em> from it — <code>agent_prefix</code> with <code>user_id</code> carved into the 32 bits after the
+agent prefix length (e.g. an agent <code>/48</code> yields the user a <code>/80</code>). Keep it for the
+optional ClickHouse awareness query in Step 5.</p>
+</div>
+</div>
+</div>
+<h2 id="step-3-tear-down-active-resources">Step 3 — Tear down active resources<a class="headerlink" href="#step-3-tear-down-active-resources" title="Permanent link">&para;</a></h2>
+<p>Order matters: stop the user from announcing/probing before you delete the records that
+authorize them.</p>
+<h3 id="3a-peering-remove-roas-then-leases">3a. Peering — remove ROAs, then leases<a class="headerlink" href="#3a-peering-remove-roas-then-leases" title="Permanent link">&para;</a></h3>
+<p>For <strong>each</strong> prefix the user leased (from Step 2), remove its RPKI ROA in the
+<a href="https://www.securebit.cloud/">Securebit</a> web UI (log in with <code>securebit.*</code> from
+<code>secrets.yml</code>; this is the same UI the gateway scrapes). This withdraws the authorization
+for AS215011 to originate that /48.</p>
+<div class="admonition info">
+<p class="admonition-title">Why this is a manual UI step</p>
+<p>peerlab-gateway only <em>adds/ensures</em> ROAs automatically; its <code>DELETE /api/user/prefix/{prefix}</code>
+endpoint actually <strong>re-adds</strong> the ROA before soft-deleting the lease (to keep in-flight
+announcements valid). There is no operator endpoint to remove a ROA, so do it in the
+Securebit UI directly. ROAs authorize the nxthdr origin ASN, not the user, so they are
+not personal data — this is resource hygiene, returning the prefix to a clean state.</p>
+</div>
+<p>The gateway hard-deletes in Step 4 (which also frees the ASN back to the pool).</p>
+<h3 id="3b-headscale-deregister-node-and-oidc-user">3b. Headscale — deregister node and OIDC user<a class="headerlink" href="#3b-headscale-deregister-node-and-oidc-user" title="Permanent link">&para;</a></h3>
+<p>The peering VPN runs on Headscale (Auth0 OIDC). Remove the user's node(s) and their OIDC
+user record (nodes would otherwise linger until the 180-day expiry, and the user record
+persists indefinitely):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>headscale<span class="w"> </span>headscale<span class="w"> </span>users<span class="w"> </span>list<span class="w">                       </span><span class="c1"># find the user (by email)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>headscale<span class="w"> </span>headscale<span class="w"> </span>nodes<span class="w"> </span>list<span class="w"> </span>--user<span class="w"> </span>&lt;user-id&gt;<span class="w">      </span><span class="c1"># find their node(s)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>headscale<span class="w"> </span>headscale<span class="w"> </span>nodes<span class="w"> </span>delete<span class="w"> </span>--identifier<span class="w"> </span>&lt;node-id&gt;
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>headscale<span class="w"> </span>headscale<span class="w"> </span>users<span class="w"> </span>destroy<span class="w"> </span>--identifier<span class="w"> </span>&lt;user-id&gt;
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Confirm subcommands against the running Headscale version</p>
+<p>Headscale's CLI surface changes between releases. If <code>--identifier</code> / <code>destroy</code> differ,
+check <code>docker exec headscale headscale users --help</code> and <code>… nodes --help</code>.</p>
+</div>
+<h3 id="3c-probing-nothing-to-stop-server-side">3c. Probing — nothing to stop server-side<a class="headerlink" href="#3c-probing-nothing-to-stop-server-side" title="Permanent link">&para;</a></h3>
+<p>Probing is request-driven: the user submits to saimiris-gateway, which publishes to Kafka
+for the agents. There is no long-running per-user process to stop. Their quota and
+in-flight tracking are removed by the Step 4 deletes.</p>
+<h2 id="step-4-delete-account-records-from-both-gateways">Step 4 — Delete account records from both gateways<a class="headerlink" href="#step-4-delete-account-records-from-both-gateways" title="Permanent link">&para;</a></h2>
+<p>Hard-delete every per-user row. These are plain <code>DELETE</code>s (the soft-delete <code>revoked_at</code>
+flag on leases is for normal lifecycle, not erasure).</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">peerlab-gateway</label><label for="__tabbed_2_2">saimiris-gateway</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>peerlab_gateway<span class="w"> </span><span class="s">&lt;&lt;SQL</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s">BEGIN;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s">DELETE FROM prefix_leases      WHERE user_hash = &#39;$USER_HASH&#39;;   -- active + revoked</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">DELETE FROM user_asn_mappings  WHERE user_hash = &#39;$USER_HASH&#39;;   -- frees the ASN, removes raw Auth0 sub</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">COMMIT;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s">SQL</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>saimiris<span class="w"> </span><span class="s">&lt;&lt;SQL</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="s">BEGIN;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s">DELETE FROM measurement_tracking WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">DELETE FROM user_limits          WHERE user_hash = &#39;$USER_HASH&#39;;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="s">DELETE FROM user_id_mappings     WHERE user_hash = &#39;$USER_HASH&#39;;   -- severs ClickHouse attribution</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s">COMMIT;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s">SQL</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Legacy <code>probe_usage</code> table</p>
+<p>Older deployments may still have a deprecated <code>probe_usage</code> table (superseded by
+<code>measurement_tracking</code>). If it exists, delete from it too:
+<code>DELETE FROM probe_usage WHERE user_hash = '$USER_HASH';</code></p>
+</div>
+</div>
+</div>
+</div>
+<p>Deleting <code>user_asn_mappings</code> removes the <strong>raw Auth0 <code>sub</code></strong> (stored there for email
+lookups) — the only place outside Auth0 that holds it. Deleting <code>user_id_mappings</code>
+removes the <code>user_id ↔ user_hash</code> link, which is what severs ClickHouse attribution.</p>
+<h2 id="step-5-clickhouse-dissociate-let-the-ttl-expire">Step 5 — ClickHouse: dissociate, let the TTL expire<a class="headerlink" href="#step-5-clickhouse-dissociate-let-the-ttl-expire" title="Permanent link">&para;</a></h2>
+<p><strong>No action is required in ClickHouse.</strong> Once Step 4 removed <code>user_id_mappings</code> (and Step
+6 removes the Auth0 <code>sub</code>), there is no longer any stored path from a <code>probe_src_addr</code>
+back to a person. The replies are now pseudonymous open data, and the 7-day TTL expires
+the live rows.</p>
+<div class="admonition warning">
+<p class="admonition-title">Do not run <code>ALTER … DELETE</code></p>
+<p>Deleting by source prefix is a heavy mutation across a ~half-billion-row table and is
+unnecessary under the dissociate approach. Only consider it if a future policy decision
+explicitly opts into aggressive purging.</p>
+</div>
+<details class="info">
+<summary>Optional: situational awareness query (read-only)</summary>
+<p>The user's source prefix is <code>agent_prefix</code> with <code>user_id</code> placed in the 32 bits after
+the prefix length. For a unicast agent <code>/48</code>, that yields a <code>/80</code>. If you computed the
+user's prefix from Step 2's <code>user_id</code> (e.g. <code>2a0e:97c0:8a0:1234:5678::/80</code>), you can see
+what will expire:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">count</span><span class="p">(),</span><span class="w"> </span><span class="k">min</span><span class="p">(</span><span class="nb">date</span><span class="p">),</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="nb">date</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">saimiris</span><span class="p">.</span><span class="n">replies</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">probe_src_addr</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="n">toIPv6</span><span class="p">(</span><span class="s1">&#39;2a0e:97c0:8a0:1234:5678::&#39;</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">                         </span><span class="k">AND</span><span class="w"> </span><span class="n">toIPv6</span><span class="p">(</span><span class="s1">&#39;2a0e:97c0:8a0:1234:5678:ffff:ffff:ffff&#39;</span><span class="p">);</span>
+</span></code></pre></div>
+<p>This is informational only — the rows expire on their own within 7 days.</p>
+</details>
+<div class="admonition note">
+<p class="admonition-title">On the deterministic hash</p>
+<p>Because <code>user_id</code> is <em>derived</em> from <code>user_hash</code> (and <code>user_hash</code> from <code>sub</code>) with no
+salt, the prefix is reproducible by anyone who already knows the Auth0 <code>sub</code>. That is a
+<em>confirmation</em> path, not re-identification of an unknown person — and it closes entirely
+once the Auth0 user is deleted in Step 6. This is the practical basis for treating the
+data as dissociated.</p>
+</div>
+<h2 id="step-6-erase-identity">Step 6 — Erase identity<a class="headerlink" href="#step-6-erase-identity" title="Permanent link">&para;</a></h2>
+<h3 id="6a-auth0-always">6a. Auth0 (always)<a class="headerlink" href="#6a-auth0-always" title="Permanent link">&para;</a></h3>
+<p>Delete the Auth0 user. This removes the email, profile, and <code>sub</code>, and closes the last
+<code>sub → user_hash</code> re-link path.</p>
+<ul>
+<li><strong>Dashboard:</strong> Auth0 → User Management → Users → find by email/<code>sub</code> → <strong>Delete User</strong>.</li>
+<li><strong>Management API:</strong> <code>DELETE /api/v2/users/{sub}</code> with an M2M token (URL-encode the <code>|</code>
+  in the <code>sub</code>).</li>
+</ul>
+<h3 id="6b-matrix-mas-only-if-the-user-has-a-matrix-account">6b. Matrix / MAS — only if the user has a Matrix account<a class="headerlink" href="#6b-matrix-mas-only-if-the-user-has-a-matrix-account" title="Permanent link">&para;</a></h3>
+<p>Matrix accounts share the Auth0 identity but not every user has one. If they do:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Find the MXID localpart from the MAS database (no `list-users` CLI exists).</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">#    Confirm column names against your MAS version.</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>mas<span class="w"> </span><span class="s">&lt;&lt;SQL</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s">SELECT u.username</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s">FROM users u</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s">JOIN upstream_oauth_links l ON l.user_id = u.id</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s">WHERE l.subject = &#39;$SUB&#39;;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s">SQL</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 2. Lock the account and kill sessions in MAS (prevents re-login).</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>mas<span class="w"> </span>mas-cli<span class="w"> </span>manage<span class="w"> </span>lock-user<span class="w"> </span>&lt;username&gt;
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>mas<span class="w"> </span>mas-cli<span class="w"> </span>manage<span class="w"> </span>kill-sessions<span class="w"> </span>&lt;username&gt;
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># 3. Deactivate + erase in Synapse (redacts the account). Token = mas.synapse_shared_secret.</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s1">&#39;&lt;mas.synapse_shared_secret&gt;&#39;</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://[2a06:de00:50:cafe:10::1008]:8008/_synapse/admin/v1/deactivate/@&lt;username&gt;:nxthdr.dev&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;erase&quot;: true}&#39;</span>
+</span></code></pre></div>
+<h2 id="step-7-logs-and-backups">Step 7 — Logs and backups<a class="headerlink" href="#step-7-logs-and-backups" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Loki</strong> is configured with <code>retention_period: 7d</code> and <code>retention_enabled: true</code>, so
+  container logs containing the <code>sub</code> or source IPs self-expire within a week. No manual
+  action.</li>
+<li>
+<p><strong>Postgres backups: these now exist and they do contain the erased user.</strong>
+  <code>make backup-postgres</code> (see the infrastructure repo) takes a <code>pg_dumpall</code> of
+  <code>mas</code>, <code>peerlab_gateway</code>, <code>saimiris</code> and <code>synapse</code> to the operator's machine and
+  <strong>retains the most recent 14 dumps</strong>. Every row you deleted in Step 4, and the
+  Auth0 <code>sub</code> in <code>user_asn_mappings</code>, still exists in any dump taken before the
+  erasure.</p>
+<p>The retention window is <strong>count-based, not time-based</strong> — 14 dumps, taken
+manually — so it does <em>not</em> expire on a predictable schedule the way the Loki
+and ClickHouse TTLs do. You cannot honestly tell a requester "your data is
+gone in 7 days" while a dump from last month sits on a laptop.</p>
+<p>So erasure is <strong>not complete</strong> until the retained dumps are dealt with. Do one
+of these, and record which:</p>
+<ol>
+<li><strong>Purge and re-dump</strong> (simplest, recommended): delete the existing dumps and
+   take a fresh one <em>after</em> the Step 4 deletes, so no retained copy contains the
+   user.
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>rm<span class="w"> </span>-f<span class="w"> </span>backups/postgres/postgresql-*.sql.gz
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>backup-postgres
+</span></code></pre></div>
+   The cost is losing point-in-time recovery depth, which for a manual backup is
+   a reasonable trade against a compliance promise.</li>
+<li><strong>Wait out the rotation</strong> — only defensible once dumps are automated on a
+   known schedule, so the window is a stated number of days. Not the case today.</li>
+</ol>
+<p>When backups move off-host or become automated (<code>infrastructure#16</code>), this
+section and the <a href="https://docs.nxthdr.dev/docs/reference/privacy/">privacy policy</a>
+must state the rotation window explicitly, and deletion "completes" only after
+it elapses.</p>
+</li>
+</ul>
+<h2 id="step-8-confirm-and-tombstone">Step 8 — Confirm and tombstone<a class="headerlink" href="#step-8-confirm-and-tombstone" title="Permanent link">&para;</a></h2>
+<p>Verify the deletes (all counts should be <code>0</code>):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>peerlab_gateway<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="s2">&quot;SELECT (SELECT count(*) FROM user_asn_mappings WHERE user_hash=&#39;</span><span class="nv">$USER_HASH</span><span class="s2">&#39;) AS asn_rows,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="s2">          (SELECT count(*) FROM prefix_leases    WHERE user_hash=&#39;</span><span class="nv">$USER_HASH</span><span class="s2">&#39;) AS lease_rows;&quot;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-i<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>saimiris<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="s2">&quot;SELECT (SELECT count(*) FROM user_id_mappings   WHERE user_hash=&#39;</span><span class="nv">$USER_HASH</span><span class="s2">&#39;) AS id_rows,</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s2">          (SELECT count(*) FROM user_limits        WHERE user_hash=&#39;</span><span class="nv">$USER_HASH</span><span class="s2">&#39;) AS limit_rows,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s2">          (SELECT count(*) FROM measurement_tracking WHERE user_hash=&#39;</span><span class="nv">$USER_HASH</span><span class="s2">&#39;) AS track_rows;&quot;</span>
+</span></code></pre></div>
+<p>Then:</p>
+<ul>
+<li><strong>Notify the requester</strong> that erasure is complete, and explain the two boundaries below
+  (TTL window for live measurements; published data cannot be recalled).</li>
+<li><strong>Keep a minimal, irreversible tombstone</strong> as compliance proof: record the <code>user_hash</code>,
+  the date, and the request reference — <strong>nothing else</strong> (no email, no <code>sub</code>). The hash
+  alone is not directly identifying once Auth0 is deleted, and serves to demonstrate the
+  request was fulfilled.</li>
+</ul>
+<hr />
+<h2 id="boundaries-what-deletion-does-not-cover">Boundaries — what deletion does <em>not</em> cover<a class="headerlink" href="#boundaries-what-deletion-does-not-cover" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Already-published / exported research data.</strong> Datasets exported or cited under PDDL
+  cannot be recalled. GDPR Art. 17(2) only requires reasonable steps; we stop new linkage
+  and let live data expire, but cannot un-publish.</li>
+<li><strong>The ≤7-day TTL window.</strong> Live <code>saimiris.replies</code> rows remain (unattributable) until the
+  TTL expires them — up to 7 days after the last measurement.</li>
+<li><strong>Backups.</strong> Local <code>pg_dumpall</code> copies exist (<code>make backup-postgres</code>, 14 retained) and
+  contain the erased rows. Erasure is only complete once those are purged — see Step 7.
+  There is no automated, time-bounded rotation window yet (<code>infrastructure#16</code>).</li>
+</ul>
+<h2 id="verifying-the-runbook-against-a-test-account">Verifying the runbook against a test account<a class="headerlink" href="#verifying-the-runbook-against-a-test-account" title="Permanent link">&para;</a></h2>
+<p>Before relying on this procedure, validate it end-to-end with a throwaway Auth0 account
+(do <strong>not</strong> test against a real user):</p>
+<ol>
+<li>Create a test Auth0 user; log into nxthdr.dev with it.</li>
+<li>Exercise the platform: request an ASN, lease a prefix (creates a ROA), connect the
+   PeerLab VPN, and submit a small probing measurement.</li>
+<li>Confirm rows exist: run the Step 2 queries (non-zero), and the Step 5 awareness query
+   (some replies after a probe cycle).</li>
+<li>Run Steps 1–8.</li>
+<li>Confirm: Step 8 counts are all <code>0</code>; the ROA is gone from Securebit; the Headscale node
+   and user are gone; the Auth0 user is deleted; and the test prefix's replies stop
+   growing and disappear within 7 days.</li>
+</ol>
+<hr />
+<h2 id="toward-automation-admin-endpoint-design-planned">Toward automation — admin endpoint design (planned)<a class="headerlink" href="#toward-automation-admin-endpoint-design-planned" title="Permanent link">&para;</a></h2>
+<p>Today this is a manual runbook (correct, auditable, near-zero effort). The next step —
+dovetailing with the admin-endpoint work in <code>roadmap#16</code> / <code>roadmap#25</code> — is to automate
+the per-gateway teardown so an operator (and eventually the user) triggers it with one
+call.</p>
+<p><strong>Shape:</strong></p>
+<ul>
+<li><strong>Per-gateway admin endpoint</strong>, reusing each gateway's existing service/agent bearer
+  auth (peerlab <code>/service/*</code>, saimiris <code>/agent-api/*</code>) or a dedicated admin scope:</li>
+<li><code>DELETE /service/user/{user_hash}</code> on <strong>peerlab-gateway</strong> → removes ROAs for the
+    user's leased prefixes (Securebit), then hard-deletes <code>prefix_leases</code> +
+    <code>user_asn_mappings</code>.</li>
+<li><code>DELETE /admin/user/{user_hash}</code> on <strong>saimiris-gateway</strong> → hard-deletes
+    <code>measurement_tracking</code> + <code>user_limits</code> + <code>user_id_mappings</code> (+ legacy <code>probe_usage</code>).</li>
+<li>Both <strong>idempotent</strong> (deleting an already-deleted user is a no-op <code>200</code>), returning a
+    summary of what was removed for the audit log.</li>
+<li><strong>Orchestrator</strong> (a small admin script, or the dashboard backend) runs the full ordered
+  flow: verify → peerlab delete → saimiris delete → Headscale deregister → Auth0 delete →
+  optional Matrix deactivate → tombstone. ClickHouse needs no call (dissociation + TTL).</li>
+<li><strong>Partial-failure handling:</strong> the orchestrator records per-step success and is safe to
+  re-run; because every step is idempotent, a retry converges. Manual steps that have no
+  API yet (Securebit ROA removal until automated, Matrix deactivation) stay in this runbook
+  as documented fallbacks.</li>
+<li><strong>Self-service (eventually):</strong> a "Delete my account" button in the dashboard calls the
+  orchestrator with the user's own JWT; the backend derives <code>user_hash</code> from the verified
+  <code>sub</code> server-side, so a user can only ever delete themselves.</li>
+</ul>
+<p>The endpoints belong with the broader admin surface tracked in <code>roadmap#16</code> / <code>roadmap#25</code>;
+this section is the erasure-specific contract they must satisfy.</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 25, 2026 13:06:39 UTC">July 25, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 25, 2026 13:06:39 UTC">July 25, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
