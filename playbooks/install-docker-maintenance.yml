@@ -1,0 +1,113 @@
+# ansible-playbook -i inventory/ playbooks/install-docker-maintenance.yml
+#
+# Permanent remediation for host disk growth on Docker hosts. Two independent
+# causes, two mechanisms:
+#
+#   1. Container json-file logs grow without bound. The per-container
+#      `log_opts` (max-size/max-file) in the Terraform modules only take effect
+#      when a container is REPLACED, and replacing all 31 coreams01 containers
+#      means a full platform restart. Setting the daemon-wide default in
+#      /etc/docker/daemon.json does not help either: `log-opts` requires a
+#      docker daemon restart, which restarts every container on the host.
+#      A logrotate drop-in with `copytruncate` caps the files that already
+#      exist, live, without recreating or restarting anything.
+#
+#   2. Images accumulate forever. Every `make apply` re-pulls the floating
+#      `:main` / `:latest` tags and the superseded images are never removed
+#      (coreams01: 327 images for 35 active containers, 13.2GB reclaimable;
+#      the 24GB IXP hosts carry ~2GB each of images for 5 containers).
+#      A weekly timer prunes them, keeping a 14-day window so the `rollback`
+#      skill can still find a last-good digest via `docker images --digests`.
+#
+# Both are safe to re-run; nothing here restarts a container or the daemon.
+---
+- hosts: core, ixp, vlt
+  become: yes
+  vars:
+    # Keep 14 days of superseded images so the rollback runbook still works.
+    # See .claude/skills/rollback/SKILL.md — it locates the last-good digest
+    # from the host image list, so pruning too aggressively removes the only
+    # record of what was running (floating :main tags are not pinned in git).
+    image_retention_hours: 336
+    log_max_size: 10M
+    log_keep: 3
+
+  tasks:
+    - name: Ensure logrotate is installed
+      ansible.builtin.apt:
+        name: logrotate
+        state: present
+        update_cache: yes
+
+    # copytruncate is the key: it copies then truncates the original in place,
+    # so the running container's already-open file descriptor keeps working.
+    # Without it logrotate would rename the file and the container would go on
+    # writing to the now-unlinked inode, reclaiming nothing.
+    - name: Install logrotate drop-in for container json-file logs
+      ansible.builtin.copy:
+        dest: /etc/logrotate.d/docker-containers
+        mode: '0644'
+        owner: root
+        group: root
+        content: |
+          # Managed by nxthdr/infrastructure (playbooks/install-docker-maintenance.yml)
+          /var/lib/docker/containers/*/*-json.log {
+              rotate {{ log_keep }}
+              size {{ log_max_size }}
+              daily
+              compress
+              delaycompress
+              missingok
+              notifempty
+              copytruncate
+          }
+
+    - name: Verify the logrotate drop-in parses
+      ansible.builtin.command: logrotate --debug /etc/logrotate.d/docker-containers
+      changed_when: false
+
+    - name: Install docker image prune service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker-prune.service
+        mode: '0644'
+        owner: root
+        group: root
+        content: |
+          # Managed by nxthdr/infrastructure (playbooks/install-docker-maintenance.yml)
+          [Unit]
+          Description=Prune unused Docker images and build cache
+          After=docker.service
+          Requires=docker.service
+
+          [Service]
+          Type=oneshot
+          # -a removes images not referenced by any container, not just dangling
+          # ones; the until= filter keeps recent history for rollbacks.
+          ExecStart=/usr/bin/docker image prune -af --filter until={{ image_retention_hours }}h
+          ExecStart=/usr/bin/docker builder prune -af --filter until={{ image_retention_hours }}h
+
+    - name: Install docker image prune timer
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker-prune.timer
+        mode: '0644'
+        owner: root
+        group: root
+        content: |
+          # Managed by nxthdr/infrastructure (playbooks/install-docker-maintenance.yml)
+          [Unit]
+          Description=Weekly Docker image prune
+
+          [Timer]
+          OnCalendar=Sun 04:00
+          RandomizedDelaySec=30m
+          Persistent=true
+
+          [Install]
+          WantedBy=timers.target
+
+    - name: Enable and start the prune timer
+      ansible.builtin.systemd_service:
+        name: docker-prune.timer
+        enabled: true
+        state: started
+        daemon_reload: yes
