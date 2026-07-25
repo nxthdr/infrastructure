@@ -111,7 +111,7 @@ resource "docker_container" "bird_exporter" {
   image   = docker_image.bird_exporter.image_id
   name    = "bird_exporter"
   command = [
-    "--bird.socket=/var/run/bird.ctl",
+    "--bird.socket=/bird-run/bird.ctl",
     "--bird.v2",
   ]
   # BIRD control socket is root:root 0660, so the exporter must run as root.
@@ -125,9 +125,15 @@ resource "docker_container" "bird_exporter" {
   networks_advanced {
     name = docker_network.backend.name
   }
+  # Mount the DIRECTORY, not the socket file. A file bind-mount pins the
+  # container to the socket's inode, so restarting BIRD (which recreates the
+  # socket) leaves the exporter attached to a deleted inode: it keeps returning
+  # HTTP 200 with zero bird_* metrics, `up` stays 1, and BGP_Session_Down simply
+  # has no series to evaluate. That silently blinded VLT BGP monitoring and is
+  # why a never-established Vultr IPv6 session went unnoticed for a week.
   volumes {
-    container_path = "/var/run/bird.ctl"
-    host_path      = "/usr/local/var/run/bird.ctl"
+    container_path = "/bird-run"
+    host_path      = "/usr/local/var/run"
   }
 }
 

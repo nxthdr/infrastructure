@@ -73,10 +73,13 @@ groups:
       title: 'risotto reports no BGP peers'
 
   - alert: Pipeline_BMP_No_Data
+    # `and on(instance)` + sum by (instance): a bare `and` requires identical
+    # label sets, and the right-hand side carries a `status` label the left-hand
+    # `up` does not, so the join silently matched nothing and this never fired.
     expr: |
       (up{job="risotto"} == 1)
-      and
-      increase(risotto_kafka_messages_total{status="success"}[15m]) == 0
+      and on(instance)
+      (sum by (instance) (increase(risotto_kafka_messages_total{status="success"}[15m])) == 0)
     for: 1m
     labels:
       severity: critical
@@ -87,10 +90,12 @@ groups:
 - name: pesto
   rules:
   - alert: Pipeline_SFlow_No_Data
+    # See Pipeline_BMP_No_Data: bare `and` could not join across the `status`
+    # label, so this rule was also inert.
     expr: |
       (up{job="pesto"} == 1)
-      and
-      increase(pesto_kafka_messages_total{status="success"}[15m]) == 0
+      and on(instance)
+      (sum by (instance) (increase(pesto_kafka_messages_total{status="success"}[15m])) == 0)
     for: 1m
     labels:
       severity: critical
@@ -104,16 +109,49 @@ groups:
     # Fires when an agent is receiving probe replies but not forwarding to Kafka.
     # This catches the case where the pipeline is broken (e.g. Kafka unreachable)
     # without false-positiving when no experiments are actively running.
+    #
+    # NOTE on the `and on(instance)`: bare `and` matches only series with
+    # *identical* label sets. saimiris_kafka_messages_total carries a `status`
+    # label that saimiris_receiver_received_total does not, so an unqualified
+    # `and` never matched anything and this rule could not fire at all. The
+    # sum by (instance) drops `status` and the explicit on(instance) makes the
+    # join independent of any future label changes.
     expr: |
-      increase(saimiris_receiver_received_total[2h]) > 100
-      and
-      increase(saimiris_kafka_messages_total{status="success"}[2h]) == 0
+      (sum by (instance) (increase(saimiris_receiver_received_total[2h])) > 100)
+      and on(instance)
+      (sum by (instance) (increase(saimiris_kafka_messages_total{status="success"}[2h])) == 0)
     for: 5m
     labels:
       severity: critical
     annotations:
       title: 'Saimiris agent {{ $labels.instance }} is receiving replies but not sending to Kafka'
       description: 'Saimiris on {{ $labels.instance }} received probe replies but sent 0 messages to Kafka in the last 2 hours. The saimiris.replies ClickHouse table is not receiving data.'
+
+  # Fires when an agent is sending probes but capturing (almost) no replies.
+  # This is the inverse of Pipeline_Saimiris_Kafka_Broken and covers the failure
+  # mode that rule structurally *cannot*: if the reply path is broken, then
+  # saimiris_receiver_received_total never rises, so any rule gated on
+  # "received > N" is unfalsifiable and stays silent forever.
+  #
+  # Incident 2026-07-24: the Vultr IPv6 BGP session on every VLT host had never
+  # established (bad next-hop in the BIRD static), so the probing prefixes were
+  # unannounced and replies could not route back. ~700M probes/week produced ~30
+  # replies and nothing alerted for at least a week. This rule is that detector.
+  #
+  # Thresholds: saimprowler dispatches every 30min, so a 1h window always spans
+  # >=1 batch. A healthy agent sends ~1e8/day and receives >1e5 replies per
+  # batch, so "sent >100k but received <100 in an hour" is far outside normal.
+  - alert: Pipeline_Saimiris_No_Replies
+    expr: |
+      (sum by (instance) (increase(saimiris_sender_sent_total[1h])) > 100000)
+      and on(instance)
+      (sum by (instance) (increase(saimiris_receiver_received_total[1h])) < 100)
+    for: 15m
+    labels:
+      severity: critical
+    annotations:
+      title: 'Saimiris agent {{ $labels.instance }} is sending probes but receiving no replies'
+      description: 'Saimiris on {{ $labels.instance }} sent >100k probes but captured <100 replies in the last hour. The reply path is broken — check that the probing prefixes are announced (BIRD VultrUplink Established and exporting) and globally visible.'
 
 - name: bird
   rules:
@@ -131,3 +169,39 @@ groups:
     annotations:
       title: 'BGP session {{ $labels.name }} is down on {{ $labels.instance }}'
       description: 'BIRD BGP session {{ $labels.name }} on {{ $labels.instance }} has not been Established for more than 10 minutes (current state: {{ $labels.state }}).'
+
+  # BGP_Session_Down is evaluated over bird_protocol_up. If bird_exporter serves
+  # no bird_* metrics at all, that expression has no series and the alert cannot
+  # fire — a scraped-but-useless exporter looks identical to "all sessions up".
+  # This detector closes that gap: the target answers (up == 1) but publishes no
+  # BGP protocol series.
+  #
+  # Root cause seen in production: bird_exporter bind-mounted the BIRD control
+  # socket as a FILE, so restarting BIRD left it holding a deleted inode. Both
+  # the ixp and vlt modules now mount the parent directory instead.
+  #
+  # job="bird" covers all three paths: the core's static scrape, and the IXP/VLT
+  # exporters that alloy scrapes locally and relabels to job="bird" before
+  # remote_write (alloy's own scrape emits the `up` series for those hosts).
+  #
+  # Two signals, because they fail differently:
+  #  - bird_socket_query_success == 0 is the exporter's own purpose-built
+  #    indicator that it could not talk to BIRD. This is what a stale socket
+  #    mount looks like (ixpcdg02 sat in exactly this state for 13 days).
+  #  - the `unless` arm catches an exporter that publishes nothing useful at
+  #    all, where even bird_socket_query_success is missing.
+  - alert: Bird_Exporter_No_Metrics
+    expr: |
+      (bird_socket_query_success == 0)
+      or
+      (
+        (up{job="bird"} == 1)
+        unless on(instance)
+        (count by (instance) (bird_socket_query_success) > 0)
+      )
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      title: 'bird_exporter on {{ $labels.instance }} is up but exporting no BGP metrics'
+      description: 'bird_exporter on {{ $labels.instance }} is being scraped successfully but publishes no bird_protocol_up{proto="BGP"} series, so BGP_Session_Down is blind on this host. Usually a stale BIRD control-socket mount — restart the bird_exporter container and check the socket path.'

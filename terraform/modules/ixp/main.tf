@@ -27,7 +27,9 @@ resource "docker_container" "alloy" {
   restart    = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    max-size = "10m"
+    max-file = "3"
   }
   # Quad9 over IPv4: the IPv6 resolvers (2a00:1098:2b::1/2c::1) are unreachable
   # from some IXP hosts (e.g. ixpams02 has no IPv6 route to them), which left
@@ -83,7 +85,9 @@ resource "docker_container" "node_exporter" {
   restart    = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    max-size = "10m"
+    max-file = "3"
   }
   user         = "1000:1000"
   pid_mode     = "host"
@@ -123,7 +127,7 @@ resource "docker_container" "bird_exporter" {
   image   = docker_image.bird_exporter.image_id
   name    = "bird_exporter"
   command = [
-    "--bird.socket=/var/run/bird.ctl",
+    "--bird.socket=/bird-run/bird.ctl",
     "--bird.v2",
   ]
   # BIRD control socket is root:root 0660, so the exporter must run as root.
@@ -131,15 +135,22 @@ resource "docker_container" "bird_exporter" {
   restart    = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    max-size = "10m"
+    max-file = "3"
   }
   network_mode = "bridge"
   networks_advanced {
     name = docker_network.backend.name
   }
+  # Mount the DIRECTORY, not the socket file — a file bind-mount pins the
+  # container to the socket's inode, so a BIRD restart leaves the exporter
+  # attached to a deleted inode and it silently serves zero bird_* metrics
+  # (HTTP 200, `up` == 1, so nothing alerts). See the VLT module for the
+  # incident this caused.
   volumes {
-    container_path = "/var/run/bird.ctl"
-    host_path      = "/usr/local/var/run/bird.ctl"
+    container_path = "/bird-run"
+    host_path      = "/usr/local/var/run"
   }
 }
 
@@ -154,7 +165,9 @@ resource "docker_container" "cadvisor" {
   restart    = "unless-stopped"
   log_driver = "json-file"
   log_opts = {
-    tag = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    tag      = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    max-size = "10m"
+    max-file = "3"
   }
   privileged   = true
   network_mode = "bridge"
