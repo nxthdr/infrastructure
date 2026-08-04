@@ -4,7 +4,19 @@
   become: yes
   vars:
     interface: enp1s0
-    mtu_size: 1420
+    # 1500, not 1420. VLT hosts sit directly on Vultr's network with no tunnel
+    # (unlike the IXP hosts, where 1420 accommodates WireGuard) — `ip link` here
+    # shows only enp1s0 plus docker bridges.
+    #
+    # 1420 actively broke this playbook: Vultr's RA advertises an IPv6 MTU of
+    # 1500, and systemd-networkd cannot set an IPv6 MTU larger than the link
+    # MTU, so it failed every ~40s with
+    #   enp1s0: Failed to set IPv6 MTU to 1500: Invalid argument
+    # and never applied the rest of this file — leaving the probing prefixes
+    # without their Type=local routes. The link had been running at 1500 all
+    # along (set by RA, not by us), so this matches reality rather than changing
+    # it. Discovered 2026-08-03; networkd had been failing since 2026-07-16.
+    mtu_size: 1500
     routing_table: 100
     routing_priority: 100
     prefixes:
@@ -96,8 +108,20 @@
           VULTR_IPV6="{{ vultr_default_ipv6 }}"
 
           # Wait up to 15 seconds for a reachable link-local gateway
+          #
+          # Read the token *after* "via" and stop at the first match, rather
+          # than a fixed column. Vultr's RA installs three default routes here
+          # and one of them carries an `nhid <id>` before `via`:
+          #   default via fe80::.. proto ra metric 1002 ...
+          #   default nhid 1723978110 via fe80::.. proto ra metric 1024 ...
+          #   default via fe80::.. proto ra metric 1024 expires ...
+          # so the previous `awk '/via/ {print $3}'` returned all three third
+          # columns — including the nhid number — and `ip route add` rejected
+          # the multi-line value with "inet6 address is expected rather than
+          # ...". Table 100 was therefore silently never populated.
           for i in {1..15}; do
-              LINKLOCAL_GW=$(ip -6 route show default dev "$IFACE" | awk '/via/ {print $3}')
+              LINKLOCAL_GW=$(ip -6 route show default dev "$IFACE" \
+                  | awk '{for (i = 1; i <= NF; i++) if ($i == "via") {print $(i+1); exit}}')
               if [[ -n "$LINKLOCAL_GW" ]]; then
                   break
               fi
