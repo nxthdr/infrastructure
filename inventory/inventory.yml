@@ -34,6 +34,9 @@ vlt:
     vltcdg01:
       ansible_host: cdg01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a4::/48
+      # Resized in the Vultr console; 2 vCPU / 2GB / 65GB is the intended size.
+      # Hosts without `plan:` use the module default (vc2-1c-1gb).
+      plan: vc2-2c-2gb
     vltsgp01:
       ansible_host: sgp01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a5::/48

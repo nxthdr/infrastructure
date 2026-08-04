@@ -8,16 +8,19 @@ locals {
       region       = "ewr"
       uniprobe0    = "2a0e:97c0:8a3::/48"
       ansible_host = "ewr01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
     }
     "vltcdg01" = {
       region       = "cdg"
       uniprobe0    = "2a0e:97c0:8a4::/48"
       ansible_host = "cdg01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-2c-2gb"
     }
     "vltsgp01" = {
       region       = "sgp"
       uniprobe0    = "2a0e:97c0:8a5::/48"
       ansible_host = "sgp01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
     }
   }
 }

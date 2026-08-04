@@ -16,6 +16,10 @@ GENERATED_HEADER = (
     "# Do not edit directly.\n\n"
 )
 
+# Vultr plan used for a VLT host that does not set `plan:` in inventory.yml.
+# Keep in sync with the `plan` variable default in modules/vlt-server.
+DEFAULT_VLT_PLAN = "vc2-1c-1gb"
+
 
 def generate_docker_providers(inventory):
     """Generate docker provider blocks for all hosts."""
@@ -80,10 +84,17 @@ def generate_vlt(inventory):
         region = host_name[3:6]
         uniprobe0 = host_data.get("uniprobe0", "")
         ansible_host = host_data.get("ansible_host", "")
+        # Per-host Vultr plan. Optional: hosts that omit it keep the module
+        # default. Needed because a host resized in the Vultr console otherwise
+        # drifts from config, and Terraform then tries to shrink it back —
+        # which Vultr rejects outright ("This plan is not an upgrade"), failing
+        # every subsequent apply.
+        plan = host_data.get("plan", DEFAULT_VLT_PLAN)
         lines.append(f'    "{host_name}" = {{')
         lines.append(f'      region       = "{region}"')
         lines.append(f'      uniprobe0    = "{uniprobe0}"')
         lines.append(f'      ansible_host = "{ansible_host}"')
+        lines.append(f'      plan         = "{plan}"')
         lines.append("    }")
     lines.append("  }")
     lines.append("}\n")

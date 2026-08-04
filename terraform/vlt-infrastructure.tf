@@ -27,8 +27,13 @@ module "vlt_server" {
   region       = each.value.region
   ssh_key_ids  = local.ssh_key_ids
 
+  # Per-host, from inventory.yml (hosts that omit `plan:` get the module
+  # default). This must reflect the instance's ACTUAL size: Vultr refuses any
+  # change that is not an upgrade, so if config is smaller than reality every
+  # apply fails with "Unable to upgrade plan: This plan is not an upgrade".
+  plan = each.value.plan
+
   # Optional: Override defaults if needed
-  # plan         = "vc2-1c-1gb"  # Default
   # os_id        = 2625  # Debian 13 x64 trixie (default)
 }
 
