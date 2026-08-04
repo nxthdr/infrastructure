@@ -159,8 +159,25 @@ resource "docker_container" "nxthdr_dev" {
 }
 
 # ClickHouse
+#
+# PINNED — do not let Renovate move this without testing on the host first.
+#
+# coreams01 is an Intel Atom C2750: it has SSE4.2 but no AVX/AVX2/AVX-512.
+# ClickHouse builds from 26.5.3 onward are compiled against a newer x86-64
+# baseline and die instantly on this CPU with "Illegal instruction (core
+# dumped)" — the crash happens in the entrypoint (`clickhouse
+# extract-from-config`), before the server ever starts, so the container just
+# restart-loops and ClickHouse is completely unavailable.
+#
+# 26.5.1 is the last release verified to run on this host (it was the version
+# actually serving until 2026-08-03). Renovate had queued 26.5.3 -> 26.6.1 ->
+# 26.6.2 -> 26.7.1 unapplied, so the first `make apply` after that jumped
+# straight to a broken build and took the whole data platform down.
+#
+# Before bumping: pull the candidate on coreams01 and check it runs, e.g.
+#   docker run --rm clickhouse/clickhouse-server:<ver> clickhouse local -q 'SELECT 1'
 resource "docker_image" "clickhouse" {
-  name = "docker.io/clickhouse/clickhouse-server:26.7.5"
+  name = "docker.io/clickhouse/clickhouse-server:26.5.1"
   provider = docker.coreams01
 }
 
@@ -411,7 +428,13 @@ resource "docker_container" "node_exporter" {
     "--path.procfs=/host/proc",
     "--path.rootfs=/rootfs",
     "--path.sysfs=/host/sys",
-    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)",
+    # Lets batch jobs (ipinfo-enrichment) export their own outcome metrics.
+    # Without this, a cron job that fails or silently loads nothing is invisible
+    # to Prometheus — which is exactly how the ipinfo import stayed broken for
+    # months. Metrics are written by the job as uid 1001; node_exporter runs as
+    # the same uid and only needs to read them.
+    "--collector.textfile.directory=/textfile"
   ]
   restart = "unless-stopped"
   log_driver = "json-file"

@@ -24,6 +24,43 @@
       "automerge": true
     },
     {
+      "description": [
+        "coreams01 is an Intel Atom C2750: SSE4.2 but no AVX/AVX2/AVX-512.",
+        "ClickHouse builds from 26.5.3 onward abort with 'Illegal instruction",
+        "(core dumped)' in the entrypoint, before the server starts, so the",
+        "container restart-loops and the whole data platform is down.",
+        "26.5.1 is the last verified-working release (incident 2026-08-03).",
+        "The version ceiling blocks the known-bad range and automerge is off so",
+        "nothing in the allowed range lands unreviewed. Before raising this,",
+        "test the candidate ON THE HOST:",
+        "docker run --rm clickhouse/clickhouse-server:<ver> clickhouse local -q 'SELECT 1'"
+      ],
+      "matchPackageNames": [
+        "docker.io/clickhouse/clickhouse-server",
+        "clickhouse/clickhouse-server"
+      ],
+      "allowedVersions": "<26.5.3",
+      "automerge": false
+    },
+    {
+      "description": [
+        "Synapse auth is delegated to MAS via MSC3861, configured in",
+        "homeserver.yaml under experimental_features.msc3861. Synapse removed",
+        "that key after v1.155.0 in favour of a top-level",
+        "matrix_authentication_service block, so newer versions exit at startup",
+        "and the container restart-loops — taking Matrix and, with it, alert",
+        "delivery (Hookshot bridges Alertmanager into a Matrix room) down.",
+        "Raising this ceiling requires porting homeserver.yaml in the same",
+        "change — see docs/pages/reference/mas-migration.md."
+      ],
+      "matchPackageNames": [
+        "matrixdotorg/synapse",
+        "docker.io/matrixdotorg/synapse"
+      ],
+      "allowedVersions": "<1.156.0",
+      "automerge": false
+    },
+    {
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["major"],
       "automerge": true
