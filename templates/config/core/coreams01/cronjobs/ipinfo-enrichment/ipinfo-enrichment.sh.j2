@@ -3,14 +3,70 @@ set -euo pipefail
 
 IPINFO_TOKEN="{{ ipinfo.api_token }}"
 CLICKHOUSE_DSN="clickhouse://localhost:9000/ipinfo"
-MMDB_IMAGE="ghcr.io/maxmouchet/mmdb-to-clickhouse:latest"
+
+# Pinned deliberately, and to the junekiwi namespace.
+#
+# This job silently stopped importing for months: the upstream GitHub account
+# was renamed maxmouchet -> junekiwi. github.com redirects renamed *repos*, but
+# GHCR does not redirect *package* namespaces, so every `docker pull` failed
+# with "denied". Because the pull is the first command under `set -e`, the whole
+# job aborted before downloading anything, the 30-day TTL on ipinfo.*_history
+# quietly drained the tables, and every country_asn() lookup began returning ''
+# with no error. Nothing alerted.
+#
+# Hence: pin the tag (no floating `latest` to drift under us) and alert on the
+# outcome via the node_exporter textfile metrics written below.
+MMDB_IMAGE="ghcr.io/junekiwi/mmdb-to-clickhouse:1.2.1"
+
+TEXTFILE_DIR="/var/lib/node_exporter/textfile"
+RUN_METRICS="${TEXTFILE_DIR}/ipinfo_enrichment_run.prom"
+DATA_METRICS="${TEXTFILE_DIR}/ipinfo_enrichment_data.prom"
+START_TS=$(date +%s)
 
 WORKDIR=$(mktemp -d)
 chmod 755 "$WORKDIR"
-trap "rm -rf $WORKDIR" EXIT
 
-# Always pull the latest image
-docker pull $MMDB_IMAGE
+# Query a single scalar out of ClickHouse; never fail the caller.
+ch_scalar() {
+  docker exec clickhouse clickhouse-client -q "$1" 2>/dev/null | head -1 | tr -d '[:space:]' || true
+}
+
+# node_exporter reads whole files from the textfile dir; write via rename so it
+# can never observe a half-written metrics file.
+write_atomic() {
+  local dest=$1
+  local tmp="${dest}.$$"
+  cat > "$tmp"
+  chmod 644 "$tmp"
+  mv -f "$tmp" "$dest"
+}
+
+# Runs on every exit path, success or failure. Deliberately kept in a separate
+# file from the success metrics so that a failed run cannot erase the record of
+# the last good import — staleness of *_last_success_timestamp_seconds is what
+# the alert keys on.
+on_exit() {
+  local code=$?
+  local now
+  now=$(date +%s)
+  if [ -d "$TEXTFILE_DIR" ] && [ -w "$TEXTFILE_DIR" ]; then
+    write_atomic "$RUN_METRICS" <<EOF
+# HELP ipinfo_enrichment_last_run_timestamp_seconds Unix time of the last ipinfo-enrichment run, whatever its outcome.
+# TYPE ipinfo_enrichment_last_run_timestamp_seconds gauge
+ipinfo_enrichment_last_run_timestamp_seconds ${now}
+# HELP ipinfo_enrichment_last_exit_code Exit code of the last ipinfo-enrichment run; 0 is success.
+# TYPE ipinfo_enrichment_last_exit_code gauge
+ipinfo_enrichment_last_exit_code ${code}
+# HELP ipinfo_enrichment_last_duration_seconds Wall-clock duration of the last ipinfo-enrichment run.
+# TYPE ipinfo_enrichment_last_duration_seconds gauge
+ipinfo_enrichment_last_duration_seconds $(( now - START_TS ))
+EOF
+  fi
+  rm -rf "$WORKDIR"
+}
+trap on_exit EXIT
+
+docker pull "$MMDB_IMAGE"
 
 # Ensure ipinfo database exists
 docker exec clickhouse clickhouse-client -q "CREATE DATABASE IF NOT EXISTS ipinfo"
@@ -50,6 +106,53 @@ LIFETIME(MIN 0 MAX 3600)
 LAYOUT(FLAT());
 SYSTEM RELOAD DICTIONARY ipinfo.asn_to_name;
 "
+
+# The ip_trie dictionaries are backed by the *_history tables that the import
+# just rewrote. Reload explicitly so the new partition is live immediately
+# rather than whenever LIFETIME happens to expire, and so the element_count we
+# record below reflects this run.
+echo "Reloading country_asn dictionaries..."
+docker exec clickhouse clickhouse-client --multiquery -q "
+SYSTEM RELOAD DICTIONARY ipinfo.country_asn_net;
+SYSTEM RELOAD DICTIONARY ipinfo.country_asn_val;
+"
+
+# --- Outcome metrics ---
+# A run that exits 0 but loads nothing is the failure mode that went unnoticed
+# for months, so record what actually landed, not just that we got here.
+echo "Recording enrichment metrics..."
+NET_ROWS=$(ch_scalar "SELECT count() FROM ipinfo.country_asn_net_history WHERE partition = (SELECT max(partition) FROM ipinfo.country_asn_net_history)")
+VAL_ROWS=$(ch_scalar "SELECT count() FROM ipinfo.country_asn_val_history WHERE partition = (SELECT max(partition) FROM ipinfo.country_asn_val_history)")
+NET_ELEMENTS=$(ch_scalar "SELECT element_count FROM system.dictionaries WHERE database = 'ipinfo' AND name = 'country_asn_net'")
+ASN_ELEMENTS=$(ch_scalar "SELECT element_count FROM system.dictionaries WHERE database = 'ipinfo' AND name = 'asn_to_name'")
+
+NET_ROWS=${NET_ROWS:-0}
+VAL_ROWS=${VAL_ROWS:-0}
+NET_ELEMENTS=${NET_ELEMENTS:-0}
+ASN_ELEMENTS=${ASN_ELEMENTS:-0}
+
+echo "  country_asn_net_history rows : ${NET_ROWS}"
+echo "  country_asn_val_history rows : ${VAL_ROWS}"
+echo "  country_asn_net elements     : ${NET_ELEMENTS}"
+echo "  asn_to_name elements         : ${ASN_ELEMENTS}"
+
+if [ -d "$TEXTFILE_DIR" ] && [ -w "$TEXTFILE_DIR" ]; then
+  write_atomic "$DATA_METRICS" <<EOF
+# HELP ipinfo_enrichment_last_success_timestamp_seconds Unix time of the last ipinfo-enrichment run that completed successfully.
+# TYPE ipinfo_enrichment_last_success_timestamp_seconds gauge
+ipinfo_enrichment_last_success_timestamp_seconds $(date +%s)
+# HELP ipinfo_enrichment_rows Rows in the latest partition of each ipinfo history table.
+# TYPE ipinfo_enrichment_rows gauge
+ipinfo_enrichment_rows{table="country_asn_net_history"} ${NET_ROWS}
+ipinfo_enrichment_rows{table="country_asn_val_history"} ${VAL_ROWS}
+# HELP ipinfo_enrichment_dictionary_elements Element count of each ipinfo dictionary after reload.
+# TYPE ipinfo_enrichment_dictionary_elements gauge
+ipinfo_enrichment_dictionary_elements{dictionary="country_asn_net"} ${NET_ELEMENTS}
+ipinfo_enrichment_dictionary_elements{dictionary="asn_to_name"} ${ASN_ELEMENTS}
+EOF
+else
+  echo "WARNING: ${TEXTFILE_DIR} missing or not writable — metrics not exported"
+fi
 
 echo "IPinfo enrichment completed successfully"
 

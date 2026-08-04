@@ -254,3 +254,63 @@ groups:
     annotations:
       title: 'bird_exporter on {{ $labels.instance }} is up but exporting no BGP metrics'
       description: 'bird_exporter on {{ $labels.instance }} is being scraped successfully but publishes no bird_protocol_up{proto="BGP"} series, so BGP_Session_Down is blind on this host. Usually a stale BIRD control-socket mount — restart the bird_exporter container and check the socket path.'
+
+- name: ipinfo-enrichment
+  # Incident 2026-08-03: the daily ipinfo-enrichment job had been failing since
+  # at least 2026-06-23 (the journal does not retain further back). The upstream
+  # GitHub account was renamed maxmouchet -> junekiwi; github.com redirects
+  # renamed repos but GHCR does not redirect package namespaces, so `docker pull
+  # ghcr.io/maxmouchet/mmdb-to-clickhouse:latest` returned "denied". That pull is
+  # the first command under `set -e`, so the job aborted before downloading
+  # anything. The 30-day TTL on ipinfo.*_history then drained the tables, the
+  # dictionaries reloaded to element_count=0, and every country_asn() lookup
+  # began returning '' — silently, including the example in the public docs.
+  #
+  # Nothing detected any of it, because nothing watched this job at all. These
+  # three rules are a deliberate ladder: each catches a failure the others
+  # structurally cannot.
+  rules:
+  # Rung 1 — fastest. Fires the morning after the first failed run.
+  # Cannot catch a job that stops running entirely: no run means no new exit
+  # code written, so a stale 0 would keep this silent. That is rung 2's job.
+  - alert: IPinfo_Enrichment_Job_Failing
+    expr: ipinfo_enrichment_last_exit_code != 0
+    for: 15m
+    labels:
+      severity: warning
+    annotations:
+      title: 'ipinfo-enrichment job is failing on {{ $labels.instance }}'
+      description: 'The daily ipinfo-enrichment job exited non-zero on its last run. IP-to-country/ASN enrichment will go stale and eventually empty (30-day TTL on ipinfo.*_history). Check `sudo journalctl -u ipinfo-enrichment.service` on coreams01.'
+
+  # Rung 2 — catches the job not running at all: timer disabled, unit removed,
+  # host rebuilt without the playbook, or textfile metrics never produced.
+  # The absent() arm matters because a metric that never appears cannot breach
+  # a threshold — the same class of blind spot as Bird_Exporter_No_Metrics.
+  # Threshold is 48h against a daily schedule, so a single missed or slow run
+  # is not enough to fire.
+  - alert: IPinfo_Enrichment_Stale
+    expr: |
+      ((time() - ipinfo_enrichment_last_success_timestamp_seconds) > 172800)
+      or
+      absent(ipinfo_enrichment_last_success_timestamp_seconds)
+    for: 30m
+    labels:
+      severity: warning
+    annotations:
+      title: 'ipinfo enrichment data has not been refreshed in over 48h'
+      description: 'No successful ipinfo-enrichment run in more than 48 hours (or the job has never reported at all). Geolocation and ASN enrichment are serving stale data and will empty out entirely once the 30-day history TTL passes.'
+
+  # Rung 3 — last line of defense, and the one that describes actual user-facing
+  # damage: the dictionaries are loaded but hold nothing, so country_asn() and
+  # dictGet('ipinfo.asn_to_name', ...) return '' for every input. Critical rather
+  # than warning because this is silently *wrong* data rather than missing data:
+  # queries, dashboards, notebooks and the public docs example all keep working
+  # and just quietly produce empty fields.
+  - alert: IPinfo_Enrichment_Empty
+    expr: min(ipinfo_enrichment_dictionary_elements) by (instance) == 0
+    for: 30m
+    labels:
+      severity: critical
+    annotations:
+      title: 'ipinfo enrichment dictionaries are empty on {{ $labels.instance }}'
+      description: 'At least one ipinfo dictionary has element_count=0, so IP-to-country/ASN lookups silently return empty strings for every address. Re-run `sudo systemctl start ipinfo-enrichment.service` on coreams01 and check its output.'

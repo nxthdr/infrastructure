@@ -3,6 +3,17 @@
 - hosts: core
   become: yes
   tasks:
+  # The job writes Prometheus textfile metrics here and node_exporter reads
+  # them. Both run as uid 1001 (nxthdr), which is also the node_exporter
+  # container's user, so the same ownership works for writer and reader.
+  - name: Create node_exporter textfile collector directory
+    ansible.builtin.file:
+      path: /var/lib/node_exporter/textfile
+      state: directory
+      owner: nxthdr
+      group: nxthdr
+      mode: "0755"
+
   - name: Copy systemd service file
     ansible.builtin.copy:
       src: "{{ base_dir }}/templates/config/shared/ipinfo-enrichment/ipinfo-enrichment.service"

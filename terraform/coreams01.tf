@@ -441,6 +441,11 @@ resource "docker_container" "node_exporter" {
     host_path = "/"
     read_only = "true"
   }
+  volumes {
+    container_path = "/textfile"
+    host_path = "/var/lib/node_exporter/textfile"
+    read_only = "true"
+  }
 }
 
 # Bird Exporter
@@ -1054,8 +1059,23 @@ resource "docker_container" "routinator" {
 }
 
 # Synapse (Matrix homeserver)
+# PINNED — do not let Renovate move this without migrating the MAS config first.
+#
+# Auth is delegated to MAS via MSC3861, configured in homeserver.yaml under
+# `experimental_features.msc3861`. Synapse removed that key after v1.155.0 in
+# favour of a top-level `matrix_authentication_service` block, so v1.157.1 exits
+# at startup with:
+#   Error in configuration at 'experimental.msc3861':
+#     experimental_features.msc3861 was removed.
+# and the container restart-loops — no Matrix, and no alert delivery, since
+# Hookshot bridges Alertmanager into a Matrix room.
+#
+# v1.155.0 is the last version verified against the current config (it served
+# until 2026-08-03). Unpinning requires porting homeserver.yaml to the new
+# `matrix_authentication_service` block in the same change — see
+# docs/pages/reference/mas-migration.md.
 resource "docker_image" "synapse" {
-  name = "matrixdotorg/synapse:v1.159.0"
+  name = "matrixdotorg/synapse:v1.155.0"
   provider = docker.coreams01
 }
 
