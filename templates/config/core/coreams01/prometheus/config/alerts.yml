@@ -190,11 +190,24 @@ groups:
   # Thresholds: saimprowler dispatches every 30min, so a 1h window always spans
   # >=1 batch. A healthy agent sends ~1e8/day and receives >1e5 replies per
   # batch, so "sent >100k but received <100 in an hour" is far outside normal.
+  # 2026-08-03: this rule was itself inert, and missed a full platform-wide
+  # reply outage. `and on(instance)` requires a matching right-hand series, but
+  # saimiris_receiver_received_total is a metrics-rs counter that only comes
+  # into existence on its FIRST increment. An agent that has never captured a
+  # single reply therefore publishes no such series at all, `increase()` over it
+  # returns nothing, the join matches nothing, and the alert cannot fire —
+  # exactly the total-failure case it was written to catch. Only a *partial*
+  # drop (series exists, value low) could ever trigger it.
+  #
+  # `unless on(instance)` inverts the test: fire when an agent is sending hard
+  # and there is NO matching series showing a healthy receive count — which
+  # covers both "received is low" and "received series is missing entirely".
+  # Same shape as Bird_Exporter_No_Metrics above.
   - alert: Pipeline_Saimiris_No_Replies
     expr: |
       (sum by (instance) (increase(saimiris_sender_sent_total[1h])) > 100000)
-      and on(instance)
-      (sum by (instance) (increase(saimiris_receiver_received_total[1h])) < 100)
+      unless on(instance)
+      (sum by (instance) (increase(saimiris_receiver_received_total[1h])) >= 100)
     for: 15m
     labels:
       severity: critical
