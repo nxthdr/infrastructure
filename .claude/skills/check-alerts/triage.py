@@ -32,13 +32,25 @@ KNOWN_NOISE = [
         "note": ("Known LocIX/iFog Frankfurt outage (upstream/IXP-side, sessions stuck in Connect). "
                  "Silence it — matcher in docs/pages/reference/alert-silences.md."),
     },
+]
+
+# --- Diagnostic hints for alerts that ARE actionable ---------------------
+# Same matching shape as KNOWN_NOISE, but these do *not* suppress an alert —
+# they attach a "start here" line to it. `Host_Out_Of_Memory` @ vlt* used to be
+# listed as benign noise above, and that verdict is exactly why a real outage
+# hid behind it for weeks (2026-08-25): saimiris was leaking AF_PACKET ring
+# buffers and sending no probes at all.
+HINTS = [
     {
         "id": "vlt-oom",
         "match": {"alertname": "Host_Out_Of_Memory"},
         "regex": {"instance": r"^vlt"},
-        "note": ("Benign flap: VLT probe nodes run full-table BGP + BMP dual-RIB on ~1GB boxes, "
-                 "so bird ~390MB (RSS+swap) is by design. Only act if a container is OOM-killed; "
-                 "real fix = resize the instance."),
+        "note": ("Actionable — do NOT dismiss as a flap. Almost certainly saimiris leaking pcap "
+                 "ring buffers because CaracatSender::new() hangs on NDP resolution: check "
+                 "`sudo grep -c socket: /proc/$(pgrep -o saimiris)/maps` (healthy = 1-2, leaking = dozens) "
+                 "and `docker logs saimiris | grep 'Failed to create Caracat sender'`. Root cause is a "
+                 "second global IPv6 address on enp1s0 (dhcpcd `slaac private`); the agent sends zero "
+                 "probes while it leaks. See project_recurring_alerts memory + nxthdr/saimiris#66."),
     },
 ]
 
@@ -46,14 +58,22 @@ SEV_ORDER = {"critical": 0, "error": 1, "warning": 2, "info": 3}
 NOW = datetime.now(timezone.utc)
 
 
-def match_noise(labels):
-    for entry in KNOWN_NOISE:
+def match_entry(labels, entries):
+    for entry in entries:
         if any(labels.get(k) != v for k, v in entry["match"].items()):
             continue
         if any(not re.search(rx, labels.get(k, "")) for k, rx in entry.get("regex", {}).items()):
             continue
         return entry
     return None
+
+
+def match_noise(labels):
+    return match_entry(labels, KNOWN_NOISE)
+
+
+def match_hint(labels):
+    return match_entry(labels, HINTS)
 
 
 def age(ts):
@@ -119,8 +139,13 @@ def main():
 
     if needs:
         print("🔴 NEEDS ATTENTION (unsilenced, not known-noise):")
+        hinted = set()
         for a in needs:
             print(line(a))
+            hint = match_hint(a["labels"])
+            if hint and hint["id"] not in hinted:
+                print(f"      → {hint['note']}")
+                hinted.add(hint["id"])
         print()
 
     if noise_firing:

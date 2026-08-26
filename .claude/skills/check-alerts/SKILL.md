@@ -1,6 +1,6 @@
 ---
 name: check-alerts
-description: Fetch and triage the nxthdr platform's currently-firing alerts from Alertmanager, the agent-friendly way — no vault, no basic-auth. Separates "needs attention now" from known-noise (Frankfurt LocIX BGP outage, VLT node OOM flaps) and from already-silenced alerts, and shows how to create/renew a silence. Use when the user asks what alerts are open/firing, to check the alert room, or to investigate a page. Read-only by default (silencing requires explicit confirmation).
+description: Fetch and triage the nxthdr platform's currently-firing alerts from Alertmanager, the agent-friendly way — no vault, no basic-auth. Separates "needs attention now" from known-noise (the Frankfurt LocIX BGP outage) and from already-silenced alerts, attaches diagnostic hints to alerts that look benign but are not, and shows how to create/renew a silence. Use when the user asks what alerts are open/firing, to check the alert room, or to investigate a page. Read-only by default (silencing requires explicit confirmation).
 ---
 
 # Check Alerts
@@ -37,9 +37,18 @@ The script encodes the recurring non-actionable alerts so they don't get re-inve
 | Class | Match | Verdict |
 |---|---|---|
 | Frankfurt LocIX BGP | `BGP_Session_Down` @ `ixpfra01`, session `HE`/`Cloudflare`/`LocIXRS[0-9]` | Upstream/IXP outage. Silence it. |
-| VLT node OOM | `Host_Out_Of_Memory` @ `vlt*` | Benign flap — full-table BGP + BMP dual-RIB on ~1GB boxes; bird ~390MB by design. Act only if a container is OOM-killed; real fix = resize. |
 
 When you add or retire a recurring alert, edit the `KNOWN_NOISE` list at the top of `triage.py`.
+
+## Diagnostic hints (the `HINTS` list)
+
+`HINTS` uses the same matching shape but does **not** suppress anything — it attaches a "start here" line to an alert that stays in NEEDS ATTENTION. Use it for alerts that *look* like noise but aren't:
+
+| Class | Match | Hint |
+|---|---|---|
+| VLT node OOM | `Host_Out_Of_Memory` @ `vlt*` | saimiris leaking AF_PACKET rings because `CaracatSender::new()` hangs on NDP resolution — check `sudo grep -c socket: /proc/$(pgrep -o saimiris)/maps` (healthy = 1–2) and `docker logs saimiris \| grep 'Failed to create Caracat sender'`. The agent sends **zero** probes while it leaks. |
+
+`Host_Out_Of_Memory` @ `vlt*` was in `KNOWN_NOISE` as a "benign flap" until 2026-08-25, and that verdict is exactly why a real outage hid behind it for weeks: the box was not short of memory by design, saimiris was leaking ~6 MB per probe batch and probing nothing. Be slow to add anything to `KNOWN_NOISE` and quick to add to `HINTS`.
 
 ## Silences
 

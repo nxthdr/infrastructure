@@ -36,10 +36,98 @@
         state: present
         update_cache: yes
 
+    # Debian ships `slaac private` in /etc/dhcpcd.conf, so dhcpcd adds an
+    # RFC 7217 stable-private address *on top of* the kernel's EUI-64 SLAAC
+    # address. Two global addresses is what takes the probing agent down:
+    # caracat resolves the gateway MAC with an NDP solicitation sourced from the
+    # *last* global address of the interface, Vultr's gateway ignores a
+    # solicitation from an address it did not assign, and `CaracatSender::new()`
+    # then blocks forever — saimiris stops sending probes at all and leaks a
+    # 2 MB + 4 MB pcap ring per probe batch. (vltsgp01, 2026-08-25: 483 MB RSS,
+    # 134 socket mappings, 293 fds, Host_Out_Of_Memory flapping every few
+    # minutes, ~1.35M probes read and never sent; vltewr01 was one saimiris
+    # restart away from the same outage, and vltcdg01 escaped only because its
+    # EUI-64 address happened to sort last.) `slaac hwaddr` makes dhcpcd manage
+    # the EUI-64 address instead, leaving exactly one global address to pick.
+    - name: Make dhcpcd use the EUI-64 SLAAC address, not a stable-private one
+      lineinfile:
+        path: /etc/dhcpcd.conf
+        regexp: '^\s*slaac\s+'
+        line: 'slaac hwaddr'
+      register: dhcpcd_slaac
+      tags: [ipv6-hygiene]
+
+    # Without this, dhcpcd keeps its old in-memory config and re-creates the
+    # stable-private address within seconds of it being removed.
+    - name: Reload dhcpcd so the new SLAAC mode takes effect
+      command: dhcpcd --rebind {{ interface }}
+      when: dhcpcd_slaac is changed
+      tags: [ipv6-hygiene]
+
+    - name: Keep only the Vultr-assigned (EUI-64) global address on {{ interface }}
+      shell: |
+        python3 - <<'PYSCRIPT'
+        import ipaddress
+        import subprocess
+        import sys
+
+        IFACE = "{{ interface }}"
+        TABLE = "{{ routing_table }}"
+
+        def ip(*args, check=True):
+            return subprocess.run(["ip", *args], capture_output=True,
+                                  text=True, check=check).stdout
+
+        # The address Vultr assigns is EUI-64: the MAC with the U/L bit flipped
+        # and ff:fe in the middle, which is what SLAAC derives.
+        mac = open(f"/sys/class/net/{IFACE}/address").read().strip()
+        octets = bytearray(int(part, 16) for part in mac.split(":"))
+        octets[0] ^= 0x02
+        iid = int.from_bytes(bytes(octets[:3]) + b"\xff\xfe" + bytes(octets[3:]), "big")
+
+        listing = ip("-6", "-oneline", "addr", "show", "dev", IFACE, "scope", "global")
+        addresses = [ipaddress.IPv6Interface(line.split()[3]) for line in listing.splitlines()]
+        keep = [a for a in addresses if int(a.ip) & 0xFFFFFFFFFFFFFFFF == iid]
+        strays = [a for a in addresses if a not in keep]
+
+        if not keep:
+            print(f"no EUI-64 address on {IFACE}, refusing to remove anything")
+            sys.exit(0)
+        if not strays:
+            print("nothing to remove")
+            sys.exit(0)
+
+        # Repoint the policy-routing default at the address being kept *before*
+        # deleting the one it currently uses as preferred source, so there is
+        # never a moment where the table has no usable route.
+        route = ip("-6", "route", "show", "table", TABLE, check=False)
+        if route.startswith("default") and f"src {keep[0].ip} " not in route:
+            gateway = route.split(" via ")[1].split()[0]
+            ip("-6", "route", "replace", "default", "via", gateway, "dev", IFACE,
+               "src", str(keep[0].ip), "table", TABLE)
+            print(f"repointed table {TABLE} default at src {keep[0].ip}")
+
+        for stray in strays:
+            ip("-6", "addr", "del", str(stray), "dev", IFACE)
+            print(f"removed {stray}")
+        PYSCRIPT
+      register: vlt_address_hygiene
+      changed_when: "'removed ' in vlt_address_hygiene.stdout"
+      tags: [ipv6-hygiene]
+
+    # With a single global address left, default_ipv6 is unambiguous again — it
+    # had picked the stray address on vltcdg01 and baked it into table 100.
+    - name: Re-gather network facts after address cleanup
+      setup:
+        gather_subset:
+          - network
+      tags: [ipv6-hygiene]
+
     - name: Set Vultr IPv6 fact
       set_fact:
         vultr_default_ipv6: "{{ ansible_facts['default_ipv6'].address }}"
         vultr_default_macaddress: "{{ ansible_facts['default_ipv6'].macaddress }}"
+      tags: [ipv6-hygiene]
 
     - name: Ensure systemd-networkd directory exists
       file:
@@ -63,6 +151,13 @@
           DHCPv6=yes
           IPv6AcceptRA=yes
           LinkLocalAddressing=yes
+
+          [IPv6AcceptRA]
+          # Derive the RA address from the MAC so it *is* the address the kernel
+          # and Vultr already use, instead of networkd adding a second,
+          # stable-privacy one. See the dhcpcd task above for why a second
+          # global address on this interface takes the saimiris agent down.
+          Token=eui64
 
           {% for prefix in prefixes %}
           [Route]
@@ -92,7 +187,12 @@
     - name: Apply sysctl settings
       command: sysctl --system
 
+    # Tagged with the address cleanup: this script hardcodes an address, so it
+    # goes stale the moment a stray one is removed. vltcdg01 was left pointing
+    # table 100 at a deleted address, which would only have surfaced the next
+    # time the table needed rebuilding.
     - name: Ensure dispatcher script for IPv6 policy routing
+      tags: [ipv6-hygiene]
       copy:
         dest: /etc/networkd-dispatcher/routable.d/99-ip6-policy-routing.sh
         mode: '0755'
