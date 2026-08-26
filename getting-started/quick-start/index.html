@@ -1588,8 +1588,8 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vim<span class="w"> </span>terraform/coreams01.tf
 </span></code></pre></div>
 <p>Find the image resource and update the version:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;docker_image&quot;</span><span class="w"> </span><span class="nv">&quot;grafana&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grafana/grafana:13.0.2&quot;</span><span class="c1">  # bump this tag to update</span>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">"docker_image"</span><span class="w"> </span><span class="nv">"grafana"</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"grafana/grafana:13.0.2"</span><span class="c1">  # bump this tag to update</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="na">provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">docker.coreams01</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">}</span>
 </span></code></pre></div>
@@ -1633,7 +1633,7 @@
 - <code>inventory/inventory.yml</code>
 - <code>secrets/secrets.yml</code></p>
 <h3 id="ansible-sync-fails">Ansible Sync Fails<a class="headerlink" href="#ansible-sync-fails" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>UNREACHABLE! =&gt; {&quot;changed&quot;: false, &quot;msg&quot;: &quot;Failed to connect&quot;}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>UNREACHABLE! =&gt; {"changed": false, "msg": "Failed to connect"}
 </span></code></pre></div>
 <p><strong>Solution</strong>: Verify SSH access to the server.</p>
 <h3 id="container-not-updated">Container Not Updated<a class="headerlink" href="#container-not-updated" title="Permanent link">&para;</a></h3>

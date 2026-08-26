@@ -1145,9 +1145,9 @@
 <div class="admonition warning">
 <p class="admonition-title">Send the query as a GET parameter, not a form-encoded POST body</p>
 <p>chproxy forwards an un-decoded form body verbatim to ClickHouse, so <code>&gt;</code> arrives as <code>%3E</code> and you get a syntax error. Use <code>curl -G --data-urlencode</code> (a raw <code>--data-binary @-</code> POST body also works):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-G<span class="w"> </span><span class="s1">&#39;https://clickhouse.nxthdr.dev/?user=read&amp;password=read&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;query=SELECT count() FROM bmp.updates</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s1">    WHERE time_received_ns &gt; now() - INTERVAL 5 MINUTE FORMAT PrettyCompact&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-G<span class="w"> </span><span class="s1">'https://clickhouse.nxthdr.dev/?user=read&amp;password=read'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">'query=SELECT count() FROM bmp.updates</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s1">    WHERE time_received_ns &gt; now() - INTERVAL 5 MINUTE FORMAT PrettyCompact'</span>
 </span></code></pre></div>
 </div>
 <h3 id="pipeline-freshness-windows">Pipeline freshness windows<a class="headerlink" href="#pipeline-freshness-windows" title="Permanent link">&para;</a></h3>

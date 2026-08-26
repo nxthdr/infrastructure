@@ -932,6 +932,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#silence-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Silence persistence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1091,6 +1102,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#silence-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Silence persistence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1207,28 +1229,28 @@ without hiding other sessions on that host:</p>
 (<code>https://alertmanager.nxthdr.dev/api/v2/silences</code>) or internally from the core
 host (<code>http://[2a06:de00:50:cafe:10::106]:9093/api/v2/silences</code>, no auth inside
 the backend network). Example, run from <code>coreams01</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;PY&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;'PY'</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="s">import json, datetime, urllib.request</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s">now = datetime.datetime.now(datetime.timezone.utc)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s">body = {</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s">    &quot;matchers&quot;: [</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s">        {&quot;name&quot;: &quot;alertname&quot;, &quot;value&quot;: &quot;BGP_Session_Down&quot;, &quot;isRegex&quot;: False, &quot;isEqual&quot;: True},</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s">        {&quot;name&quot;: &quot;instance&quot;,  &quot;value&quot;: &quot;ixpfra01&quot;,         &quot;isRegex&quot;: False, &quot;isEqual&quot;: True},</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s">        {&quot;name&quot;: &quot;name&quot;,      &quot;value&quot;: &quot;HE|Cloudflare|LocIXRS[0-9]&quot;, &quot;isRegex&quot;: True, &quot;isEqual&quot;: True},</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s">    "matchers": [</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s">        {"name": "alertname", "value": "BGP_Session_Down", "isRegex": False, "isEqual": True},</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s">        {"name": "instance",  "value": "ixpfra01",         "isRegex": False, "isEqual": True},</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s">        {"name": "name",      "value": "HE|Cloudflare|LocIXRS[0-9]", "isRegex": True, "isEqual": True},</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s">    ],</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s">    &quot;startsAt&quot;: now.isoformat(),</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s">    &quot;endsAt&quot;:   (now + datetime.timedelta(days=30)).isoformat(),</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s">    &quot;createdBy&quot;: &quot;your-name&quot;,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s">    &quot;comment&quot;:  &quot;Known LocIX/iFog FRA outage since 2026-05-11 (ticket #...).&quot;,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s">    "startsAt": now.isoformat(),</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s">    "endsAt":   (now + datetime.timedelta(days=30)).isoformat(),</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s">    "createdBy": "your-name",</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s">    "comment":  "Known LocIX/iFog FRA outage since 2026-05-11 (ticket #...).",</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s">}</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s">req = urllib.request.Request(</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s">    &quot;http://[2a06:de00:50:cafe:10::106]:9093/api/v2/silences&quot;,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">    data=json.dumps(body).encode(), headers={&quot;Content-Type&quot;: &quot;application/json&quot;})</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s">    "http://[2a06:de00:50:cafe:10::106]:9093/api/v2/silences",</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s">    data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s">print(urllib.request.urlopen(req).read().decode())</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s">PY</span>
 </span></code></pre></div>
 <p>List active silences:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:PASSWORD<span class="w"> </span>https://alertmanager.nxthdr.dev/api/v2/silences<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {id, state: .status.state, comment}&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:PASSWORD<span class="w"> </span>https://alertmanager.nxthdr.dev/api/v2/silences<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.[] | {id, state: .status.state, comment}'</span>
 </span></code></pre></div>
 <p>Expire (delete) a silence early:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:PASSWORD<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://alertmanager.nxthdr.dev/api/v2/silence/&lt;silence-id&gt;
@@ -1243,6 +1265,27 @@ the backend network). Example, run from <code>coreams01</code>:</p>
 <li>Always set a meaningful <strong>expiry</strong> and <strong>comment</strong> — an un-expiring, unexplained
   silence is how real outages get missed.</li>
 </ul>
+<h2 id="silence-persistence">Silence persistence<a class="headerlink" href="#silence-persistence" title="Permanent link">&para;</a></h2>
+<p>Silences live in alertmanager's own state store (<code>--storage.path=/data</code>, bind-mounted
+from <code>/home/nxthdr/alertmanager/data</code> on <code>coreams01</code>), <strong>not</strong> in any config file in
+this repo. They survive restarts only because that directory is writable by the
+container's uid.</p>
+<p>That was broken from Nov 2024 until 2026-08-26: the directory was owned by <code>nxthdr</code>
+(1001) while alertmanager runs as <code>nobody</code> (65534), so nothing was ever persisted and
+<strong>every restart silently discarded all silences</strong>. It surfaced when a <code>make apply</code>
+bumped alertmanager to 0.34.0 and the long-standing Frankfurt LocIX silence vanished,
+putting five <code>ixpfra01</code> BGP alerts back into the room with no explanation.</p>
+<p>Before trusting a silence to outlive a deploy, check the state files exist:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev<span class="w"> </span><span class="s1">'ls -la /home/nxthdr/alertmanager/data'</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># expect: silences  and  nflog, both owned by nobody</span>
+</span></code></pre></div>
+<p>An <strong>empty</strong> directory means the ownership fix is missing (see CLAUDE.md →
+"Manual Configuration"); create silences all you like, none will survive the next
+container replacement. The same permission also gates the <strong>notification log</strong>, so
+without it alertmanager re-sends alerts it had already delivered after each restart.</p>
+<p>Because the store is host state and not in git, a rebuilt core server starts out
+broken again — and with no silences to lose, the only visible symptom is a pair of
+<code>permission denied</code> maintenance errors in <code>docker logs alertmanager</code>.</p>
 
 
 
@@ -1265,7 +1308,7 @@ the backend network). Example, run from <code>coreams01</code>:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 15:49:30 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 18:26:08 UTC">August 26, 2026</span>
   </span>
 
     

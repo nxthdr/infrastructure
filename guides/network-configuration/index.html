@@ -1714,13 +1714,13 @@
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>wg<span class="w"> </span>genkey
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Generate public key from private key</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;private_key&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wg<span class="w"> </span>pubkey
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"&lt;private_key&gt;"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wg<span class="w"> </span>pubkey
 </span></code></pre></div>
 <p>Store the private key in <code>secrets/secrets.yml</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>make<span class="w"> </span>edit-secrets
 </span></code></pre></div>
 <p>Add:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">wireguard_private_key_wg0</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;private_key&gt;&quot;</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">wireguard_private_key_wg0</span><span class="p">:</span><span class="w"> </span><span class="s">"&lt;private_key&gt;"</span>
 </span></code></pre></div></p>
 <p>Use in config:
 <div class="language-ini highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="na">PrivateKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{{ secrets.wireguard_private_key_wg0 }}</span>
