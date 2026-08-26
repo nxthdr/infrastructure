@@ -204,6 +204,27 @@ This is faster than a full `make apply` when no Terraform resources changed.
 
 Renovate can update image versions directly in the module files.
 
+#### Pinned images — do not bump without testing on the host
+
+Three images are held below their latest release because newer builds are known to
+break *this* hardware or *this* config. Each has a `PINNED` comment block at the
+resource explaining the failure and how to test a candidate, plus an
+`allowedVersions` ceiling and `automerge: false` in `renovate.json` — the ceiling
+blocks the known-bad range, and `automerge: false` stops anything inside the allowed
+range landing unreviewed. A pin without both walks forward again within days.
+
+| image | pinned at | breaks because | test before raising |
+|---|---|---|---|
+| `clickhouse/clickhouse-server` | `26.5.1` | coreams01 is an Intel Atom C2750 — SSE4.2 but no AVX. Builds ≥26.5.3 abort with `Illegal instruction` in the entrypoint; the whole data platform goes down. | `docker run --rm clickhouse/clickhouse-server:<ver> clickhouse local -q 'SELECT 1'` on coreams01 |
+| `matrixdotorg/synapse` | `v1.155.0` | Auth is delegated to MAS via MSC3861 under `experimental_features.msc3861`, removed after v1.155.0. Newer versions exit at startup, taking Matrix **and alert delivery** with them. | Requires porting `homeserver.yaml` to the top-level `matrix_authentication_service` block in the same change — see `docs/pages/reference/mas-migration.md` |
+| `grafana/alloy` | `v1.19.0` | v1.19.1 aborts at startup on **ixpcdg01** only (`fatal error: runtime: split stack overflow`), even on `alloy --version`; that host then ships no metrics or logs. Cause unknown — cdg01 and cdg02 match on image digest, config, kernel, Docker, libseccomp, rlimits and CPU flags. | `docker run --rm grafana/alloy:<ver> --version` **on ixpcdg01 specifically** |
+
+Two lessons these encode, both learned the hard way (incidents 2026-08-03 and
+2026-08-26): `make apply` is fleet-wide and untargeted, so queued bumps land
+together and a single deploy can take out several services at once — and a bump
+that is fine on eight hosts can still be fatal on the ninth, so "it works here"
+is not evidence.
+
 ### Roll Back a Failing Service
 
 Most first-party services track the floating `ghcr.io/nxthdr/*:main` tag via a `data.docker_registry_image` + `pull_triggers` block, so the running version is **not recorded in git** and re-running `make apply` does **not** roll back (it re-pulls the same `:main`). To roll back you must repoint the reference at an immutable image (a `@sha256:` digest or immutable tag), then apply **scoped** with `-target` (never `make apply`, which would drag every other `:main` service forward at once). The full runbook — finding the last-good digest (host `docker images --digests`, Loki, GHCR), pinning it, scoped apply, verify, and the un-pin follow-up — is the `rollback` skill (`.claude/skills/rollback/SKILL.md`). Floating-tag services: `:main` first-party (risotto, pesto, saimiris [all VLT], saimiris-gateway, peerlab-gateway, nxthdr.dev, blog, docs, peers) and `:latest` third-party (tailscale [all IXP], bgpalerter).
@@ -475,6 +496,30 @@ logrotate.
 Some tasks require manual intervention:
 - **Grafana admin password:** `docker exec -ti grafana grafana cli admin reset-admin-password <PASSWORD>`
 - **Docker firewall rules:** `ip6tables -I DOCKER-USER -d 2a06:de00:50:cafe:100::/80 -j ACCEPT`
+- **Alertmanager state dir ownership:** `sudo chown 65534:65534 /home/nxthdr/alertmanager/data`
+
+  Alertmanager runs as `nobody` (uid 65534) but the bind-mounted
+  `--storage.path=/data` host directory is created owned by `nxthdr` (1001), so
+  the container cannot write to it. It fails **silently as far as alerting is
+  concerned** — the service starts and alerts fine, and the only symptom is two
+  log lines every maintenance interval:
+
+  ```
+  component=silences err="open /data/silences.<id>: permission denied"
+  component=nflog    err="open /data/nflog.<id>: permission denied"
+  ```
+
+  Consequences, both of which persisted unnoticed from Nov 2024 to 2026-08-26:
+  - **Silences are lost on every container restart or replacement.** Any
+    `make apply` that bumps the alertmanager image silently un-silences
+    everything, so known-noise alerts (the Frankfurt LocIX outage) start paging
+    again with no indication why.
+  - **The notification log is lost too**, so alertmanager re-notifies alerts it
+    had already sent, spamming the Matrix room after a restart.
+
+  Verify with `ls -la /home/nxthdr/alertmanager/data` — it should contain
+  `silences` and `nflog` owned by `nobody`. An **empty** directory means the
+  chown is missing and no silence you create will outlive the next restart.
 
 ### Alerting Pipeline
 

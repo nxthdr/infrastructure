@@ -103,3 +103,32 @@ curl -s -u admin:PASSWORD -X DELETE https://alertmanager.nxthdr.dev/api/v2/silen
   *new, unrelated* problem on the same host still pages.
 - Always set a meaningful **expiry** and **comment** — an un-expiring, unexplained
   silence is how real outages get missed.
+
+## Silence persistence
+
+Silences live in alertmanager's own state store (`--storage.path=/data`, bind-mounted
+from `/home/nxthdr/alertmanager/data` on `coreams01`), **not** in any config file in
+this repo. They survive restarts only because that directory is writable by the
+container's uid.
+
+That was broken from Nov 2024 until 2026-08-26: the directory was owned by `nxthdr`
+(1001) while alertmanager runs as `nobody` (65534), so nothing was ever persisted and
+**every restart silently discarded all silences**. It surfaced when a `make apply`
+bumped alertmanager to 0.34.0 and the long-standing Frankfurt LocIX silence vanished,
+putting five `ixpfra01` BGP alerts back into the room with no explanation.
+
+Before trusting a silence to outlive a deploy, check the state files exist:
+
+```bash
+ssh nxthdr@ams01.core.infra.nxthdr.dev 'ls -la /home/nxthdr/alertmanager/data'
+# expect: silences  and  nflog, both owned by nobody
+```
+
+An **empty** directory means the ownership fix is missing (see CLAUDE.md →
+"Manual Configuration"); create silences all you like, none will survive the next
+container replacement. The same permission also gates the **notification log**, so
+without it alertmanager re-sends alerts it had already delivered after each restart.
+
+Because the store is host state and not in git, a rebuilt core server starts out
+broken again — and with no silences to lose, the only visible symptom is a pair of
+`permission denied` maintenance errors in `docker logs alertmanager`.
