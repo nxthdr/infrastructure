@@ -585,8 +585,28 @@ resource "docker_container" "loki" {
 }
 
 # Alloy
+# PINNED — v1.19.1 does not run on ixpcdg01. Test on that host before raising.
+#
+# The v1.19.1 binary dies at startup there before doing any work — even
+# `alloy --version` aborts with "fatal error: runtime: split stack overflow"
+# out of the Go 1.26.7 runtime, so the container restart-loops and the host
+# stops shipping metrics and logs entirely.
+#
+# It is host-specific and unexplained: ixpcdg01 and ixpcdg02 are identical in
+# image digest, rendered config, mounts, kernel (6.12.48+deb13), Docker
+# (28.5.1), libseccomp (2.6.0), stack rlimit and CPU flags — yet the same
+# image runs fine on cdg02 and the other seven hosts. Clearing the alloy data
+# directory does not help; a fresh empty state dir crashes identically.
+#
+# v1.19.0 and v1.18.0 both run correctly on ixpcdg01 (verified 2026-08-26), so
+# the ceiling is v1.19.1, not the whole 1.19 line. Pinned fleet-wide rather
+# than per-group: since the cause is unknown we cannot rule out other hosts
+# hitting it, and a uniform agent version is worth more than the churn saved.
+#
+# Before bumping, test ON ixpcdg01:
+#   docker run --rm grafana/alloy:<ver> --version
 resource "docker_image" "alloy" {
-  name = "grafana/alloy:v1.19.1"
+  name = "grafana/alloy:v1.19.0"
   provider = docker.coreams01
 }
 

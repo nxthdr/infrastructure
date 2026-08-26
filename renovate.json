@@ -61,6 +61,26 @@
       "automerge": false
     },
     {
+      "description": [
+        "grafana/alloy v1.19.1 does not run on ixpcdg01: the binary aborts at",
+        "startup with 'fatal error: runtime: split stack overflow' from the Go",
+        "1.26.7 runtime — even `alloy --version` fails — so the container",
+        "restart-loops and that host ships no metrics or logs at all.",
+        "Host-specific and unexplained: ixpcdg01 and ixpcdg02 match on image",
+        "digest, config, mounts, kernel, Docker, libseccomp, stack rlimit and",
+        "CPU flags, yet only cdg01 crashes. v1.19.0 and v1.18.0 both run there",
+        "(verified 2026-08-26), so the ceiling is v1.19.1, not the 1.19 line.",
+        "Before raising this, test ON ixpcdg01:",
+        "docker run --rm grafana/alloy:<ver> --version"
+      ],
+      "matchPackageNames": [
+        "grafana/alloy",
+        "docker.io/grafana/alloy"
+      ],
+      "allowedVersions": "<1.19.1",
+      "automerge": false
+    },
+    {
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["major"],
       "automerge": true
