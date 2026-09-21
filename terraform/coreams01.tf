@@ -1164,7 +1164,7 @@ resource "docker_container" "synapse" {
 
 # Matrix Authentication Service (MSC3861 native OIDC for Matrix)
 resource "docker_image" "mas" {
-  name = "ghcr.io/element-hq/matrix-authentication-service:1.24.0"
+  name = "ghcr.io/element-hq/matrix-authentication-service:1.25.1"
   provider = docker.coreams01
 }
 
