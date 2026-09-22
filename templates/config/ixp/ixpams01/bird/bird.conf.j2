@@ -168,8 +168,20 @@ protocol bgp NLIXRS2v6  {
     };
 }
 
-## Cloudflare
-protocol bgp Cloudflare1  {
+## Cloudflare (AS13335) at NL-ix Main
+# Four routers, dual-stack, as listed in Cloudflare's peering portal (all
+# "Healthy / Potential" on 2026-09-22) and in PeeringDB. The vNN suffix pairs
+# each IPv4 session with the IPv6 session on the SAME Cloudflare router, so a
+# one-sided failure is obvious from the session name:
+#   1 -> 193.239.117.114 / 2001:7f8:13::a501:3335:1   (400G port)
+#   2 -> 193.239.118.138 / 2001:7f8:13::a501:3335:2   (100G port)
+#   3 -> 193.239.117.14  / 2001:7f8:13::a501:3335:3   (200G port)
+#   4 -> 193.239.119.101 / 2001:7f8:13::a501:3335:4   (400G port)
+# Our NL-IX ports: 193.239.119.146 (v4) and 2001:7f8:13::a521:5011:1 (v6), 100M.
+# Renamed from Cloudflare1..4 to Cloudflare1v6..4v6 to match the NLIXRS{1,2}{v4,v6}
+# convention in this file — these sessions have never been deployed, so the
+# rename has no operational effect.
+protocol bgp Cloudflare1v6  {
     local 2001:7f8:13::a521:5011:1 as 215011;
     neighbor 2001:7f8:13::a501:3335:1 as 13335;
     ipv6 {
@@ -179,7 +191,7 @@ protocol bgp Cloudflare1  {
     };
 }
 
-protocol bgp Cloudflare2  {
+protocol bgp Cloudflare2v6  {
     local 2001:7f8:13::a521:5011:1 as 215011;
     neighbor 2001:7f8:13::a501:3335:2 as 13335;
     ipv6 {
@@ -189,7 +201,7 @@ protocol bgp Cloudflare2  {
     };
 }
 
-protocol bgp Cloudflare3  {
+protocol bgp Cloudflare3v6  {
     local 2001:7f8:13::a521:5011:1 as 215011;
     neighbor 2001:7f8:13::a501:3335:3 as 13335;
     ipv6 {
@@ -199,10 +211,50 @@ protocol bgp Cloudflare3  {
     };
 }
 
-protocol bgp Cloudflare4  {
+protocol bgp Cloudflare4v6  {
     local 2001:7f8:13::a521:5011:1 as 215011;
     neighbor 2001:7f8:13::a501:3335:4 as 13335;
     ipv6 {
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}
+
+protocol bgp Cloudflare1v4  {
+    local 193.239.119.146 as 215011;
+    neighbor 193.239.117.114 as 13335;
+    ipv4 {
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}
+
+protocol bgp Cloudflare2v4  {
+    local 193.239.119.146 as 215011;
+    neighbor 193.239.118.138 as 13335;
+    ipv4 {
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}
+
+protocol bgp Cloudflare3v4  {
+    local 193.239.119.146 as 215011;
+    neighbor 193.239.117.14 as 13335;
+    ipv4 {
+        import keep filtered;
+        import filter ImportFilter;
+        export filter ExportFilter;
+    };
+}
+
+protocol bgp Cloudflare4v4  {
+    local 193.239.119.146 as 215011;
+    neighbor 193.239.119.101 as 13335;
+    ipv4 {
         import keep filtered;
         import filter ImportFilter;
         export filter ExportFilter;
