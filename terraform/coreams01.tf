@@ -473,7 +473,7 @@ resource "docker_container" "node_exporter" {
 
 # Bird Exporter
 resource "docker_image" "bird_exporter" {
-  name = "ghcr.io/czerwonk/bird_exporter:1.6.2"
+  name = "ghcr.io/czerwonk/bird_exporter:1.7.0"
   provider = docker.coreams01
 }
 
