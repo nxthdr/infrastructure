@@ -33,6 +33,11 @@ module "vlt_server" {
   # apply fails with "Unable to upgrade plan: This plan is not an upgrade".
   plan = each.value.plan
 
+  # Per-host Vultr tags, from inventory.yml. Null keeps the module default
+  # (nxthdr/vlt/automated); experiment hosts carry their own tag so they are
+  # identifiable in the Vultr console and on the invoice.
+  tags = each.value.tags != null ? each.value.tags : ["nxthdr", "vlt", "automated"]
+
   # Optional: Override defaults if needed
   # os_id        = 2625  # Debian 13 x64 trixie (default)
 }

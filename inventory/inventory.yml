@@ -40,5 +40,66 @@ vlt:
     vltsgp01:
       ansible_host: sgp01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a5::/48
+    # exp-hjl7: NOT probing agents. `probing: false` keeps the whole probing
+    # stack off them — render_terraform.py emits their vlt-containers module
+    # with `enable_saimiris = false` (observability only), so `make apply`
+    # cannot deploy saimiris here. They also have no uniprobe0,
+    # since they originate no research prefix. Keep them out of any
+    # `--limit vlt` ansible run that deploys the probing BIRD config.
+    vltams01:
+      ansible_host: ams01.vlt.infra.nxthdr.dev
+      plan: vc2-2c-2gb
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltcdg02:
+      ansible_host: cdg02.vlt.infra.nxthdr.dev
+      plan: vc2-2c-2gb
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    # exp-hjl7 second wave (2026-09-24), one per Vultr region for maximum
+    # geographic spread: Africa 1, South America 1, Oceania 1, Asia 3,
+    # Europe 2, North America 2. No `plan:`, so these take the module default
+    # (vc2-1c-1gb) rather than the 2GB of the first two exp hosts — they only
+    # need the larger size if exp-hjl7 ends up running a full DFZ table.
+    vltjnb01:
+      ansible_host: jnb01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltsao01:
+      ansible_host: sao01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltsyd01:
+      ansible_host: syd01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltnrt01:
+      ansible_host: nrt01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltbom01:
+      ansible_host: bom01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vlticn01:
+      ansible_host: icn01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltfra01:
+      ansible_host: fra01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltsto01:
+      ansible_host: sto01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltlax01:
+      ansible_host: lax01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
+    vltmia01:
+      ansible_host: mia01.vlt.infra.nxthdr.dev
+      probing: false
+      tags: [nxthdr, exp-hjl7, automated]
   vars:
     ansible_user: nxthdr

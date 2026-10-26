@@ -203,17 +203,23 @@ resource "docker_container" "cadvisor" {
 }
 
 # Saimiris
+# Gated by var.enable_saimiris so a VLT-provisioned host can carry the
+# observability stack and BIRD without becoming a probe source. Hosts with
+# `probing: false` in inventory get the module with enable_saimiris = false.
 data "docker_registry_image" "saimiris" {
-  name = "ghcr.io/nxthdr/saimiris:main"
+  count = var.enable_saimiris ? 1 : 0
+  name  = "ghcr.io/nxthdr/saimiris:main"
 }
 
 resource "docker_image" "saimiris" {
-  name          = data.docker_registry_image.saimiris.name
-  pull_triggers = [data.docker_registry_image.saimiris.sha256_digest]
+  count         = var.enable_saimiris ? 1 : 0
+  name          = data.docker_registry_image.saimiris[0].name
+  pull_triggers = [data.docker_registry_image.saimiris[0].sha256_digest]
 }
 
 resource "docker_container" "saimiris" {
-  image      = docker_image.saimiris.image_id
+  count      = var.enable_saimiris ? 1 : 0
+  image      = docker_image.saimiris[0].image_id
   name       = "saimiris"
   command    = ["-v", "agent", "--config=/config/saimiris.yml"]
   restart    = "unless-stopped"
