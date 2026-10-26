@@ -15,21 +15,40 @@
       - m4
       - libreadline-dev
       - libncurses-dev
+      # autoconf is needed because we build from the git archive, which ships
+      # configure.ac but no generated ./configure — see the next task.
+      - autoconf
 
+  # Sources come from the upstream git repository, NOT bird.network.cz.
+  # As of 2026-09-14 the whole of https://bird.network.cz/download/ returns
+  # HTTP 403 (the index too, and with any User-Agent), so `get_url`/`unarchive`
+  # silently fetched a 0-byte file and the play failed with "Invalid archive
+  # ... the file is 0 bytes". That broke BIRD installation on every new host.
+  # The GitLab archive unpacks to bird-v{{ bird_version }} — note the `v` — and
+  # needs `autoreconf -i` first because a git archive has no ./configure.
   - name: Download sources ({{ bird_version }})
     ansible.builtin.unarchive:
-      src: 'https://bird.network.cz/download/bird-{{ bird_version }}.tar.gz'
+      src: 'https://gitlab.nic.cz/labs/bird/-/archive/v{{ bird_version }}/bird-v{{ bird_version }}.tar.gz'
       dest: /tmp
       remote_src: yes
 
   - name: Install from sources
-    ansible.builtin.shell: "./configure --with-protocols='bmp,bgp,rpki,static' && make && make install"
+    ansible.builtin.shell: "autoreconf -i && ./configure --with-protocols='bmp,bgp,rpki,static' && make && make install"
     args:
-      chdir: '/tmp/bird-{{ bird_version }}'
+      chdir: '/tmp/bird-v{{ bird_version }}'
+
+  # `bmp` is the protocol the Debian package lacks, so prove it is compiled in
+  # rather than trusting the configure flag.
+  - name: Verify the bmp protocol is compiled in
+    ansible.builtin.shell: |
+      printf 'router id 10.0.0.1;\nprotocol device {}\nprotocol bmp {\n  station address ip ::1 port 4000;\n}\n' > /tmp/bird-bmp-check.conf
+      /usr/local/sbin/bird -p -c /tmp/bird-bmp-check.conf
+      rm -f /tmp/bird-bmp-check.conf
+    changed_when: false
 
   - name: Delete sources
     ansible.builtin.file:
-      path: '/tmp/bird-{{ bird_version }}'
+      path: '/tmp/bird-v{{ bird_version }}'
       state: absent
 
   - name: Enable `net.ipv4.ip_forward`
