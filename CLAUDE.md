@@ -128,6 +128,34 @@ Runs Ansible playbook: `playbooks/sync-config.yml`
 
 > ⚠️ **ixpams01 / ixpams02 experiment:** these two hosts currently run hand-managed experiment configs in their live `/etc/bird/bird.conf` that diverge from the repo templates (they announce `2a06:de00:58::/47`). Because `sync-bird` deploys from `.rendered/`, running `make sync-bird` against them would **overwrite the experiment** — do not, until it ends. See the guard headers in those templates.
 
+> ⚠️ **`sync-bird` blast radius is `ixp` + `vlt`, and it deploys from `.rendered/`,
+> not from the templates.** The playbook is `hosts: ixp, vlt` with no limit, so it
+> pushes to *every* IXP and VLT host in one run, whatever each host actually needs.
+> That makes a stale or hand-edited `.rendered/` on any operator's laptop a
+> fleet-wide hazard, in both directions: it can overwrite the AMS experiment, and
+> it can overwrite the VLT fleet with an IXP config.
+>
+> **Incident 2026-09-02:** a sync from a working copy carrying an IXP-flavoured
+> config replaced `/etc/bird/bird.conf` on all three VLT hosts. The live
+> `ExportFilter` became an unconditional `reject;`, so the probing `/48`s stopped
+> being announced to Vultr, probe replies had no route back, and
+> `saimiris.replies` fell from ~4M/hour to **zero for 28 hours**. The `protocol
+> bmp` block was lost too, and `VultrUplinkPeer` regressed to the self-pointing
+> next-hop that commit `3f65351` had fixed. Probes kept being sent the whole
+> time, which is why it presented as "sending but not receiving" rather than as a
+> dead agent.
+>
+> **To deploy to one group only**, always pass a limit:
+> ```bash
+> ansible-playbook -i inventory/ -e "base_dir=$(pwd)" -e @secrets/secrets.yml \
+>   --vault-password-file .password playbooks/sync-bird.yml --limit vlt
+> ```
+> Run `make render-config` first so `.rendered/` matches the templates, and
+> verify the rendered file before pushing — for VLT, `ExportFilter` must match
+> `2a0e:97c0:8a0::/44+` and the BGP protocol is named `VultrUplink` (the IXP
+> configs use `Vultrv4`/`Vultrv6`, a quick way to spot the wrong config on a
+> host). `sudo -n true` works on these hosts, so `--ask-become-pass` is optional.
+
 **Files:**
 - `templates/config/{ixp,vlt}/{...}/bird/bird.conf.j2` - Main BIRD configuration (rendered)
 - `templates/config/shared/bird/bird.service` - Systemd service file
