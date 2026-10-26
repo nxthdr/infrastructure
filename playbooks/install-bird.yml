@@ -2,8 +2,16 @@
 ---
 - hosts: core, ixp, vlt
   become: yes
+  # BIRD 3 was blocked on BMP Adj-RIB-In (issue #22); 3.3.3 is the first
+  # release that exports pre/post-policy correctly with `import table on`.
+  # Roll out with --limit, one host first. Installing does not restart BIRD:
+  # `sudo systemctl restart bird` picks up the new binary. To roll back a host,
+  # re-run with `-e bird_version=2.16.1 --limit <host>` and restart.
+  # The fleet runs mixed versions during the rollout, so keep configs parsable
+  # by both: e.g. `authentication md5;` (wanted by BIRD 3 for the VLT
+  # `password`) is a syntax error on 2.16.1.
   vars:
-    bird_version: '2.16.1'
+    bird_version: '3.3.3'
   tasks:
   - name: Install packages for compilation
     ansible.builtin.apt:
