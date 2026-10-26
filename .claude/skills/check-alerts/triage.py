@@ -52,6 +52,18 @@ HINTS = [
                  "second global IPv6 address on enp1s0 (dhcpcd `slaac private`); the agent sends zero "
                  "probes while it leaks. See project_recurring_alerts memory + nxthdr/saimiris#66."),
     },
+    {
+        "id": "ams-nlix",
+        "match": {"alertname": "BGP_Session_Down"},
+        "regex": {"instance": r"^ixpams0[12]$", "name": r"^(NLIXRS[0-9]v6|HE)$"},
+        "note": ("Almost certainly the NL-IX peering VLAN dead at iFog AMS since 2026-08-19 "
+                 "(provider-side, silence 773699ad expired or a new session appeared) — but verify, "
+                 "do not assume: `ssh nxthdr@ams01.ixp.infra.nxthdr.dev 'sudo timeout 8 tcpdump -nni ens19 -c 10'`. "
+                 "Zero inbound packets = same outage, needs an iFog ticket, re-silence. Packets flowing = the "
+                 "VLAN is back and this is a NEW fault, debug BIRD. Deliberately a HINT and not KNOWN_NOISE so "
+                 "a real session failure can never hide behind the outage. "
+                 "See docs/pages/reference/alert-silences.md."),
+    },
 ]
 
 SEV_ORDER = {"critical": 0, "error": 1, "warning": 2, "info": 3}

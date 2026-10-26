@@ -94,6 +94,138 @@ Expire (delete) a silence early:
 curl -s -u admin:PASSWORD -X DELETE https://alertmanager.nxthdr.dev/api/v2/silence/<silence-id>
 ```
 
+## Currently tracked outages
+
+Two upstream BGP outages are currently silenced, both **provider-side** — no
+BIRD or host change will fix either, so re-diagnosing them from scratch each
+time they resurface is wasted effort. Note the differing expiries: they encode
+how long each is expected to last, so a short one coming back is a signal, not
+noise.
+
+| Silence | Scope | Expires | Cause |
+|---|---|---|---|
+| `154459ab` | `ixpfra01`, `name=~HE\|Cloudflare\|LocIXRS[0-9]` | 2026-09-25 | LocIX/iFog Frankfurt outage (RS2/RS3/Cloudflare down since 2026-05-11, HE/RS1 since 2026-06-12) |
+| `88c636ac` | `ixpfra01`, `name=FogIXPRS1` | 2026-09-06 | FogIXP route server RS1 pulled from service 2026-08-30 (**7 days on purpose** — expected back) |
+
+No silence covers `peerlab_*` sessions on those hosts, so participant sessions
+still page normally — and none covers `FogIXPRS2`.
+
+The NL-IX silence (`773699ad`) was **expired early on 2026-09-03** when that
+outage resolved. Expiring a stale silence is part of closing an incident: left
+alone it would have masked real NL-IX and HE failures on both Amsterdam hosts
+until 2026-09-26.
+
+### NL-IX VLAN dead at iFog Amsterdam (2026-08-19 → 2026-09-02) — RESOLVED
+
+!!! success "Resolved 2026-09-02 ~22:57"
+    iFog fixed the bridge. All eight sessions (v4 + v6 on both hosts) are
+    Established and `ixpams01` ↔ `ixpams02` across the bridge pings in 0.35 ms.
+    Kept here because the diagnosis method is reusable — the fault was invisible
+    from BIRD, and two of the obvious checks actively mislead.
+
+Five sessions — `NLIXRS1v6`, `NLIXRS2v6`, `HE` on `ixpams01` and `NLIXRS1v6`,
+`NLIXRS2v6` on `ixpams02` — went to `Connect / Hold timer expired` within 90
+seconds of each other at **2026-08-19 18:08 CEST** and stayed there. The
+peering interface `ens19` received **zero inbound packets** on both hosts.
+
+Diagnosed provider-side rather than ours:
+
+- Two independent VMs failed simultaneously; a single peer fault cannot do that.
+- `ip -6 neigh show dev ens19` is `FAILED`/`INCOMPLETE` for *every* neighbour —
+  including `ixpams01` ↔ `ixpams02`, which sit on the same peering LAN.
+- `tcpdump -i ens19` captures only our own outbound neighbour solicitations.
+- `ens18` (iFog transit) is healthy: gateway replies in 0.2 ms, default route
+  works, no carrier/link events in the journal, no repo change to network config.
+- FranceIX sessions on `ixpcdg01`/`ixpcdg02` stayed Established, so it is
+  neither our ASN nor a global problem.
+
+**Narrowed on 2026-09-02 to iFog's hypervisor bridge, not NL-IX.** Both VMs'
+`ens19` hang off the same Proxmox host, which identifies itself in LLDP as
+`vmhost06-ams.ifog.ch` (taps `tap756i1` for ams01, `tap768i1` for ams02) and
+advertises a management address *inside* the peering LAN,
+`2001:7f8:13:0:a21d:48ff:feef:5e0c`. So that bridge really is the NL-IX VLAN
+bridge, our vNICs are attached to it, and it is up — its LLDP arrives on both
+taps. It nevertheless forwards nothing:
+
+- Neither VM can ping the hypervisor's own peering-LAN address.
+- **ams01 and ams02 cannot reach each other**, on IPv6 or IPv4, despite being
+  two taps on the same bridge — traffic that never needs to touch NL-IX at all.
+
+That combination (LLDP in, nothing else in, no VM-to-VM forwarding) puts the
+fault squarely inside `vmhost06-ams` — port isolation, a broken bridge, or lost
+VLAN membership. It is **not** NL-IX, and **not** anything in our BIRD config or
+addressing. The fix is an iFog ticket naming that host and those two tap ports.
+
+**Before renewing the silence, re-verify — and mind the two traps:**
+
+```bash
+# Trap 1: your OWN outbound ARP/NS shows up in a plain capture and looks like traffic.
+# Trap 2: iFog's hypervisor sends LLDP every 30 s, which arrives even while broken.
+# So exclude your own MAC, and don't count LLDP as recovery:
+MAC=$(cat /sys/class/net/ens19/address)
+sudo timeout 25 tcpdump -nni ens19 "not ether src $MAC and not ether proto 0x88cc"
+
+# still broken: 0 packets captured
+# recovered:    route-server / participant ND and BGP visible -> debug BIRD instead
+```
+
+The fastest single check is VM-to-VM across the bridge, which needs no peer at
+all — if this works, the bridge is forwarding again:
+
+```bash
+ssh nxthdr@ams01.ixp.infra.nxthdr.dev 'ping6 -c3 2001:7f8:13::a500:9434:1'  # -> ams02
+```
+
+!!! warning "Collateral: blackhole routes on the dead LAN"
+    Both hosts carry hand-added static routes (`ip -6 route add`, kernel source
+    3 = `RTPROT_BOOT`) whose next-hops are on this LAN. Because they are not
+    BGP-learned, **BIRD cannot withdraw them** — it imports them via `kernel1` —
+    so they blackhole traffic instead of falling back to the iFog default route:
+
+    - `ixpams01`: `2001:4860::/32` via HE, `fd00:babe::/64` via `ixpams02`
+    - `ixpams02`: `2001:4860::/32` and `2a07:8880:2::/48` via AS16509
+
+    All Google IPv6 is therefore unreachable from both hosts. Check with
+    `ip -6 route show | grep "dev ens19"` and trace an origin with
+    `birdc show route for <addr> all`. These belong to the hand-managed
+    ixpams01/ixpams02 experiment, so confirm before deleting.
+
+### FogIXP route server RS1 pulled from service (2026-08-30)
+
+`FogIXPRS1` (`2001:7f8:ca:1::111`, AS47498) sent a graceful BGP **Administrative
+shutdown** at **15:20:26 UTC** and then left the peering LAN altogether.
+
+Unlike the two outages above, the **LAN is healthy** — this is one route server,
+not a dead VLAN, and telling the two apart takes one command:
+
+- `ip -6 neigh show | grep 2001:7f8:ca:1:` lists 20+ neighbours REACHABLE/STALE
+  on `ens20`; only `::111` is `FAILED`.
+- `FogIXPRS2` (`::222`) stayed Established with ~4698 routes imported, so
+  FogIXP reachability continues through the surviving route server.
+
+RS1 was already misbehaving three days earlier, which is likely why it was
+pulled:
+
+```
+Aug 27 22:16:40  FogIXPRS1: Malformed attribute list - framing error (1024/3) at 75
+Aug 27 22:16:40  FogIXPRS1: Invalid route 2001:67c:1550::/48 withdrawn
+Aug 30 15:20:26  FogIXPRS1: Received: Administrative shutdown
+```
+
+Worth reporting the malformed-attribute event to FogIXP — they may not have it.
+
+!!! tip "Why this silence is 7 days and not 30"
+    A route server returning is the *expected* outcome, so the silence is set to
+    expire while the situation is still fresh. If `FogIXPRS1` pages again on
+    2026-09-06 that is useful information — either it is still out (chase FogIXP)
+    or it came back and broke again. A 30-day silence would have turned that
+    signal into a month of silence. Match the expiry to the expected fix time,
+    not to habit.
+
+    Route servers are a redundant pair: losing one is a *degradation*, not an
+    outage. If **both** FogIXP sessions go down, that is a different incident —
+    check the LAN with `tcpdump -nni ens20` before assuming it is IXP-side.
+
 ## Notes
 
 - A silence only suppresses **notifications**; the alert still evaluates and will

@@ -47,6 +47,9 @@ When you add or retire a recurring alert, edit the `KNOWN_NOISE` list at the top
 | Class | Match | Hint |
 |---|---|---|
 | VLT node OOM | `Host_Out_Of_Memory` @ `vlt*` | saimiris leaking AF_PACKET rings because `CaracatSender::new()` hangs on NDP resolution — check `sudo grep -c socket: /proc/$(pgrep -o saimiris)/maps` (healthy = 1–2) and `docker logs saimiris \| grep 'Failed to create Caracat sender'`. The agent sends **zero** probes while it leaks. |
+| Amsterdam NL-IX | `BGP_Session_Down` @ `ixpams0[12]`, session `NLIXRS[0-9]v6`/`HE` | NL-IX peering VLAN dead at iFog AMS since 2026-08-19 (silence `773699ad`, expires 2026-09-26). Confirm with `sudo timeout 8 tcpdump -nni ens19 -c 10`: zero inbound = same provider outage, re-silence; packets flowing = VLAN restored and this is a **new** fault. |
+
+A hint, not `KNOWN_NOISE`, is also the right home for a *diagnosed but unfixed* upstream outage that is already silenced: while the silence holds the alert shows as SILENCED anyway, and when it expires the hint turns a 20-minute re-diagnosis into one 8-second command — without ever letting a genuine new failure on those sessions be suppressed.
 
 `Host_Out_Of_Memory` @ `vlt*` was in `KNOWN_NOISE` as a "benign flap" until 2026-08-25, and that verdict is exactly why a real outage hid behind it for weeks: the box was not short of memory by design, saimiris was leaking ~6 MB per probe batch and probing nothing. Be slow to add anything to `KNOWN_NOISE` and quick to add to `HINTS`.
 
