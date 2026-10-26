@@ -9,18 +9,105 @@ locals {
       uniprobe0    = "2a0e:97c0:8a3::/48"
       ansible_host = "ewr01.vlt.infra.nxthdr.dev"
       plan         = "vc2-1c-1gb"
+      tags         = null
     }
     "vltcdg01" = {
       region       = "cdg"
       uniprobe0    = "2a0e:97c0:8a4::/48"
       ansible_host = "cdg01.vlt.infra.nxthdr.dev"
       plan         = "vc2-2c-2gb"
+      tags         = null
     }
     "vltsgp01" = {
       region       = "sgp"
       uniprobe0    = "2a0e:97c0:8a5::/48"
       ansible_host = "sgp01.vlt.infra.nxthdr.dev"
       plan         = "vc2-1c-1gb"
+      tags         = null
+    }
+    "vltams01" = {
+      region       = "ams"
+      uniprobe0    = ""
+      ansible_host = "ams01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-2c-2gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltcdg02" = {
+      region       = "cdg"
+      uniprobe0    = ""
+      ansible_host = "cdg02.vlt.infra.nxthdr.dev"
+      plan         = "vc2-2c-2gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltjnb01" = {
+      region       = "jnb"
+      uniprobe0    = ""
+      ansible_host = "jnb01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltsao01" = {
+      region       = "sao"
+      uniprobe0    = ""
+      ansible_host = "sao01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltsyd01" = {
+      region       = "syd"
+      uniprobe0    = ""
+      ansible_host = "syd01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltnrt01" = {
+      region       = "nrt"
+      uniprobe0    = ""
+      ansible_host = "nrt01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltbom01" = {
+      region       = "bom"
+      uniprobe0    = ""
+      ansible_host = "bom01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vlticn01" = {
+      region       = "icn"
+      uniprobe0    = ""
+      ansible_host = "icn01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltfra01" = {
+      region       = "fra"
+      uniprobe0    = ""
+      ansible_host = "fra01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltsto01" = {
+      region       = "sto"
+      uniprobe0    = ""
+      ansible_host = "sto01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltlax01" = {
+      region       = "lax"
+      uniprobe0    = ""
+      ansible_host = "lax01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
+    }
+    "vltmia01" = {
+      region       = "mia"
+      uniprobe0    = ""
+      ansible_host = "mia01.vlt.infra.nxthdr.dev"
+      plan         = "vc2-1c-1gb"
+      tags         = ["nxthdr", "exp-hjl7", "automated"]
     }
   }
 }
@@ -47,4 +134,112 @@ module "vlt_vltsgp01" {
     docker = docker.vltsgp01
   }
   hostname = "vltsgp01"
+}
+
+module "vlt_vltams01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltams01
+  }
+  hostname = "vltams01"
+  enable_saimiris = false
+}
+
+module "vlt_vltcdg02" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltcdg02
+  }
+  hostname = "vltcdg02"
+  enable_saimiris = false
+}
+
+module "vlt_vltjnb01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltjnb01
+  }
+  hostname = "vltjnb01"
+  enable_saimiris = false
+}
+
+module "vlt_vltsao01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltsao01
+  }
+  hostname = "vltsao01"
+  enable_saimiris = false
+}
+
+module "vlt_vltsyd01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltsyd01
+  }
+  hostname = "vltsyd01"
+  enable_saimiris = false
+}
+
+module "vlt_vltnrt01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltnrt01
+  }
+  hostname = "vltnrt01"
+  enable_saimiris = false
+}
+
+module "vlt_vltbom01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltbom01
+  }
+  hostname = "vltbom01"
+  enable_saimiris = false
+}
+
+module "vlt_vlticn01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vlticn01
+  }
+  hostname = "vlticn01"
+  enable_saimiris = false
+}
+
+module "vlt_vltfra01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltfra01
+  }
+  hostname = "vltfra01"
+  enable_saimiris = false
+}
+
+module "vlt_vltsto01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltsto01
+  }
+  hostname = "vltsto01"
+  enable_saimiris = false
+}
+
+module "vlt_vltlax01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltlax01
+  }
+  hostname = "vltlax01"
+  enable_saimiris = false
+}
+
+module "vlt_vltmia01" {
+  source = "./modules/vlt-containers"
+  providers = {
+    docker = docker.vltmia01
+  }
+  hostname = "vltmia01"
+  enable_saimiris = false
 }

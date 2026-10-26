@@ -91,9 +91,21 @@ def process_host_files(
         )
         return
 
+    # A host with `probing: false` is provisioned like a VLT server but must
+    # never probe. Do not render the probing pieces for it at all: the VLT BIRD
+    # config originates the research prefixes, and `sync-bird` deploys whatever
+    # sits in .rendered/, so rendering it would leave a probing config one
+    # untargeted playbook run away from being live on an experiment host.
+    skip_dirs = set()
+    if isinstance(host_data, dict) and host_data.get("probing") is False:
+        skip_dirs = {"bird", "saimiris"}
+
     for item_path in input_dir.rglob("*"):
         if item_path.is_file():
             relative_path = item_path.relative_to(input_dir)
+            if relative_path.parts and relative_path.parts[0] in skip_dirs:
+                print(f"  Skipped (probing disabled): {relative_path}")
+                continue
             output_path = host_output_dir / relative_path
 
             if item_path.suffix == ".j2":

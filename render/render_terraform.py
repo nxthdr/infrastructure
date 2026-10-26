@@ -90,23 +90,37 @@ def generate_vlt(inventory):
         # which Vultr rejects outright ("This plan is not an upgrade"), failing
         # every subsequent apply.
         plan = host_data.get("plan", DEFAULT_VLT_PLAN)
+        # Vultr instance tags. Hosts that omit `tags:` keep the module default
+        # (nxthdr/vlt/automated); an experiment host sets its own so the
+        # instance is identifiable in the Vultr console and billing.
+        tags = host_data.get("tags", [])
         lines.append(f'    "{host_name}" = {{')
         lines.append(f'      region       = "{region}"')
         lines.append(f'      uniprobe0    = "{uniprobe0}"')
         lines.append(f'      ansible_host = "{ansible_host}"')
         lines.append(f'      plan         = "{plan}"')
+        if tags:
+            rendered = ", ".join(f'"{tag}"' for tag in tags)
+            lines.append(f"      tags         = [{rendered}]")
+        else:
+            lines.append("      tags         = null")
         lines.append("    }")
     lines.append("  }")
     lines.append("}\n")
 
-    # Generate module calls for VLT containers
-    for host_name in hosts:
+    # Generate module calls for VLT containers (alloy, exporters, saimiris).
+    # `probing: false` in inventory keeps the observability stack but drops
+    # saimiris, so `make apply` cannot turn the host into a probe source.
+    for host_name, host_data in hosts.items():
+        probing = (host_data or {}).get("probing", True) is not False
         lines.append(f'module "vlt_{host_name}" {{')
         lines.append('  source = "./modules/vlt-containers"')
         lines.append("  providers = {")
         lines.append(f"    docker = docker.{host_name}")
         lines.append("  }")
         lines.append(f'  hostname = "{host_name}"')
+        if not probing:
+            lines.append("  enable_saimiris = false")
         lines.append("}\n")
     return "\n".join(lines)
 
