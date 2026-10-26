@@ -1063,7 +1063,7 @@ resource "docker_container" "headplane" {
 
 # Routinator
 resource "docker_image" "routinator" {
-  name = "nlnetlabs/routinator:v0.15.2"
+  name = "nlnetlabs/routinator:v0.15.3"
   provider = docker.coreams01
 }
 
