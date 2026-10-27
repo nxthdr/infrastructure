@@ -10,8 +10,13 @@
   # The fleet runs mixed versions during the rollout, so keep configs parsable
   # by both: e.g. `authentication md5;` (wanted by BIRD 3 for the VLT
   # `password`) is a syntax error on 2.16.1.
+  # A host can be pinned with a `bird_version` host var in inventory; every
+  # host still on 2.16.1 is pinned there with the reason (1 GB VLTs cannot fit
+  # BIRD 3's ROA aux tables, the AMS hosts run an experiment). It has to be
+  # read through `bird_release`, because a play var named `bird_version`
+  # would override the inventory value.
   vars:
-    bird_version: '3.3.3'
+    bird_release: "{{ bird_version | default('3.3.3') }}"
   tasks:
   - name: Install packages for compilation
     ansible.builtin.apt:
@@ -32,18 +37,18 @@
   # HTTP 403 (the index too, and with any User-Agent), so `get_url`/`unarchive`
   # silently fetched a 0-byte file and the play failed with "Invalid archive
   # ... the file is 0 bytes". That broke BIRD installation on every new host.
-  # The GitLab archive unpacks to bird-v{{ bird_version }} — note the `v` — and
+  # The GitLab archive unpacks to bird-v{{ bird_release }} — note the `v` — and
   # needs `autoreconf -i` first because a git archive has no ./configure.
-  - name: Download sources ({{ bird_version }})
+  - name: Download sources ({{ bird_release }})
     ansible.builtin.unarchive:
-      src: 'https://gitlab.nic.cz/labs/bird/-/archive/v{{ bird_version }}/bird-v{{ bird_version }}.tar.gz'
+      src: 'https://gitlab.nic.cz/labs/bird/-/archive/v{{ bird_release }}/bird-v{{ bird_release }}.tar.gz'
       dest: /tmp
       remote_src: yes
 
   - name: Install from sources
     ansible.builtin.shell: "autoreconf -i && ./configure --with-protocols='bmp,bgp,rpki,static' && make && make install"
     args:
-      chdir: '/tmp/bird-v{{ bird_version }}'
+      chdir: '/tmp/bird-v{{ bird_release }}'
 
   # `bmp` is the protocol the Debian package lacks, so prove it is compiled in
   # rather than trusting the configure flag.
@@ -56,7 +61,7 @@
 
   - name: Delete sources
     ansible.builtin.file:
-      path: '/tmp/bird-v{{ bird_version }}'
+      path: '/tmp/bird-v{{ bird_release }}'
       state: absent
 
   - name: Enable `net.ipv4.ip_forward`
