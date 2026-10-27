@@ -11,9 +11,11 @@ ixp:
     ixpams01:
       ansible_host: ams01.ixp.infra.nxthdr.dev
       tailscale_ip: 100.64.0.3
+      bird_version: '2.16.1'  # AMS experiment config; do not move to BIRD 3 until it ends
     ixpams02:
       ansible_host: ams02.ixp.infra.nxthdr.dev
       tailscale_ip: 100.64.0.4
+      bird_version: '2.16.1'  # AMS experiment config; do not move to BIRD 3 until it ends
     ixpfra01:
       ansible_host: fra01.ixp.infra.nxthdr.dev
       tailscale_ip: 100.64.0.2
@@ -31,6 +33,7 @@ vlt:
     vltewr01:
       ansible_host: ewr01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a3::/48
+      bird_version: '2.16.1'  # 1 GB: BIRD 3 needs ~180 MB more; resize to vc2-2c-2gb first
     vltcdg01:
       ansible_host: cdg01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a4::/48
@@ -40,6 +43,7 @@ vlt:
     vltsgp01:
       ansible_host: sgp01.vlt.infra.nxthdr.dev
       uniprobe0: 2a0e:97c0:8a5::/48
+      bird_version: '2.16.1'  # 1 GB: BIRD 3 needs ~180 MB more; resize to vc2-2c-2gb first
     # exp-hjl7: NOT probing agents. `probing: false` keeps the whole probing
     # stack off them — render_terraform.py emits their vlt-containers module
     # with `enable_saimiris = false` (observability only), so `make apply`
@@ -50,11 +54,13 @@ vlt:
       ansible_host: ams01.vlt.infra.nxthdr.dev
       plan: vc2-2c-2gb
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltcdg02:
       ansible_host: cdg02.vlt.infra.nxthdr.dev
       plan: vc2-2c-2gb
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     # exp-hjl7 second wave (2026-09-24), one per Vultr region for maximum
     # geographic spread: Africa 1, South America 1, Oceania 1, Asia 3,
@@ -64,42 +70,52 @@ vlt:
     vltjnb01:
       ansible_host: jnb01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltsao01:
       ansible_host: sao01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltsyd01:
       ansible_host: syd01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltnrt01:
       ansible_host: nrt01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltbom01:
       ansible_host: bom01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vlticn01:
       ansible_host: icn01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltfra01:
       ansible_host: fra01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltsto01:
       ansible_host: sto01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltlax01:
       ansible_host: lax01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
     vltmia01:
       ansible_host: mia01.vlt.infra.nxthdr.dev
       probing: false
+      bird_version: '2.16.1'  # do not move to BIRD 3 while exp-hjl7 runs
       tags: [nxthdr, exp-hjl7, automated]
   vars:
     ansible_user: nxthdr
