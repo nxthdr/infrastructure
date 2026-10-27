@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -922,6 +922,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#currently-tracked-outages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Currently tracked outages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Currently tracked outages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nl-ix-vlan-dead-at-ifog-amsterdam-2026-08-19-2026-09-02-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NL-IX VLAN dead at iFog Amsterdam (2026-08-19 → 2026-09-02) — RESOLVED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fogixp-route-server-rs1-pulled-from-service-2026-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FogIXP route server RS1 pulled from service (2026-08-30)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1092,6 +1131,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#currently-tracked-outages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Currently tracked outages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Currently tracked outages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nl-ix-vlan-dead-at-ifog-amsterdam-2026-08-19-2026-09-02-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NL-IX VLAN dead at iFog Amsterdam (2026-08-19 → 2026-09-02) — RESOLVED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fogixp-route-server-rs1-pulled-from-service-2026-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FogIXP route server RS1 pulled from service (2026-08-30)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1255,6 +1333,140 @@ the backend network). Example, run from <code>coreams01</code>:</p>
 <p>Expire (delete) a silence early:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:PASSWORD<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://alertmanager.nxthdr.dev/api/v2/silence/&lt;silence-id&gt;
 </span></code></pre></div>
+<h2 id="currently-tracked-outages">Currently tracked outages<a class="headerlink" href="#currently-tracked-outages" title="Permanent link">&para;</a></h2>
+<p>Two upstream BGP outages are currently silenced, both <strong>provider-side</strong> — no
+BIRD or host change will fix either, so re-diagnosing them from scratch each
+time they resurface is wasted effort. Note the differing expiries: they encode
+how long each is expected to last, so a short one coming back is a signal, not
+noise.</p>
+<table>
+<thead>
+<tr>
+<th>Silence</th>
+<th>Scope</th>
+<th>Expires</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>154459ab</code></td>
+<td><code>ixpfra01</code>, <code>name=~HE\|Cloudflare\|LocIXRS[0-9]</code></td>
+<td>2026-09-25</td>
+<td>LocIX/iFog Frankfurt outage (RS2/RS3/Cloudflare down since 2026-05-11, HE/RS1 since 2026-06-12)</td>
+</tr>
+<tr>
+<td><code>88c636ac</code></td>
+<td><code>ixpfra01</code>, <code>name=FogIXPRS1</code></td>
+<td>2026-09-06</td>
+<td>FogIXP route server RS1 pulled from service 2026-08-30 (<strong>7 days on purpose</strong> — expected back)</td>
+</tr>
+</tbody>
+</table>
+<p>No silence covers <code>peerlab_*</code> sessions on those hosts, so participant sessions
+still page normally — and none covers <code>FogIXPRS2</code>.</p>
+<p>The NL-IX silence (<code>773699ad</code>) was <strong>expired early on 2026-09-03</strong> when that
+outage resolved. Expiring a stale silence is part of closing an incident: left
+alone it would have masked real NL-IX and HE failures on both Amsterdam hosts
+until 2026-09-26.</p>
+<h3 id="nl-ix-vlan-dead-at-ifog-amsterdam-2026-08-19-2026-09-02-resolved">NL-IX VLAN dead at iFog Amsterdam (2026-08-19 → 2026-09-02) — RESOLVED<a class="headerlink" href="#nl-ix-vlan-dead-at-ifog-amsterdam-2026-08-19-2026-09-02-resolved" title="Permanent link">&para;</a></h3>
+<div class="admonition success">
+<p class="admonition-title">Resolved 2026-09-02 ~22:57</p>
+<p>iFog fixed the bridge. All eight sessions (v4 + v6 on both hosts) are
+Established and <code>ixpams01</code> ↔ <code>ixpams02</code> across the bridge pings in 0.35 ms.
+Kept here because the diagnosis method is reusable — the fault was invisible
+from BIRD, and two of the obvious checks actively mislead.</p>
+</div>
+<p>Five sessions — <code>NLIXRS1v6</code>, <code>NLIXRS2v6</code>, <code>HE</code> on <code>ixpams01</code> and <code>NLIXRS1v6</code>,
+<code>NLIXRS2v6</code> on <code>ixpams02</code> — went to <code>Connect / Hold timer expired</code> within 90
+seconds of each other at <strong>2026-08-19 18:08 CEST</strong> and stayed there. The
+peering interface <code>ens19</code> received <strong>zero inbound packets</strong> on both hosts.</p>
+<p>Diagnosed provider-side rather than ours:</p>
+<ul>
+<li>Two independent VMs failed simultaneously; a single peer fault cannot do that.</li>
+<li><code>ip -6 neigh show dev ens19</code> is <code>FAILED</code>/<code>INCOMPLETE</code> for <em>every</em> neighbour —
+  including <code>ixpams01</code> ↔ <code>ixpams02</code>, which sit on the same peering LAN.</li>
+<li><code>tcpdump -i ens19</code> captures only our own outbound neighbour solicitations.</li>
+<li><code>ens18</code> (iFog transit) is healthy: gateway replies in 0.2 ms, default route
+  works, no carrier/link events in the journal, no repo change to network config.</li>
+<li>FranceIX sessions on <code>ixpcdg01</code>/<code>ixpcdg02</code> stayed Established, so it is
+  neither our ASN nor a global problem.</li>
+</ul>
+<p><strong>Narrowed on 2026-09-02 to iFog's hypervisor bridge, not NL-IX.</strong> Both VMs'
+<code>ens19</code> hang off the same Proxmox host, which identifies itself in LLDP as
+<code>vmhost06-ams.ifog.ch</code> (taps <code>tap756i1</code> for ams01, <code>tap768i1</code> for ams02) and
+advertises a management address <em>inside</em> the peering LAN,
+<code>2001:7f8:13:0:a21d:48ff:feef:5e0c</code>. So that bridge really is the NL-IX VLAN
+bridge, our vNICs are attached to it, and it is up — its LLDP arrives on both
+taps. It nevertheless forwards nothing:</p>
+<ul>
+<li>Neither VM can ping the hypervisor's own peering-LAN address.</li>
+<li><strong>ams01 and ams02 cannot reach each other</strong>, on IPv6 or IPv4, despite being
+  two taps on the same bridge — traffic that never needs to touch NL-IX at all.</li>
+</ul>
+<p>That combination (LLDP in, nothing else in, no VM-to-VM forwarding) puts the
+fault squarely inside <code>vmhost06-ams</code> — port isolation, a broken bridge, or lost
+VLAN membership. It is <strong>not</strong> NL-IX, and <strong>not</strong> anything in our BIRD config or
+addressing. The fix is an iFog ticket naming that host and those two tap ports.</p>
+<p><strong>Before renewing the silence, re-verify — and mind the two traps:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trap 1: your OWN outbound ARP/NS shows up in a plain capture and looks like traffic.</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Trap 2: iFog's hypervisor sends LLDP every 30 s, which arrives even while broken.</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># So exclude your own MAC, and don't count LLDP as recovery:</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">MAC</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>/sys/class/net/ens19/address<span class="k">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>timeout<span class="w"> </span><span class="m">25</span><span class="w"> </span>tcpdump<span class="w"> </span>-nni<span class="w"> </span>ens19<span class="w"> </span><span class="s2">"not ether src </span><span class="nv">$MAC</span><span class="s2"> and not ether proto 0x88cc"</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># still broken: 0 packets captured</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># recovered:    route-server / participant ND and BGP visible -&gt; debug BIRD instead</span>
+</span></code></pre></div>
+<p>The fastest single check is VM-to-VM across the bridge, which needs no peer at
+all — if this works, the bridge is forwarding again:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>nxthdr@ams01.ixp.infra.nxthdr.dev<span class="w"> </span><span class="s1">'ping6 -c3 2001:7f8:13::a500:9434:1'</span><span class="w">  </span><span class="c1"># -&gt; ams02</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Collateral: blackhole routes on the dead LAN</p>
+<p>Both hosts carry hand-added static routes (<code>ip -6 route add</code>, kernel source
+3 = <code>RTPROT_BOOT</code>) whose next-hops are on this LAN. Because they are not
+BGP-learned, <strong>BIRD cannot withdraw them</strong> — it imports them via <code>kernel1</code> —
+so they blackhole traffic instead of falling back to the iFog default route:</p>
+<ul>
+<li><code>ixpams01</code>: <code>2001:4860::/32</code> via HE, <code>fd00:babe::/64</code> via <code>ixpams02</code></li>
+<li><code>ixpams02</code>: <code>2001:4860::/32</code> and <code>2a07:8880:2::/48</code> via AS16509</li>
+</ul>
+<p>All Google IPv6 is therefore unreachable from both hosts. Check with
+<code>ip -6 route show | grep "dev ens19"</code> and trace an origin with
+<code>birdc show route for &lt;addr&gt; all</code>. These belong to the hand-managed
+ixpams01/ixpams02 experiment, so confirm before deleting.</p>
+</div>
+<h3 id="fogixp-route-server-rs1-pulled-from-service-2026-08-30">FogIXP route server RS1 pulled from service (2026-08-30)<a class="headerlink" href="#fogixp-route-server-rs1-pulled-from-service-2026-08-30" title="Permanent link">&para;</a></h3>
+<p><code>FogIXPRS1</code> (<code>2001:7f8:ca:1::111</code>, AS47498) sent a graceful BGP <strong>Administrative
+shutdown</strong> at <strong>15:20:26 UTC</strong> and then left the peering LAN altogether.</p>
+<p>Unlike the two outages above, the <strong>LAN is healthy</strong> — this is one route server,
+not a dead VLAN, and telling the two apart takes one command:</p>
+<ul>
+<li><code>ip -6 neigh show | grep 2001:7f8:ca:1:</code> lists 20+ neighbours REACHABLE/STALE
+  on <code>ens20</code>; only <code>::111</code> is <code>FAILED</code>.</li>
+<li><code>FogIXPRS2</code> (<code>::222</code>) stayed Established with ~4698 routes imported, so
+  FogIXP reachability continues through the surviving route server.</li>
+</ul>
+<p>RS1 was already misbehaving three days earlier, which is likely why it was
+pulled:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Aug 27 22:16:40  FogIXPRS1: Malformed attribute list - framing error (1024/3) at 75
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Aug 27 22:16:40  FogIXPRS1: Invalid route 2001:67c:1550::/48 withdrawn
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Aug 30 15:20:26  FogIXPRS1: Received: Administrative shutdown
+</span></code></pre></div>
+<p>Worth reporting the malformed-attribute event to FogIXP — they may not have it.</p>
+<div class="admonition tip">
+<p class="admonition-title">Why this silence is 7 days and not 30</p>
+<p>A route server returning is the <em>expected</em> outcome, so the silence is set to
+expire while the situation is still fresh. If <code>FogIXPRS1</code> pages again on
+2026-09-06 that is useful information — either it is still out (chase FogIXP)
+or it came back and broke again. A 30-day silence would have turned that
+signal into a month of silence. Match the expiry to the expected fix time,
+not to habit.</p>
+<p>Route servers are a redundant pair: losing one is a <em>degradation</em>, not an
+outage. If <strong>both</strong> FogIXP sessions go down, that is a different incident —
+check the LAN with <code>tcpdump -nni ens20</code> before assuming it is IXP-side.</p>
+</div>
 <h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
 <li>A silence only suppresses <strong>notifications</strong>; the alert still evaluates and will
@@ -1276,8 +1488,8 @@ container's uid.</p>
 bumped alertmanager to 0.34.0 and the long-standing Frankfurt LocIX silence vanished,
 putting five <code>ixpfra01</code> BGP alerts back into the room with no explanation.</p>
 <p>Before trusting a silence to outlive a deploy, check the state files exist:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev<span class="w"> </span><span class="s1">'ls -la /home/nxthdr/alertmanager/data'</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># expect: silences  and  nflog, both owned by nobody</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>nxthdr@ams01.core.infra.nxthdr.dev<span class="w"> </span><span class="s1">'ls -la /home/nxthdr/alertmanager/data'</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># expect: silences  and  nflog, both owned by nobody</span>
 </span></code></pre></div>
 <p>An <strong>empty</strong> directory means the ownership fix is missing (see CLAUDE.md →
 "Manual Configuration"); create silences all you like, none will survive the next
@@ -1308,7 +1520,7 @@ broken again — and with no silences to lose, the only visible symptom is a pai
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2026 18:26:08 UTC">August 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 26, 2026 12:36:18 UTC">October 26, 2026</span>
   </span>
 
     
@@ -1373,10 +1585,10 @@ broken again — and with no silences to lose, the only visible symptom is a pai
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
