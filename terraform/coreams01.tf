@@ -553,7 +553,7 @@ resource "docker_container" "cadvisor" {
 
 # Loki
 resource "docker_image" "loki" {
-  name = "grafana/loki:3.7.9"
+  name = "grafana/loki:3.7.10"
   provider = docker.coreams01
 }
 
