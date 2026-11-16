@@ -17,11 +17,12 @@ This directory contains the ClickHouse table definitions for the nxthdr data pip
 - `from_kafka` - Kafka engine table consuming Cap'n Proto messages (all BMP message types)
 - `updates` - Route Monitoring, one row per prefix update; `initial_dump` flags the table dump following a Peer Up
 - `peer_events` - Peer Up and Peer Down
-- `sessions` - Initiation and Termination (`synthetic` when the router disconnected without a Termination)
+- `sessions` - Initiation and Termination (`synthetic` when the session ended without a Termination: `connection closed` or `collector shutdown`), and `collector_start` (Risotto started: earlier sessions are over)
+- `end_of_ribs` - End-of-RIB markers: the table dump of a peer's RIB view and address family is complete
 - `stats` - Statistics Reports, one row per counter
 - `*_mv` - Materialized views dispatching `from_kafka` rows by message type
 
-**Data Retention**: 7 days TTL for `updates` and `stats`; none for `peer_events` and `sessions`
+**Data Retention**: 7 days TTL for every table
 
 **Migration from the stateful Risotto**: run `migrate-stateless-risotto.sql` before `bmp.sql`
 

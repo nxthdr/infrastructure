@@ -325,12 +325,13 @@ The infrastructure uses ClickHouse for storing time-series data. Database schema
 - `from_kafka` - Kafka engine table consuming from the `risotto` topic
 - `updates` - Route Monitoring, one row per prefix update (`updates_mv`). `initial_dump` flags the table dump sent after a Peer Up (not routing changes)
 - `peer_events` - Peer Up and Peer Down (`peer_events_mv`)
-- `sessions` - BMP session Initiation and Termination, including synthetic terminations when a router disconnects without one (`sessions_mv`)
+- `sessions` - BMP session Initiation and Termination, including synthetic terminations when a session ends without one, and `collector_start` events (`sessions_mv`)
+- `end_of_ribs` - End-of-RIB markers: a peer's table dump is complete for a RIB view and address family (`end_of_ribs_mv`)
 - `stats` - Statistics Reports, one row per counter (`stats_mv`)
 
 **Key Fields**: router address, peer address, prefix, AS path, BGP attributes, timestamps, BMP session (`router_addr`, `router_port`, `session_start_ns`) and `sequence` (a gap within a session means lost messages)
 
-**TTL**: 7 days for `updates` and `stats`; none for `peer_events` and `sessions`
+**TTL**: 7 days for every table
 
 ### Public Read-Only Access (chproxy)
 

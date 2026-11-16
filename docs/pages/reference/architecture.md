@@ -215,8 +215,8 @@ ClickHouse stores all time-series data in three separate databases:
 - Stores BMP messages: route updates, peer up/down, sessions and statistics
 - Kafka topic: `risotto`
 - Schema: Cap'n Proto (`message.capnp:Message`)
-- TTL: 7 days for `updates` and `stats`; none for `peer_events` and `sessions`
-- Key tables: `from_kafka`, `updates`, `peer_events`, `sessions`, `stats`
+- TTL: 7 days
+- Key tables: `from_kafka`, `updates`, `peer_events`, `sessions`, `end_of_ribs`, `stats`
 
 **Flows Database** (`flows`):
 - Stores network flow data from sFlow collectors
