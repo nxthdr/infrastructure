@@ -212,11 +212,11 @@ IPv4-only network for IPv4 proxy.
 ClickHouse stores all time-series data in three separate databases:
 
 **BMP Database** (`bmp`):
-- Stores BGP routing updates from BMP protocol
-- Kafka topic: `risotto-updates`
-- Schema: Cap'n Proto (`update.capnp:Update`)
-- TTL: 7 days
-- Key tables: `from_kafka`, `updates`, `from_kafka_mv`
+- Stores BMP messages: route updates, peer up/down, sessions and statistics
+- Kafka topic: `risotto`
+- Schema: Cap'n Proto (`message.capnp:Message`)
+- TTL: 7 days for `updates` and `stats`; none for `peer_events` and `sessions`
+- Key tables: `from_kafka`, `updates`, `peer_events`, `sessions`, `stats`
 
 **Flows Database** (`flows`):
 - Stores network flow data from sFlow collectors

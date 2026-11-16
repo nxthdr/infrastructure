@@ -5,18 +5,25 @@ This directory contains the ClickHouse table definitions for the nxthdr data pip
 ## Databases
 
 ### BMP Database (`bmp/`)
-**Purpose**: Store BGP routing updates collected via BMP (BGP Monitoring Protocol)
+**Purpose**: Store BMP (BGP Monitoring Protocol) messages collected by Risotto
 
-**Data Source**: Risotto service collecting BMP messages from BIRD routers
+**Data Source**: Risotto service collecting BMP messages from BIRD routers. Risotto is stateless: it forwards every BMP message type, and routing state is reconstructed in ClickHouse
 
-**Pipeline**: BIRD routers → Risotto → Redpanda (Kafka topic: `risotto-updates`) → ClickHouse
+**Pipeline**: BIRD routers → Risotto → Redpanda (Kafka topic: `risotto`) → ClickHouse
+
+**Schema**: [`message.capnp:Message`](https://github.com/nxthdr/risotto/blob/main/risotto/schemas/message.capnp), to copy into the ClickHouse `format_schemas` directory (`/home/nxthdr/clickhouse/data/format_schemas` on coreams01)
 
 **Tables**:
-- `from_kafka` - Kafka engine table consuming Cap'n Proto messages
-- `updates` - MergeTree table with processed BGP updates
-- `from_kafka_mv` - Materialized view for data transformation
+- `from_kafka` - Kafka engine table consuming Cap'n Proto messages (all BMP message types)
+- `updates` - Route Monitoring, one row per prefix update; `initial_dump` flags the table dump following a Peer Up
+- `peer_events` - Peer Up and Peer Down
+- `sessions` - Initiation and Termination (`synthetic` when the router disconnected without a Termination)
+- `stats` - Statistics Reports, one row per counter
+- `*_mv` - Materialized views dispatching `from_kafka` rows by message type
 
-**Data Retention**: 7 days TTL
+**Data Retention**: 7 days TTL for `updates` and `stats`; none for `peer_events` and `sessions`
+
+**Migration from the stateful Risotto**: run `migrate-stateless-risotto.sql` before `bmp.sql`
 
 ### Flows Database (`flows/`)
 **Purpose**: Store network flow data from sFlow collectors
