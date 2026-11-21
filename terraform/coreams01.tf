@@ -674,9 +674,7 @@ resource "docker_container" "risotto" {
     "--bmp-address", "[::]:4000",
     "--metrics-address", "[2a06:de00:50:cafe:10::112]:8080",
     "--kafka-brokers", "[2a06:de00:50:cafe:10::103]:9092",
-    "--kafka-topic", "risotto-updates",
-    "--curation-state-path", "/data/state.bin",
-    "--curation-state-interval", "10",
+    "--kafka-topic", "risotto",
   ]
   restart = "unless-stopped"
   log_driver = "json-file"
@@ -691,10 +689,6 @@ resource "docker_container" "risotto" {
   networks_advanced {
     name = docker_network.backend.name
     ipv6_address = "2a06:de00:50:cafe:10::112"
-  }
-  volumes {
-    container_path = "/data"
-    host_path = "/home/nxthdr/risotto/data"
   }
 }
 

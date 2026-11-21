@@ -18,8 +18,8 @@ The infrastructure supports three main data pipelines:
 - **Service**: Risotto (BMP collector)
 - **Database**: `bmp` in ClickHouse
 - **Data Flow**: BIRD routers → Risotto → Redpanda (Kafka) → ClickHouse
-- **Schema**: Cap'n Proto format (`update.capnp:Update`)
-- **Purpose**: Collect and store BGP routing updates from peering sessions
+- **Schema**: Cap'n Proto format (`message.capnp:Message`, one schema for every BMP message type)
+- **Purpose**: Collect and store BMP messages (route updates, peer up/down, sessions) from peering sessions. Risotto is stateless: routing state is reconstructed downstream
 
 ### 2. Flow Monitoring (sFlow)
 - **Service**: Pesto (sFlow collector)
@@ -319,16 +319,19 @@ The provider block, module call, VLT server entry, and config rendering are all 
 The infrastructure uses ClickHouse for storing time-series data. Database schemas are defined in `clickhouse-tables/`:
 
 ### BMP Database (`bmp`)
-**Purpose**: Store BGP routing updates from BMP (BGP Monitoring Protocol)
+**Purpose**: Store BMP (BGP Monitoring Protocol) messages from Risotto
 
 **Tables**:
-- `from_kafka` - Kafka engine table consuming from `risotto-updates` topic
-- `updates` - MergeTree table storing processed BGP updates
-- `from_kafka_mv` - Materialized view transforming Kafka data
+- `from_kafka` - Kafka engine table consuming from the `risotto` topic
+- `updates` - Route Monitoring, one row per prefix update (`updates_mv`). `initial_dump` flags the table dump sent after a Peer Up (not routing changes)
+- `peer_events` - Peer Up and Peer Down (`peer_events_mv`)
+- `sessions` - BMP session Initiation and Termination, including synthetic terminations when a session ends without one, and `collector_start` events (`sessions_mv`)
+- `end_of_ribs` - End-of-RIB markers: a peer's table dump is complete for a RIB view and address family (`end_of_ribs_mv`)
+- `stats` - Statistics Reports, one row per counter (`stats_mv`)
 
-**Key Fields**: router address, peer address, prefix, AS path, BGP attributes, timestamps
+**Key Fields**: router address, peer address, prefix, AS path, BGP attributes, timestamps, BMP session (`router_addr`, `router_port`, `session_start_ns`) and `sequence` (a gap within a session means lost messages)
 
-**TTL**: 7 days
+**TTL**: 7 days for every table
 
 ### Public Read-Only Access (chproxy)
 

@@ -200,13 +200,13 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "risotto_state_updates{router='$router'}",
-          "legendFormat": "{{peer}}",
+          "expr": "rate(risotto_bmp_decode_errors_total{router=\"$router\"}[$__rate_interval])",
+          "legendFormat": "{{ router }}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Updates in Memory",
+      "title": "BMP Decode Errors",
       "type": "timeseries"
     },
     {
@@ -476,13 +476,13 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "rate(risotto_tx_updates_total{router=\"$router\"}[$__rate_interval])",
-          "legendFormat": "{{ peer }}",
+          "expr": "sum by (status) (rate(risotto_kafka_messages_total[$__rate_interval]))",
+          "legendFormat": "{{ status }}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Transmitted Updates Rate",
+      "title": "Kafka Messages Rate",
       "type": "timeseries"
     },
     {
@@ -610,7 +610,7 @@
           },
           "pluginVersion": "4.8.2",
           "queryType": "timeseries",
-          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time, Count() AS \"${router}\"\nFROM bmp.updates\nWHERE $__timeFilter(time) AND router_addr == toIPv6('${router}')\nGROUP BY time\nORDER BY time",
+          "rawSql": "SELECT toStartOfMinute(time_received_ns) AS time,\n  countIf(NOT initial_dump) AS \"changes\",\n  countIf(initial_dump) AS \"initial dump\"\nFROM bmp.updates\nWHERE $__timeFilter(time) AND router_addr == toIPv6('${router}')\nGROUP BY time\nORDER BY time",
           "refId": "A"
         }
       ],
