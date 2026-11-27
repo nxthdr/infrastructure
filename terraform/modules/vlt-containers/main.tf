@@ -124,7 +124,7 @@ resource "docker_container" "node_exporter" {
 
 # Bird Exporter
 resource "docker_image" "bird_exporter" {
-  name = "ghcr.io/czerwonk/bird_exporter:1.7.1"
+  name = "ghcr.io/czerwonk/bird_exporter:1.7.2"
 }
 
 resource "docker_container" "bird_exporter" {
